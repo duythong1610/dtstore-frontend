@@ -22,14 +22,16 @@ export const getAllProduct = async (search, limit) => {
 export const getProductType = async (type, page, limit) => {
   if (type) {
     const res = await axios.get(
-      `api/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
+      `https://dtstore-backend.onrender.com/api/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
     );
     return res.data;
   }
 };
 
 export const getAllTypeProduct = async () => {
-  const res = await axios.get(`api/product/get-all-type`);
+  const res = await axios.get(
+    `https://dtstore-backend.onrender.com/api/product/get-all-type`
+  );
   return res.data;
 };
 
