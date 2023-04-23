@@ -1,0 +1,85 @@
+import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { routes } from "./routes";
+import DefaultLayout from "./components/DefaultLayout/DefaultLayout";
+import { Fragment, useEffect } from "react";
+// import { useQuery } from "@tanstack/react-query";
+import { isJsonString } from "./until";
+import * as UserService from "./services/UserService";
+import jwt_decode from "jwt-decode";
+import { updateUser } from "./redux/slides/userSlice";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "./theme/theme";
+
+function App() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    const { storageData, decoded } = handleDecoded();
+    if (decoded?.id) {
+      handleGetDetailUser(decoded.id, storageData);
+    }
+    console.log({ storageData });
+  }, []);
+
+  const handleDecoded = () => {
+    let storageData = localStorage.getItem("access_token");
+    let decoded = {};
+    if (storageData && isJsonString(storageData)) {
+      storageData = JSON.parse(storageData);
+      decoded = jwt_decode(storageData);
+    }
+    return { decoded, storageData };
+  };
+
+  UserService.axiosJWT.interceptors.request.use(
+    async (config) => {
+      const { decoded } = handleDecoded();
+      const currentTime = new Date();
+      if (decoded?.exp < currentTime.getTime() / 1000) {
+        const data = await UserService.refreshToken();
+        config.headers["token"] = `Bearer ${data?.access_token}`;
+      }
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+  );
+
+  const handleGetDetailUser = async (id, access_token) => {
+    const res = await UserService.getDetailsUser(id, access_token);
+    dispatch(updateUser({ ...res?.data, access_token: access_token }));
+  };
+
+  return (
+    <div className="App">
+      <ChakraProvider theme={theme}>
+        {/* <ThemeEditorProvider> */}
+        <Router>
+          <Routes>
+            {routes.map((route, index) => {
+              const Page = route.component;
+              const isCheckAuth = route.isPrivate && user.isAdmin;
+              const Layout = route.isDefaultLayout ? DefaultLayout : Fragment;
+              return (
+                <Route
+                  key={index}
+                  path={isCheckAuth ? route.pathAdmin : route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
+            })}
+          </Routes>
+        </Router>
+        {/* </ThemeEditorProvider> */}
+      </ChakraProvider>
+    </div>
+  );
+}
+
+export default App;

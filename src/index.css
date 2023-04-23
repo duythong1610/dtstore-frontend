@@ -1,0 +1,40 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
+
+* {
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #fff;
+  height: 30px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #ccc;
+  height: 30px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  height: 30px;
+  background-color: #d2d8d8;
+}
+
+.btn-sign-up:disable {
+  background: #ccc;
+}
+
+.ant-popover-inner {
+  padding: 0px !important;
+}
+
+.ant-input-number-sm input.ant-input-number-input {
+  padding: 0;
+  text-align: center;
+}

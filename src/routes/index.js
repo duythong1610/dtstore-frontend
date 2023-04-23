@@ -1,0 +1,63 @@
+import AdminPage from "../pages/AdminPage/AdminPage";
+import Home from "../pages/HomePage/Home";
+import Login from "../pages/LoginPage/Login";
+import OrderPage from "../pages/OrderPage/OrderPage";
+import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
+import ProductPage from "../pages/ProductPage/ProductPage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import SignUpPage from "../pages/SignUpPage/SignUpPage";
+import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
+// import Settings from "../pages/AdminPage/dataTables";
+export const routes = [
+  {
+    path: "/",
+    component: Home,
+    isDefaultLayout: true,
+  },
+
+  {
+    path: "/order",
+    component: OrderPage,
+    isDefaultLayout: true,
+  },
+
+  {
+    path: "product/:type",
+    component: TypeProductPage,
+    isDefaultLayout: true,
+  },
+  {
+    path: "/sign-in",
+    component: Login,
+    isDefaultLayout: false,
+  },
+
+  {
+    path: "/sign-up",
+    component: SignUpPage,
+    isDefaultLayout: false,
+  },
+  {
+    path: "/product-detail/:id",
+    component: ProductDetailsPage,
+    isDefaultLayout: true,
+  },
+  {
+    path: "/product",
+    component: ProductPage,
+    isDefaultLayout: false,
+  },
+  {
+    path: "/profile-user",
+    component: ProfilePage,
+    isDefaultLayout: true,
+  },
+
+  {
+    // path: "/system-admin",
+    pathAdmin: "/system-admin",
+    component: AdminPage,
+    isDefaultLayout: false,
+    isPrivate: true,
+  },
+];
