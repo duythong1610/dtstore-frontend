@@ -99,7 +99,6 @@ export const deleteManyUser = async (data, access_token) => {
 // };
 
 export const refreshToken = async (refreshToken) => {
-  console.log("refreshToken", refreshToken);
   const res = await axios.post(
     "https://dtstore-backend.onrender.com/api/user/refresh-token",
     {},
