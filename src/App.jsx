@@ -19,7 +19,6 @@ function App() {
     if (decoded?.id) {
       handleGetDetailUser(decoded.id, storageData);
     }
-    console.log({ storageData });
   }, []);
 
   const handleDecoded = () => {

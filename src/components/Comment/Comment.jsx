@@ -10,7 +10,6 @@ import { FieldTimeOutlined } from "@ant-design/icons";
 import * as message from "../Message/Message";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
-  console.log({ user });
   const [commentText, setCommentText] = useState({ text: "", createAt: "" });
   const [productDetails, setProductDetails] = useState([]);
   const fetchProductDetails = async () => {
@@ -22,8 +21,6 @@ const Comment = ({ idProduct }) => {
   useEffect(() => {
     fetchProductDetails();
   }, [idProduct]);
-
-  console.log(productDetails);
 
   const handleComment = async () => {
     const res = await ProductService.postComment(
@@ -63,7 +60,6 @@ const Comment = ({ idProduct }) => {
         style={{ maxHeight: "400px", overflowX: "hidden", overflowY: "auto" }}
       >
         {productDetails?.comments?.map((comment) => {
-          console.log({ comment });
           const timeAgo = Math.floor(
             (new Date().getTime() - new Date(comment?.createAt).getTime()) /
               (1000 * 60)
