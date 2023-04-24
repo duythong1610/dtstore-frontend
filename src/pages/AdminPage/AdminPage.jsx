@@ -33,7 +33,6 @@ const AdminPage = () => {
     setKeySelected(key);
   };
 
-  console.log({ keySelected });
   const items = [
     getItem("Quản lý người dùng", "user", <UserOutlined />),
     getItem("Quản lý sản phẩm", "product", <SettingOutlined />),
@@ -56,7 +55,7 @@ const AdminPage = () => {
         mode="inline"
         items={items}
       />
-      <div style={{ flex: 1 , padding: "15px"}}>{renderPage(keySelected)}</div>
+      <div style={{ flex: 1, padding: "15px" }}>{renderPage(keySelected)}</div>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import { TypeProductItem } from "./style";
 const TypeProduct = ({ name }) => {
   const navigate = useNavigate();
   const handleNavigateType = (type) => {
-    console.log(type);
     navigate(
       `product/${type
         .normalize("NFD")

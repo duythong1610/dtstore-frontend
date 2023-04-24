@@ -61,11 +61,7 @@ function Login() {
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
   const dispatch = useDispatch();
 
-  console.log(mutation);
-
   const { data, isLoading, isSuccess } = mutation;
-
-  console.log({ data });
 
   useEffect(() => {
     if (data?.status === "OK") {
@@ -79,7 +75,6 @@ function Login() {
 
       if (data?.access_token) {
         const decoded = jwt_decode(data?.access_token);
-        console.log({ decoded });
         if (decoded.id) {
           handleGetDetailUser(decoded.id, data?.access_token);
         }
@@ -93,7 +88,6 @@ function Login() {
     const storage = localStorage.getItem("refresh_token");
     const refreshToken = JSON.parse(storage);
     const res = await UserService.getDetailsUser(id, access_token);
-    console.log({ res });
     dispatch(
       updateUser({ ...res?.data, access_token: access_token, refreshToken })
     );
@@ -115,7 +109,6 @@ function Login() {
       email,
       password,
     });
-    console.log("sign-in", email, password);
   };
 
   return (

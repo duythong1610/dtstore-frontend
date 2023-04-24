@@ -33,7 +33,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const onChange = () => {};
   const fetchProductDetails = async (context) => {
     const id = context?.queryKey && context?.queryKey[1];
-    console.log({ id });
     if (id) {
       const res = await ProductService.getDetailsProduct(id);
       return res.data;
@@ -87,8 +86,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
       );
     }
   };
-
-  console.log({ productDetails });
 
   return (
     <Loading isLoading={isLoading}>
@@ -260,7 +257,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
               <WrapperInputNumber
                 size="small"
                 min={1}
-                max={10}
+                max={productDetails?.countInStock}
                 defaultValue={1}
                 value={numProduct}
                 onChange={onChange}

@@ -60,8 +60,6 @@ const OrderPage = () => {
     }
   }, [order?.orderItems]);
 
-  console.log({ discount }, { priceVoucher });
-
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -134,14 +132,10 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
-  console.log({});
-
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      console.log({ cur }, { total });
       if (cur?.discount) {
         const abc = ((cur?.price * cur?.discount) / 100) * cur?.amount;
-        console.log({ abc });
         return (
           total +
           (cur?.price - (cur?.price * cur?.discount) / 100) * cur?.amount
@@ -149,7 +143,6 @@ const OrderPage = () => {
       }
       return total + cur.price * cur.amount;
     }, 0);
-    console.log({ result });
     return result;
   }, [order]);
 
@@ -184,8 +177,6 @@ const OrderPage = () => {
       Number(diliveryPriceMemo)
     );
   }, [priceMemo, diliveryPriceMemo]);
-
-  console.log({ totalPriceMemo });
 
   const handleRemoveAllOrder = () => {
     if (listChecked?.length > 1) {
@@ -244,12 +235,8 @@ const OrderPage = () => {
   };
 
   const priceAddVoucher = (total) => {
-    console.log({ total });
     return total - 20000;
   };
-  console.log({
-    voucherCode,
-  });
 
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rests } = data;
@@ -305,7 +292,6 @@ const OrderPage = () => {
       description: "Trên 500.000 VND",
     },
   ];
-  console.log(diliveryPriceMemo);
   return (
     <div style={{ background: "#f5f5fa", with: "100%", minHeight: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
