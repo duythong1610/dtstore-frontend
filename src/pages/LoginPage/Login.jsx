@@ -50,6 +50,7 @@ function Login() {
     { bg: "whiteAlpha.200" }
   );
   const [show, setShow] = React.useState(false);
+  const [messageError, setMessageError] = useState("");
   const handleClick = () => setShow(!show);
 
   // Handle Logic
@@ -64,9 +65,11 @@ function Login() {
 
   const { data, isLoading, isSuccess } = mutation;
 
+  console.log({ data });
+
   useEffect(() => {
-    if (isSuccess) {
-      message.success();
+    if (data?.status === "OK") {
+      message.success("Đăng nhập thành công!");
       navigate("/");
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
       localStorage.setItem(
@@ -81,6 +84,8 @@ function Login() {
           handleGetDetailUser(decoded.id, data?.access_token);
         }
       }
+    } else {
+      setMessageError(data?.message);
     }
   }, [isSuccess]);
 
@@ -88,6 +93,7 @@ function Login() {
     const storage = localStorage.getItem("refresh_token");
     const refreshToken = JSON.parse(storage);
     const res = await UserService.getDetailsUser(id, access_token);
+    console.log({ res });
     dispatch(
       updateUser({ ...res?.data, access_token: access_token, refreshToken })
     );
@@ -177,15 +183,28 @@ function Login() {
             <Heading color={textColor} fontSize="36px" mb="10px">
               Đăng nhập
             </Heading>
-            <Text
-              mb="36px"
-              ms="4px"
-              color={textColorSecondary}
-              fontWeight="400"
-              fontSize="md"
-            >
-              Đăng nhập để sử dụng ứng dụng!
-            </Text>
+
+            {messageError ? (
+              <Text
+                mb="36px"
+                ms="4px"
+                color={"red"}
+                fontWeight="400"
+                fontSize="md"
+              >
+                {messageError}
+              </Text>
+            ) : (
+              <Text
+                mb="36px"
+                ms="4px"
+                color={textColorSecondary}
+                fontWeight="400"
+                fontSize="md"
+              >
+                Đăng nhập để sử dụng ứng dụng!
+              </Text>
+            )}
           </Box>
           <Flex
             zIndex="2"

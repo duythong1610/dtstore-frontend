@@ -12,30 +12,37 @@ function ProductDetailsPage() {
   };
 
   return (
-    <div
-      style={{ padding: "0 120px", background: "#efefef", height: "1000px" }}
-    >
-      <Breadcrumb
-        style={{ padding: "8px 0", fontSize: 16 }}
-        items={[
-          {
-            title: <Link to="/">Trang chủ</Link>,
-          },
-          {
-            title: ` ${productDetails?.type ? productDetails?.type : ""}`,
-          },
-          {
-            title: `${productDetails?.name ? productDetails?.name : ""}`,
-          },
-        ]}
-      />
-
+    <div style={{ padding: "0 120px", background: "#efefef", height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          borderRadius: "8px",
+          maxWidth: "1270px",
+          margin: "0 auto",
+        }}
+      >
+        <Breadcrumb
+          style={{ padding: "8px 0", fontSize: 16 }}
+          items={[
+            {
+              title: <Link to="/">Trang chủ</Link>,
+            },
+            {
+              title: ` ${productDetails?.type ? productDetails?.type : ""}`,
+            },
+            {
+              title: `${productDetails?.name ? productDetails?.name : ""}`,
+            },
+          ]}
+        />
+      </div>
       <div
         style={{
           display: "flex",
           borderRadius: "8px",
           background: "#fff",
-          width: "1270px",
+          maxWidth: "1270px",
+          margin: "0 auto",
         }}
       >
         <ProductDetailsComponent

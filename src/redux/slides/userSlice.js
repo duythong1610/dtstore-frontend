@@ -11,6 +11,7 @@ const initialState = {
   isAdmin: false,
   city: "",
   refreshToken: "",
+  createdAt: "",
 };
 
 export const userSlice = createSlice({
@@ -29,6 +30,7 @@ export const userSlice = createSlice({
         isAdmin,
         city = "",
         refreshToken = "",
+        createdAt,
       } = action.payload;
       state.name = name ? name : state.name;
       state.email = email ? email : state.email;
@@ -40,6 +42,7 @@ export const userSlice = createSlice({
       state.isAdmin = isAdmin ? isAdmin : state.isAdmin;
       state.city = city ? city : state.city;
       state.refreshToken = refreshToken ? refreshToken : state.refreshToken;
+      state.createdAt = createdAt ? createdAt : state.createdAt;
     },
     resetUser: (state) => {
       state.id = "";

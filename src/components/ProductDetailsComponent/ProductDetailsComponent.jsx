@@ -98,6 +98,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
           padding: "16px",
           background: "#fff",
           borderRadius: "12px",
+          margin: "0 auto",
         }}
       >
         {contextHolder}
@@ -170,7 +171,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             {productDetails?.name}
           </WrapperStyleNameProduct>
 
-          <div>
+          <div style={{ marginBottom: "10px" }}>
             <Rate
               value={productDetails?.rating}
               style={{ fontSize: "12px", color: "yellow" }}

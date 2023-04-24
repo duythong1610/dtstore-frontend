@@ -5,16 +5,14 @@ export const getAllProduct = async (search, limit) => {
   let res;
   if (search?.length > 0) {
     res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-all?filter=name&filter=${search}&limit=${limit}`
+      `http://localhost:3000/api/product/get-all?filter=name&filter=${search}&limit=${limit}`
     );
   } else if (limit) {
     res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-all?limit=${limit}`
+      `http://localhost:3000/api/product/get-all?limit=${limit}`
     );
   } else {
-    res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-all`
-    );
+    res = await axios.get(`http://localhost:3000/api/product/get-all`);
   }
   return res.data;
 };
@@ -22,29 +20,27 @@ export const getAllProduct = async (search, limit) => {
 export const getProductType = async (type, page, limit) => {
   if (type) {
     const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
+      `http://localhost:3000/api/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
     );
     return res.data;
   }
 };
 
 export const getAllTypeProduct = async () => {
-  const res = await axios.get(
-    `https://dtstore-backend.onrender.com/api/product/get-all-type`
-  );
+  const res = await axios.get(`http://localhost:3000/api/product/get-all-type`);
   return res.data;
 };
 
 export const getDetailsProduct = async (id) => {
   const res = await axios.get(
-    `https://dtstore-backend.onrender.com/api/product/get-details/${id}`
+    `http://localhost:3000/api/product/get-details/${id}`
   );
   return res.data;
 };
 
 export const createProduct = async (data) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/product/create-product",
+    "http://localhost:3000/api/product/create-product",
     data
   );
   return res.data;
@@ -52,7 +48,7 @@ export const createProduct = async (data) => {
 
 export const postComment = async (id, data, access_token) => {
   const res = await axiosJWT.put(
-    `https://dtstore-backend.onrender.com/api/product/comment/${id}`,
+    `http://localhost:3000/api/product/comment/${id}`,
     data,
     {
       headers: {

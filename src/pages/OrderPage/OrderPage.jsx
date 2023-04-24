@@ -40,7 +40,10 @@ const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const [voucherCode, setVoucherCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+
   const [isVoucher, setIsVoucher] = useState(false);
+  const [priceVoucher, setPriceVoucher] = useState(0);
   const [messageVoucher, setMessageVoucher] = useState(false);
   const [listChecked, setListChecked] = useState([]);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -50,7 +53,15 @@ const OrderPage = () => {
     address: "",
     city: "",
   });
-  console.log({ listChecked });
+
+  useEffect(() => {
+    if (isVoucher) {
+      setDiscount(priceVoucher);
+    }
+  }, [order?.orderItems]);
+
+  console.log({ discount }, { priceVoucher });
+
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -123,50 +134,58 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
+  console.log({});
+
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
+      console.log({ cur }, { total });
+      if (cur?.discount) {
+        const abc = ((cur?.price * cur?.discount) / 100) * cur?.amount;
+        console.log({ abc });
+        return (
+          total +
+          (cur?.price - (cur?.price * cur?.discount) / 100) * cur?.amount
+        );
+      }
       return total + cur.price * cur.amount;
     }, 0);
+    console.log({ result });
     return result;
   }, [order]);
 
-  console.log({ order });
-
-  const priceDiscountMemo = useMemo(() => {
-    const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      console.log({ total }, { cur }, cur?.price);
-      const totalDiscount = cur.discount ? cur.discount : 0;
-      return (cur?.price * (totalDiscount * cur?.amount)) / 100;
-    }, 0);
-    if (Number(result)) {
-      console.log(result);
-      return result;
-    }
-    return 0;
-  }, [order]);
+  // const priceDiscountMemo = useMemo(() => {
+  //   const result = order?.orderItemsSelected?.reduce((total, cur) => {
+  //     console.log({ total }, { cur }, cur?.price);
+  //     const totalDiscount = cur.discount ? cur.discount : 0;
+  //     return (cur?.price * (totalDiscount * cur?.amount)) / 100;
+  //   }, 0);
+  //   if (Number(result)) {
+  //     console.log(result);
+  //     return result;
+  //   }
+  //   return 0;
+  // }, [order]);
 
   const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo >= 20000 && priceMemo < 500000) {
+    if (priceMemo >= 200000 && priceMemo < 500000) {
       return 10000;
     } else if (priceMemo >= 500000 || order?.orderItemsSelected?.length === 0) {
-      const httt = {
-        value: 0,
-        description: "(Freeship)",
-      };
-      return httt;
+      return 0;
     } else {
       return 20000;
     }
   }, [priceMemo]);
 
-  console.log(diliveryPriceMemo);
+  // console.log({ diliveryPriceMemo }, { priceMemo }, { priceDiscountMemo });
   const totalPriceMemo = useMemo(() => {
     return (
       Number(priceMemo) -
-      Number(priceDiscountMemo) +
-      Number(diliveryPriceMemo.value ?? diliveryPriceMemo)
+      // Number(priceDiscountMemo) +
+      Number(diliveryPriceMemo)
     );
-  }, [priceMemo, priceDiscountMemo, diliveryPriceMemo]);
+  }, [priceMemo, diliveryPriceMemo]);
+
+  console.log({ totalPriceMemo });
 
   const handleRemoveAllOrder = () => {
     if (listChecked?.length > 1) {
@@ -180,7 +199,21 @@ const OrderPage = () => {
     } else if (!user?.phone || !user.address || !user.name || !user.city) {
       setIsOpenModalUpdateInfo(true);
     } else {
-      navigate("/payment");
+      navigate("/payment", {
+        state: {
+          priceVoucher: priceVoucher,
+          totalPrice: isVoucher
+            ? `${priceAddVoucher(totalPriceMemo)
+                .toLocaleString()
+                .replaceAll(",", ".")} VNĐ`
+            : convertPrice(
+                diliveryPriceMemo
+                  ? totalPriceMemo - diliveryPriceMemo - priceVoucher
+                  : totalPriceMemo
+              ),
+          price: convertPrice(totalPriceMemo),
+        },
+      });
     }
   };
 
@@ -189,14 +222,24 @@ const OrderPage = () => {
   };
 
   const handleAddVoucher = () => {
-    if (voucherCode === "DUYTHONGDEPTRAI") {
-      setIsVoucher(true);
-    } else if (!voucherCode) {
-      setMessageVoucher("Vui lòng nhập mã giảm giá");
-    } else {
+    if (listChecked.length <= 0) {
       setMessageVoucher(
-        "Mã giảm giá không hợp lệ, liên hệ Duy Thông để nhận được mã"
+        "Vui lòng chọn sản phẩm cần thanh toán để được giảm giá"
       );
+    } else {
+      if (voucherCode === "DUYTHONGDEPTRAI") {
+        setIsVoucher(true);
+        message.success("Áp dụng mã giảm giá thành công");
+        setVoucherCode("");
+        setMessageVoucher("");
+        setPriceVoucher(20000);
+      } else if (!voucherCode) {
+        setMessageVoucher("Vui lòng nhập mã giảm giá");
+      } else {
+        setMessageVoucher(
+          "Mã giảm giá không hợp lệ, liên hệ Duy Thông để nhận được mã"
+        );
+      }
     }
   };
 
@@ -227,7 +270,6 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
 
-  console.log(stateUserDetails);
   const handleUpdateInforUser = () => {
     const { name, address, city, phone } = stateUserDetails;
     if (name && address && city && phone) {
@@ -263,6 +305,7 @@ const OrderPage = () => {
       description: "Trên 500.000 VND",
     },
   ];
+  console.log(diliveryPriceMemo);
   return (
     <div style={{ background: "#f5f5fa", with: "100%", minHeight: "100vh" }}>
       <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
@@ -316,7 +359,7 @@ const OrderPage = () => {
             </WrapperStyleHeader>
             <WrapperListOrder>
               {order?.orderItems?.map((order) => {
-                console.log(order);
+                console.log({ order });
                 return (
                   <WrapperItemOrder key={order?.product}>
                     <div
@@ -422,8 +465,10 @@ const OrderPage = () => {
                         }}
                       >
                         {order?.discount
-                          ? convertPrice(priceDiscount(order?.price, order))
-                          : convertPrice(order?.price)}
+                          ? convertPrice(
+                              priceDiscount(order?.price, order) * order?.amount
+                            )
+                          : convertPrice(order?.price * order?.amount)}
                       </span>
                       <DeleteOutlined
                         style={{ cursor: "pointer" }}
@@ -451,6 +496,7 @@ const OrderPage = () => {
                     type="text"
                     placeholder="Nhập mã giảm giá"
                     onChange={onChangeVoucher}
+                    value={voucherCode}
                   />
                   <ButtonComponent
                     onClick={handleAddVoucher}
@@ -473,7 +519,7 @@ const OrderPage = () => {
                 <div>
                   <span>Địa chỉ: </span>
                   <span style={{ fontWeight: "bold" }}>
-                    {`${user?.address} ${user?.city}`}{" "}
+                    {`${user?.address}, ${user?.city}`}{" "}
                   </span>
                   <span
                     onClick={handleChangeAddress}
@@ -502,24 +548,27 @@ const OrderPage = () => {
                     {convertPrice(priceMemo)}
                   </span>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span>Giảm giá</span>
-                  <span
+                {isVoucher && (
+                  <div
                     style={{
-                      color: "#000",
-                      fontSize: "14px",
-                      fontWeight: "bold",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {convertPrice(priceDiscountMemo)}
-                  </span>
-                </div>
+                    <span>Giảm giá</span>
+                    <span
+                      style={{
+                        color: "#000",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {convertPrice(priceVoucher)}
+                    </span>
+                  </div>
+                )}
+
                 <div
                   style={{
                     display: "flex",
@@ -535,8 +584,7 @@ const OrderPage = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    {convertPrice(diliveryPriceMemo.value ?? diliveryPriceMemo)}{" "}
-                    {diliveryPriceMemo.description}
+                    {convertPrice(diliveryPriceMemo)}
                   </span>
                 </div>
               </WrapperInfo>
@@ -554,7 +602,11 @@ const OrderPage = () => {
                       ? `${priceAddVoucher(totalPriceMemo)
                           .toLocaleString()
                           .replaceAll(",", ".")} VNĐ`
-                      : convertPrice(totalPriceMemo)}
+                      : convertPrice(
+                          diliveryPriceMemo
+                            ? priceMemo - diliveryPriceMemo - priceVoucher
+                            : priceMemo
+                        )}
                   </span>
                   <span style={{ color: "#000", fontSize: "11px" }}>
                     (Đã bao gồm VAT nếu có)

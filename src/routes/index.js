@@ -2,6 +2,7 @@ import AdminPage from "../pages/AdminPage/AdminPage";
 import Home from "../pages/HomePage/Home";
 import Login from "../pages/LoginPage/Login";
 import OrderPage from "../pages/OrderPage/OrderPage";
+import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
@@ -21,6 +22,11 @@ export const routes = [
     isDefaultLayout: true,
   },
 
+  {
+    path: "/payment",
+    component: PaymentPage,
+    isDefaultLayout: true,
+  },
   {
     path: "product/:type",
     component: TypeProductPage,

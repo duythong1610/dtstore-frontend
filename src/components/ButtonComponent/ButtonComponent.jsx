@@ -10,7 +10,7 @@ const ButtonComponent = ({
   ...rest
 }) => {
   return (
-    <div>
+    <>
       <Button
         // disabled={disabled}
         size={size}
@@ -20,7 +20,7 @@ const ButtonComponent = ({
       >
         {textButton}
       </Button>
-    </div>
+    </>
   );
 };
 
