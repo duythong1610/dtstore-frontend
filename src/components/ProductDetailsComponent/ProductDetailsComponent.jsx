@@ -62,6 +62,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
       setNumProduct(numProduct - 1);
     }
   };
+  console.log({ productDetails });
 
   const handleAddOrderProduct = () => {
     api.success({

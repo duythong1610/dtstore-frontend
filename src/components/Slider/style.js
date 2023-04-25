@@ -14,6 +14,7 @@ export const WrapperSliderStyle = styled(Slider)`
       opacity: 0.5;
       font-size: 30px;
       color: #fff;
+      position: absolute;
     }
   }
 
@@ -25,6 +26,7 @@ export const WrapperSliderStyle = styled(Slider)`
       opacity: 0.5;
       font-size: 30px;
       color: #fff;
+      position: absolute;
     }
   }
 
