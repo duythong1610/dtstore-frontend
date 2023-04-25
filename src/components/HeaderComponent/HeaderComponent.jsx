@@ -7,23 +7,23 @@ import {
   WrapperHeaderAccount,
   WrapperHeaderAccountText,
   WrapperHeaderCart,
+  WrapperHeaderHome,
+  WrapperHeaderHomeText,
   WrapperTextHeader,
 } from "./style";
-import {
-  UserOutlined,
-  CaretDownOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlice";
 import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlice";
+import { HomeOutlined } from "@ant-design/icons";
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState(false);
   const order = useSelector((state) => state.order);
   const [searchText, setSearchText] = useState("");
   const user = useSelector((state) => state.user);
@@ -35,6 +35,8 @@ function HeaderComponent() {
   const handleNavigate = () => {
     navigate("/sign-in");
   };
+
+  console.log({ active });
 
   const handleLogout = async () => {
     setLoading(true);
@@ -94,10 +96,10 @@ function HeaderComponent() {
       }}
     >
       <WrapperHeader>
-        <Col span={5}>
+        <Col span={4}>
           <WrapperTextHeader>Logo nhe anh em</WrapperTextHeader>
         </Col>
-        <Col span={12}>
+        <Col span={11}>
           <ButtonInputSearch
             border="none"
             placeholder="Tìm sản phẩm "
@@ -109,9 +111,21 @@ function HeaderComponent() {
           />
         </Col>
         <Col
-          span={7}
+          span={9}
           style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
         >
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              isActive
+                ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
+                : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+            }
+          >
+            <HomeOutlined style={{ fontSize: "22px" }} />
+
+            <WrapperHeaderHomeText>Trang chủ</WrapperHeaderHomeText>
+          </NavLink>
           <Loading isLoading={loading}>
             <WrapperHeaderAccount>
               {userAvatar ? (
@@ -139,28 +153,45 @@ function HeaderComponent() {
                     <WrapperHeaderAccountText
                       style={{ cursor: "pointer", fontSize: "16px" }}
                     >
-                      {userName?.length ? userName : user.email}
+                      Tài khoản
                     </WrapperHeaderAccountText>
                   </Popover>
                 </>
               ) : (
                 <div onClick={handleNavigate}>
-                  <span>Tài khoản</span>
+                  <WrapperHeaderAccountText
+                    style={{ cursor: "pointer", fontSize: "16px" }}
+                  >
+                    Tài khoản
+                  </WrapperHeaderAccountText>
                 </div>
               )}
             </WrapperHeaderAccount>
           </Loading>
-          <WrapperHeaderCart
-            onClick={() => navigate("/order")}
-            style={{ cursor: "pointer" }}
+          <NavLink
+            to="/order"
+            className={({ isActive }) =>
+              setActive(isActive) ?? active
+                ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
+                : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+            }
+            //  active
+            //    ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
+            //    : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200")
           >
             <Badge count={order?.orderItems?.length} size="small">
               <ShoppingCartOutlined
-                style={{ fontSize: "22px", color: "rgb(128, 128, 137)" }}
+                className={
+                  active
+                    ? "text-blue-600 font-medium hover:text-blue-600"
+                    : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                }
+                style={{ fontSize: "22px" }}
               />
             </Badge>
+
             <WrapperTextHeader>Giỏ hàng</WrapperTextHeader>
-          </WrapperHeaderCart>
+          </NavLink>
         </Col>
       </WrapperHeader>
     </div>

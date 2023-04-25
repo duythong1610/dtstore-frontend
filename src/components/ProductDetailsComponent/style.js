@@ -35,11 +35,18 @@ export const WrapperPriceProduct = styled.div`
 
 export const WrapperPriceTextProduct = styled.h1`
   font-size: 32px;
-  margin: 0 8px 0 0;
+  margin: 0px 8px 0px 0px;
   font-weight: 500;
 `;
 
 export const WrapperDescriptionProduct = styled.div`
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 10;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  width: 100%;
   font-size: 16px;
   margin: 10px 0;
 `;

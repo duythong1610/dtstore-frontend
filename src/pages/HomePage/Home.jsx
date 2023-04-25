@@ -7,9 +7,12 @@ import {
 } from "./index";
 import SliderComponent from "../../components/Slider/SliderComponent";
 import Slider1 from "../../assets/img/slider1.png";
-import Slider2 from "../../assets/img/slider2.jpg";
+import Slider2 from "../../assets/img/slider2.png";
 import Slider3 from "../../assets/img/slider3.png";
 import Slider4 from "../../assets/img/slider4.png";
+import Slider5 from "../../assets/img/slider5.png";
+import Slider6 from "../../assets/img/slider6.png";
+
 import CardComponent from "../../components/CardComponent/CardComponent";
 import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import { useQuery } from "@tanstack/react-query";
@@ -73,7 +76,9 @@ function Home() {
             margin: "0 auto",
           }}
         >
-          <SliderComponent arrImages={[Slider1, Slider2, Slider3, Slider4]} />
+          <SliderComponent
+            arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
+          />
           <Loading isLoading={isLoading}>
             <WrapperProducts>
               {products?.data?.map((product) => {

@@ -108,7 +108,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             style={{
               height: "400px",
               width: "100%",
-              objectFit: "cover",
+              objectFit: "contain",
               display: "block",
               borderRadius: "12px",
             }}
@@ -166,15 +166,25 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
 
         <Col span={12} style={{ paddingLeft: "20px" }}>
           <WrapperStyleNameProduct>
-            {productDetails?.name}
+            {productDetails?.name}{" "}
           </WrapperStyleNameProduct>
+          {productDetails?.countInStock === 0 && (
+            <p style={{ color: "#e83a45", marginTop: "-10px" }}>
+              TẠM THỜI HẾT HÀNG{" "}
+            </p>
+          )}
 
           <div style={{ marginBottom: "10px" }}>
             <Rate
+              disabled
               value={productDetails?.rating}
-              style={{ fontSize: "12px", color: "yellow" }}
+              style={{ fontSize: "12px", color: "#e83a45" }}
             />
-            <WrapperStyleTextSell> | Đã bán 1000+</WrapperStyleTextSell>
+            {productDetails?.sold && (
+              <WrapperStyleTextSell>
+                {` | Đã bán ${productDetails?.sold}`}
+              </WrapperStyleTextSell>
+            )}
           </div>
 
           <WrapperPriceProduct>
@@ -190,7 +200,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                 : convertPrice(productDetails?.price)}
             </WrapperPriceTextProduct>
 
-            {productDetails?.discount && (
+            {productDetails?.discount > 0 && (
               <WrapperPriceTextProduct
                 style={{
                   textDecorationLine: "line-through",
@@ -203,7 +213,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                 {convertPrice(productDetails?.price)}
               </WrapperPriceTextProduct>
             )}
-            {productDetails?.discount && (
+            {productDetails?.discount > 0 && (
               <div
                 style={{
                   color: "rgb(255, 66, 78)",
@@ -250,6 +260,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             </div>
             <WrapperQuantityProduct>
               <WrapperBtnQuantityProduct
+                disabled={numProduct <= 1}
                 onClick={() => handleChangeCount("decrease")}
               >
                 <MinusOutlined style={{ color: "#000", fontSize: "20px" }} />
@@ -257,11 +268,11 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
 
               <WrapperInputNumber
                 size="small"
-                min={1}
-                max={productDetails?.countInStock}
                 defaultValue={1}
                 value={numProduct}
                 onChange={onChange}
+                min={1}
+                max={productDetails?.countInStock}
               />
               <WrapperBtnQuantityProduct
                 onClick={() => handleChangeCount("increase")}
@@ -271,7 +282,13 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             </WrapperQuantityProduct>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <div
+            style={
+              productDetails?.countInStock === 0
+                ? { display: "none" }
+                : { display: "flex", alignItems: "center", gap: "20px" }
+            }
+          >
             <ButtonComponent
               size={40}
               style={{
