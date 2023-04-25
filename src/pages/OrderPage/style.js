@@ -7,7 +7,6 @@ export const WrapperStyleHeader = styled.div`
   display: flex;
   align-items: center;
   position: sticky;
-  top: 120px;
   left: 0;
   z-index: 6;
   span {
@@ -81,15 +80,6 @@ export const WrapperCountOrder = styled.div`
   width: 84px;
   border: 1px solid #ccc;
   border-radius: 4px;
-`;
-
-export const WrapperRight = styled.div`
-  width: 320px;
-  margin-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
 `;
 
 export const WrapperInfo = styled.div`

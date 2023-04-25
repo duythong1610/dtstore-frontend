@@ -8,10 +8,6 @@ export const WrapperHeader = styled(Row)`
   width: 1270px;
 `;
 
-export const WrapperTextHeader = styled.span`
-  font-size: 16px;
-`;
-
 export const WrapperHeaderCart = styled.div`
   padding: 8px 16px;
   display: flex;
@@ -40,10 +36,6 @@ export const WrapperHeaderHome = styled.div`
   }
 `;
 
-export const WrapperHeaderHomeText = styled.span`
-  font-size: 16px;
-`;
-
 export const WrapperHeaderAccount = styled.div`
   cursor: pointer;
   max-width: 200px;
@@ -51,12 +43,10 @@ export const WrapperHeaderAccount = styled.div`
   display: flex;
   align-items: center;
   color: rgb(128, 128, 137);
-  gap: 8px;
-  font-size: 16px;
   font-weight: 400;
   &:hover {
     background: #27272a1f;
-    border-radius: 10px;
+    border-radius: 12px;
   }
 `;
 

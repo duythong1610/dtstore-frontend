@@ -3,11 +3,9 @@ import {
   StyleNameProduct,
   WrapperCardStyle,
   WrapperDiscountText,
-  WrapperImageCard,
   WrapperPriceOriginText,
   WrapperPriceText,
   WrapperReportText,
-  WrapperStyleTextSell,
 } from "./style";
 import { useNavigate } from "react-router-dom";
 import { convertPrice } from "../../until";
@@ -35,32 +33,34 @@ const CardComponent = ({
       hoverable
       style={{ padding: "10px" }}
       bodyStyle={{ padding: 0 }}
-      cover={<WrapperImageCard src={image} />}
       onClick={() => handleProductDetails(id)}
     >
-      {countInStock === 0 && (
-        <span style={{ position: "absolute", top: "30%", left: 0, right: 0 }}>
-          <img
-            src={Soldout}
-            alt=""
-            style={{ width: "150px", margin: "0 auto" }}
-          />
-        </span>
-      )}
+      <div className="relative">
+        <img
+          src={image}
+          className="my-2 md:my-4 mx-0 h-36 md:h-60 object-contain"
+        />
+        {countInStock === 0 && (
+          <span style={{ position: "absolute", top: "30%", left: 0, right: 0 }}>
+            <img src={Soldout} alt="" className="w-24 md:w-36 m-auto" />
+          </span>
+        )}
+      </div>
 
-      <StyleNameProduct>{name}</StyleNameProduct>
-      <WrapperReportText>
+      <StyleNameProduct className="text-sm md:text-lg">{name}</StyleNameProduct>
+      <WrapperReportText className="md:text-sm">
         <span style={{ marginRight: "4px" }}>
           <Rate
             disabled
             value={rating}
-            style={{ fontSize: "12px", color: "#e83a45" }}
+            style={{ fontSize: "11px", color: "#e83a45" }}
+            className="md:!text-sm"
           />
         </span>
 
-        <WrapperStyleTextSell>
+        <span className="text-xs md:text-sm">
           {sold && `| Đã bán ${sold}`}{" "}
-        </WrapperStyleTextSell>
+        </span>
       </WrapperReportText>
 
       <div
@@ -71,26 +71,22 @@ const CardComponent = ({
           marginTop: "5px",
         }}
       >
-        <WrapperPriceOriginText
-          style={
+        <div
+          className={
             discount > 0
-              ? {
-                  fontWeight: 400,
-                  fontSize: "14px",
-                  textDecorationLine: "line-through",
-                }
-              : { fontWeight: 500, color: " rgb(255, 66, 78)" }
+              ? "font-normal text-xs text-zinc-400 line-through"
+              : "font-medium text-sm md:text-base text-red-500"
           }
         >
-          <span style={{ marginRight: "8px" }}>{convertPrice(price)}</span>
-        </WrapperPriceOriginText>
+          <span>{convertPrice(price)}</span>
+        </div>
         {discount > 0 && (
           <WrapperDiscountText>{`-${discount}%` || "-5%"}</WrapperDiscountText>
         )}
       </div>
 
       {discount > 0 && (
-        <WrapperPriceText>
+        <WrapperPriceText className="text-red-500 text-sm md:text-base">
           <span style={{ marginRight: "8px" }}>
             {convertPrice(price - (price * discount) / 100)}
           </span>

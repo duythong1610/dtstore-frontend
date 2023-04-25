@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import {
-  WrapperTypeProduct,
-  WrapperButtonMore,
-  WrapperProducts,
-} from "./index";
+import { WrapperTypeProduct, WrapperButtonMore } from "./index";
 import SliderComponent from "../../components/Slider/SliderComponent";
 import Slider1 from "../../assets/img/slider1.png";
 import Slider2 from "../../assets/img/slider2.png";
@@ -57,7 +53,7 @@ function Home() {
 
   return (
     <>
-      <div style={{ width: "1270px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1270px", margin: "0 auto" }}>
         <WrapperTypeProduct>
           {typeProduct.map((item, index) => {
             return <TypeProduct key={index} name={item} />;
@@ -66,13 +62,13 @@ function Home() {
       </div>
 
       <div
-        className="body"
+        className="min-h-screen"
         style={{ width: "100%", backgroundColor: "#efefef" }}
       >
         <div
           id="container"
           style={{
-            width: "1270px",
+            maxWidth: "1270px",
             margin: "0 auto",
           }}
         >
@@ -80,7 +76,7 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
           <Loading isLoading={isLoading}>
-            <WrapperProducts>
+            <div className="grid gap-5 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
               {products?.data?.map((product) => {
                 return (
                   <CardComponent
@@ -98,7 +94,7 @@ function Home() {
                   />
                 );
               })}
-            </WrapperProducts>
+            </div>
           </Loading>
 
           <div

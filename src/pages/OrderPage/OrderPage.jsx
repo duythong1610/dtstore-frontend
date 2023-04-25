@@ -6,7 +6,6 @@ import {
   WrapperItemOrder,
   WrapperLeft,
   WrapperListOrder,
-  WrapperRight,
   WrapperStyleHeader,
   WrapperStyleHeaderDilivery,
   WrapperTotal,
@@ -293,12 +292,12 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div style={{ background: "#f5f5fa", with: "100%", minHeight: "100vh" }}>
-      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
+    <div style={{ background: "#f5f5fa", width: "100%", minHeight: "100vh" }}>
+      <div className="h-full max-w-7xl px-5 m-auto">
         <h1 style={{ padding: "12px 0", fontSize: "24px", margin: "0" }}>
           GIỎ HÀNG
         </h1>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="flex justify-center flex-col md:flex-row">
           <WrapperLeft>
             <WrapperStyleHeaderDilivery>
               <StepComponent
@@ -314,8 +313,8 @@ const OrderPage = () => {
                 }
               />
             </WrapperStyleHeaderDilivery>
-            <WrapperStyleHeader>
-              <span style={{ display: "inline-block", width: "390px" }}>
+            <WrapperStyleHeader className="top-60 md:top-28">
+              <span>
                 <Checkbox
                   onChange={handleOnchangeCheckAll}
                   checked={listChecked?.length === order?.orderItems?.length}
@@ -324,17 +323,20 @@ const OrderPage = () => {
                   Tất cả ({order?.orderItems?.length} sản phẩm)
                 </span>
               </span>
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>Đơn giá</span>
-                <span style={{ marginRight: "-10px" }}>Số lượng</span>
-                <span style={{ marginRight: "-20px" }}>Thành tiền</span>
+              <div className="md:flex-1 flex items-center">
+                <span className="hidden md:block">Đơn giá</span>
+                <span
+                  className="hidden md:block"
+                  style={{ marginRight: "-10px" }}
+                >
+                  Số lượng
+                </span>
+                <span
+                  className="hidden md:block"
+                  style={{ marginRight: "-20px" }}
+                >
+                  Thành tiền
+                </span>
                 <Tooltip placement="bottom" title={"Xóa các mục đã chọn"}>
                   <DeleteOutlined
                     style={{ cursor: "pointer" }}
@@ -343,19 +345,15 @@ const OrderPage = () => {
                 </Tooltip>
               </div>
             </WrapperStyleHeader>
-            <WrapperListOrder>
+            <WrapperListOrder className="flex-col md:flex-row">
               {order?.orderItems?.map((order) => {
                 console.log({ order });
                 return (
-                  <WrapperItemOrder key={order?.product}>
-                    <div
-                      style={{
-                        width: "390px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 15,
-                      }}
-                    >
+                  <WrapperItemOrder
+                    className="flex-col md:flex-row"
+                    key={order?.product}
+                  >
+                    <div class="flex items-center gap-3 w-full md:w-96">
                       <Checkbox
                         onChange={onChange}
                         value={order?.product}
@@ -370,8 +368,8 @@ const OrderPage = () => {
                         }}
                       />
                       <div
+                        className="md:w-60 w-full"
                         style={{
-                          width: "260px",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
                           whiteSpace: "nowrap",
@@ -388,7 +386,7 @@ const OrderPage = () => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <span>
+                      <span className="hidden md:block">
                         <span style={{ fontSize: "13px", color: "#242424" }}>
                           {order?.discount
                             ? convertPrice(priceDiscount(order?.price, order))
@@ -466,7 +464,7 @@ const OrderPage = () => {
               })}
             </WrapperListOrder>
           </WrapperLeft>
-          <WrapperRight>
+          <div className="mt-5 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
             <div
               style={{
                 width: "100%",
@@ -616,7 +614,7 @@ const OrderPage = () => {
                 textButton={`Mua hàng (${listChecked?.length})`}
               ></ButtonComponent>
             </div>
-          </WrapperRight>
+          </div>
         </div>
       </div>
       <ModalComponent

@@ -6,10 +6,6 @@ import {
   WrapperHeader,
   WrapperHeaderAccount,
   WrapperHeaderAccountText,
-  WrapperHeaderCart,
-  WrapperHeaderHome,
-  WrapperHeaderHomeText,
-  WrapperTextHeader,
 } from "./style";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
@@ -97,9 +93,12 @@ function HeaderComponent() {
     >
       <WrapperHeader>
         <Col span={4}>
-          <WrapperTextHeader>Logo nhe anh em</WrapperTextHeader>
+          <span className="hidden md:block">Logo nhe anh em</span>
         </Col>
-        <Col span={11}>
+        <Col
+          span={8}
+          className="flex-none md:flex-initial max-w-none m-auto md:m-0"
+        >
           <ButtonInputSearch
             border="none"
             placeholder="Tìm sản phẩm "
@@ -111,23 +110,23 @@ function HeaderComponent() {
           />
         </Col>
         <Col
-          span={9}
-          style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+          className="flex flex-none justify-center gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
+          span={10}
         >
           <NavLink
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
-                : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
             }
           >
             <HomeOutlined style={{ fontSize: "22px" }} />
 
-            <WrapperHeaderHomeText>Trang chủ</WrapperHeaderHomeText>
+            <span className="text-sm md:text-base">Trang chủ</span>
           </NavLink>
           <Loading isLoading={loading}>
-            <WrapperHeaderAccount>
+            <WrapperHeaderAccount className="flex-col md:flex-row gap-1 md:gap-2">
               {userAvatar ? (
                 <img
                   src={userAvatar}
@@ -150,20 +149,16 @@ function HeaderComponent() {
                     content={content}
                     style={{ padding: "0px" }}
                   >
-                    <WrapperHeaderAccountText
-                      style={{ cursor: "pointer", fontSize: "16px" }}
-                    >
+                    <span className="text-sm md:text-base cursor-pointer">
                       Tài khoản
-                    </WrapperHeaderAccountText>
+                    </span>
                   </Popover>
                 </>
               ) : (
                 <div onClick={handleNavigate}>
-                  <WrapperHeaderAccountText
-                    style={{ cursor: "pointer", fontSize: "16px" }}
-                  >
+                  <span className="text-sm md:text-base cursor-pointer">
                     Tài khoản
-                  </WrapperHeaderAccountText>
+                  </span>
                 </div>
               )}
             </WrapperHeaderAccount>
@@ -172,8 +167,8 @@ function HeaderComponent() {
             to="/order"
             className={({ isActive }) =>
               setActive(isActive) ?? active
-                ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
-                : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
             }
             //  active
             //    ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
@@ -190,7 +185,7 @@ function HeaderComponent() {
               />
             </Badge>
 
-            <WrapperTextHeader>Giỏ hàng</WrapperTextHeader>
+            <span className="text-sm md:text-base">Giỏ hàng</span>
           </NavLink>
         </Col>
       </WrapperHeader>

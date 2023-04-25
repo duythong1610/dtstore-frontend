@@ -2,6 +2,7 @@ import Slider from "react-slick";
 import styled from "styled-components";
 
 export const WrapperSliderStyle = styled(Slider)`
+  width: 100%;
   padding-top: 20px;
   .slick-list {
     border-radius: 12px;
