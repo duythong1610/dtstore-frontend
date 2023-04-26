@@ -3,6 +3,7 @@ import ProductDetailsComponent from "../../components/ProductDetailsComponent/Pr
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb } from "antd";
 import Comment from "../../components/Comment/Comment";
+import ProductSimilar from "../../components/ProductSimilarComponent/ProductSimilar";
 
 function ProductDetailsPage() {
   const [productDetails, setProductDetails] = useState("");
@@ -12,15 +13,8 @@ function ProductDetailsPage() {
   };
 
   return (
-    <div style={{ padding: "0 120px", background: "#efefef", height: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          borderRadius: "8px",
-          maxWidth: "1270px",
-          margin: "0 auto",
-        }}
-      >
+    <div style={{ background: "#efefef", height: "100%" }}>
+      <div className="hidden md:flex flex-col max-w-7xl rounded-lg m-auto">
         <Breadcrumb
           style={{ padding: "8px 0", fontSize: 16 }}
           items={[
@@ -36,20 +30,13 @@ function ProductDetailsPage() {
           ]}
         />
       </div>
-      <div
-        style={{
-          display: "flex",
-          borderRadius: "8px",
-          background: "#fff",
-          maxWidth: "1270px",
-          margin: "0 auto",
-        }}
-      >
+      <div className="flex md:flex-row flex-col max-w-7xl rounded-lg m-auto">
         <ProductDetailsComponent
           cbProductDetails={cbProductDetailsData}
           idProduct={id}
         />
       </div>
+      <ProductSimilar idProduct={id} />
       <Comment idProduct={id} />
     </div>
   );

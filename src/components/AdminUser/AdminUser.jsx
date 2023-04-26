@@ -22,20 +22,11 @@ import { getBase64 } from "../../until";
 
 const AdminUser = () => {
   const user = useSelector((state) => state.user);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [rowSelected, setRowSelected] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const [stateUser, setStateUser] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    isAdmin: false,
-  });
 
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -48,15 +39,18 @@ const AdminUser = () => {
   const [form] = Form.useForm();
 
   const fetchUserDetails = async (rowSelected) => {
-    const res = await UserService.getDetailsUser(rowSelected);
+    const res = await UserService.getDetailsUser(
+      rowSelected,
+      user?.access_token
+    );
     if (res?.data) {
       setStateUserDetails({
-        name: res?.data.name,
-        email: res?.data.email,
-        phone: res?.data.phone,
-        isAdmin: res?.data.isAdmin,
-        avatar: res?.data.avatar,
-        address: res?.data.address,
+        name: res?.data?.name,
+        email: res?.data?.email,
+        phone: res?.data?.phone,
+        isAdmin: res?.data?.isAdmin,
+        avatar: res?.data?.avatar,
+        address: res?.data?.address,
       });
     }
 
@@ -116,20 +110,6 @@ const AdminUser = () => {
     );
   };
 
-  const mutation = useMutationHooks((data) => {
-    const { name, price, countInStock, rating, type, image, description } =
-      data;
-    return UserService.createUser({
-      name,
-      price,
-      countInStock,
-      rating,
-      type,
-      image,
-      description,
-    });
-  });
-
   const mutationUpdate = useMutationHooks((data) => {
     const { id, token, ...rest } = data;
     return UserService.updateUser(id, token, { ...rest });
@@ -145,7 +125,7 @@ const AdminUser = () => {
     return UserService.deleteManyUser(ids, token);
   });
   const getAllUsers = async () => {
-    const res = await UserService.getAllUser();
+    const res = await UserService.getAllUser(user?.access_token);
     return res.data;
   };
 
@@ -156,7 +136,6 @@ const AdminUser = () => {
 
   const { data: users, isLoading: isLoadingUser } = queryUser;
 
-  const { data, isLoading, isSuccess, isError } = mutation;
   const {
     data: dataUpdated,
     isLoading: isLoadingUpdated,
@@ -177,15 +156,6 @@ const AdminUser = () => {
     isSuccess: isSuccessDeletedMany,
     isError: isErrorDeletedMany,
   } = mutationDeleteMany;
-
-  useEffect(() => {
-    if (isSuccess && data?.status === "OK") {
-      message.success();
-      handleCancel();
-    } else if (isError) {
-      message.error();
-    }
-  }, [isSuccess]);
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === "OK") {
@@ -219,14 +189,6 @@ const AdminUser = () => {
     onFinish();
   };
 
-  const onFinish = () => {
-    mutation.mutate(stateUser),
-      {
-        onSettled: () => {
-          queryUser.refetch();
-        },
-      };
-  };
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateUser({
@@ -475,114 +437,6 @@ const AdminUser = () => {
           handleDeleteMany={handleDeleteManyUser}
         />
       </div>
-
-      <ModalComponent
-        forceRender
-        title="Basic Modal"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Loading isLoading={isLoading}>
-          <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            form={form}
-            autoComplete="off"
-          >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
-            >
-              <InputComponent
-                value={stateUser.name}
-                onChange={handleChange}
-                name="name"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: "Please input your email!" }]}
-            >
-              <InputComponent
-                value={stateUser.email}
-                onChange={handleChange}
-                name="email"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Phone"
-              name="phone"
-              rules={[{ required: true, message: "Please input your phone!" }]}
-            >
-              <InputComponent
-                value={stateUser.phone}
-                onChange={handleChange}
-                name="phone"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[{ required: true, message: "Please input your phone!" }]}
-            >
-              <InputComponent
-                value={stateUser.phone}
-                onChange={handleChange}
-                name="address"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Admin"
-              name="isAdmin"
-              rules={[
-                { required: true, message: "Please input your password!" },
-              ]}
-            >
-              <InputComponent
-                value={stateUser.isAdmin}
-                onChange={handleChange}
-                name="isAdmin"
-              />
-            </Form.Item>
-
-            {/* <Form.Item
-              label="Image"
-              name="image"
-              rules={[
-                { required: true, message: "Please input your password!" },
-              ]}
-            >
-              <WrapperUploadFile
-                maxCount={1}
-                onChange={handleChangeImageProduct}
-              >
-                <Button icon={<UploadOutlined />} />
-                {stateUser.image && (
-                  <img
-                    src={stateUser.image}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                    alt="avatar"
-                  />
-                )}
-              </WrapperUploadFile>
-            </Form.Item> */}
-          </Form>
-        </Loading>
-      </ModalComponent>
 
       <DrawerComponent
         title="Thông tin người dùng"

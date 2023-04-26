@@ -13,7 +13,6 @@ export const WrapperStyleColImage = styled(Col)`
 
 export const WrapperStyleNameProduct = styled.h1`
   color: rgb(36, 36, 36);
-  font-size: 26px;
   font-weight: 400;
   line-height: 32px;
   word-break: break-word;

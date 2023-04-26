@@ -6,7 +6,11 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import InputComponent from "../InputComponent/InputComponent";
-import { FieldTimeOutlined } from "@ant-design/icons";
+import {
+  FieldTimeOutlined,
+  CheckCircleFilled,
+  SendOutlined,
+} from "@ant-design/icons";
 import * as message from "../Message/Message";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
@@ -23,17 +27,21 @@ const Comment = ({ idProduct }) => {
   }, [idProduct]);
 
   const handleComment = async () => {
-    const res = await ProductService.postComment(
-      productDetails?._id,
-      commentText,
-      user?.access_token
-    );
-    if (res) {
-      message.success("Gửi đánh giá thành công");
-      fetchProductDetails();
-      setCommentText({ text: "", createAt: "" });
+    if (commentText.text) {
+      const res = await ProductService.postComment(
+        productDetails?._id,
+        commentText,
+        user?.access_token
+      );
+      if (res) {
+        message.success("Gửi đánh giá thành công");
+        fetchProductDetails();
+        setCommentText({ text: "", createAt: "" });
+      }
+      return res;
+    } else {
+      message.error("Vui lòng nhập nội dung đánh giá");
     }
-    return res;
   };
   const onChangeComment = (e) => {
     setCommentText({
@@ -45,20 +53,17 @@ const Comment = ({ idProduct }) => {
   return (
     <div
       style={{
-        width: "1270px",
+        maxWidth: "1270px",
         borderRadius: "12px",
         margin: "0 auto",
       }}
     >
-      <h1 style={{ fontSize: "24px", padding: "12px 0" }}>
+      <p className="text-base md:text-2xl px-4 mb-2 font-medium">
         {" "}
         Đánh giá sản phẩm:
-      </h1>
+      </p>
 
-      <div
-        className="comment-list"
-        style={{ maxHeight: "400px", overflowX: "hidden", overflowY: "auto" }}
-      >
+      <div className="comment-list px-4 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96">
         {productDetails?.comments?.map((comment) => {
           const timeAgo = Math.floor(
             (new Date().getTime() - new Date(comment?.createAt).getTime()) /
@@ -79,7 +84,7 @@ const Comment = ({ idProduct }) => {
               let day = Math.floor(timeAgo / 60 / 24);
               return day + " ngày trước";
             } else {
-              return timeAgo + " phút trước";
+              return timeAgo === 0 ? "Vừa xong" : timeAgo + " phút trước";
             }
           };
 
@@ -97,73 +102,49 @@ const Comment = ({ idProduct }) => {
 
           return (
             <>
-              <div
-                className="comment-item"
-                style={{
-                  width: "700px",
-                  marginBottom: "30px",
-                  background: "rgb(255, 255, 255)",
-                  borderRadius: "12px",
-                  padding: "10px 20px",
-                }}
-              >
-                <div
-                  className="user-top"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                  }}
-                >
+              <div className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-2 rounded-xl">
+                <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
                   <div
                     className="user-info"
                     style={{ display: "flex", gap: 10, alignItems: "center" }}
                   >
                     <div className="user-img">
                       <img
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
-                        className="avatar"
+                        className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
                         src={comment?.postedBy?.avatar}
                         alt=""
                       />
                     </div>
                     <div>
-                      <h1
-                        className="user-name"
-                        style={{ margin: 0, fontSize: "16px" }}
-                      >
-                        {comment?.postedBy?.name}
-                      </h1>
-                      <h2
-                        style={{ margin: 0, fontSize: "13px", fontWeight: 400 }}
-                      >
+                      <div className="flex items-center gap-2 w-24">
+                        <h1 className="user-name m-0 text-sm md:text-base one-line max-w-[100px]">
+                          {comment?.postedBy?.name}
+                        </h1>
+                        {comment?.postedBy?.isAdmin && (
+                          <CheckCircleFilled className="text-blue-500" />
+                        )}
+                      </div>
+                      <h2 className="text-xs md:text-sm font-normal m-0">
                         {timeJoinRender(timeJoin)}
                       </h2>
                     </div>
                   </div>
-                  <div
-                    className="user-time"
-                    style={{ display: "flex", gap: "10px" }}
-                  >
-                    <div>
+                  <div className="user-time justify-between flex-auto flex mb-3 md:mb-5 gap-2 md:gap-3">
+                    <span className="flex items-center text-xs md:text-base">
                       {comment?.createAt && (
                         <FieldTimeOutlined style={{ marginRight: "5px" }} />
                       )}
                       {timeAgoRender(timeAgo)}
-                    </div>
-                    <div>
+                    </span>
+                    <span className="text-xs md:text-base">
                       {new Date(comment?.createAt).toLocaleDateString()}
-                    </div>
+                    </span>
                   </div>
                 </div>
                 <div className="user-bottom">
-                  <p style={{ marginLeft: "60px" }}>{comment?.text}</p>
+                  <p className="text-sm md:text-base md:ml-14 ml-[42px]">
+                    {comment?.text}
+                  </p>
                 </div>
               </div>
             </>
@@ -171,25 +152,9 @@ const Comment = ({ idProduct }) => {
         })}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-          width: "700px",
-        }}
-      >
-        <div
-          style={{
-            marginTop: "30px",
-            gap: 10,
-            padding: "20px",
-            height: "120px",
-            borderRadius: "12px",
-            background: "#fff",
-          }}
-        >
-          <div style={{ display: "flex", gap: 15 }}>
+      <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:p-0  ">
+        <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
+          <div className="flex items-center gap-4">
             <img
               src={
                 user?.avatar ||
@@ -204,21 +169,21 @@ const Comment = ({ idProduct }) => {
               alt="user-avatar"
             />
             <textarea
-              style={{
-                width: "100%",
-                height: "80px",
-                border: "none",
-                outline: "none",
-                marginTop: "15px",
-              }}
+              className="mt-3 w-full md:h-20 h-10 border-none outline-none"
               placeholder={"Viết đánh giá..."}
               value={commentText?.text}
               type="text"
               onChange={onChangeComment}
             />
+            <SendOutlined
+              onClick={handleComment}
+              className={
+                commentText?.text !== "" ? "text-blue-600" : "text-zinc-500"
+              }
+            />
           </div>
         </div>
-        {commentText?.text && (
+        {/* {commentText?.text && (
           <ButtonComponent
             style={{
               color: "rgb(255, 255, 255)",
@@ -234,7 +199,7 @@ const Comment = ({ idProduct }) => {
             textButton={"Gửi đánh giá"}
             onClick={handleComment}
           ></ButtonComponent>
-        )}
+        )} */}
       </div>
     </div>
   );

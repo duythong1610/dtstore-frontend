@@ -33,7 +33,7 @@ const CardComponent = ({
       hoverable
       style={{ padding: "10px" }}
       bodyStyle={{ padding: 0 }}
-      onClick={() => handleProductDetails(id)}
+      onClick={() => handleProductDetails()}
     >
       <div className="relative">
         <img

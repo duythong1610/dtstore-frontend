@@ -95,7 +95,11 @@ function HeaderComponent() {
       }}
     >
       <WrapperHeader
-        className={pathname === "/order" ? "!hidden md:!flex" : "flex"}
+        className={
+          pathname !== "/" && pathname !== "/profile-user"
+            ? "!hidden md:!flex"
+            : "flex"
+        }
       >
         <Col span={4}>
           <span className="hidden md:block">Logo nhe anh em</span>

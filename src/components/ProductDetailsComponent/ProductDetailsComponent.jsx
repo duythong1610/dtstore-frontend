@@ -6,11 +6,8 @@ import {
   WrapperBtnQuantityProduct,
   WrapperDescriptionProduct,
   WrapperInputNumber,
-  WrapperPriceProduct,
   WrapperPriceTextProduct,
   WrapperQuantityProduct,
-  WrapperStyleColImage,
-  WrapperStyleImageSmall,
   WrapperStyleNameProduct,
   WrapperStyleTextSell,
 } from "./style";
@@ -22,8 +19,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlice";
 import { convertPrice, priceDiscount } from "../../until";
+import { LeftOutlined } from "@ant-design/icons";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  console.log(scrollPosition);
   const [api, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const location = useLocation();
@@ -90,34 +103,36 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
 
   return (
     <Loading isLoading={isLoading}>
-      <Row
-        style={{
-          width: "1270px",
-          padding: "16px",
-          background: "#fff",
-          borderRadius: "12px",
-          margin: "0 auto",
-        }}
-      >
+      <Row className="flex flex-col md:flex-row max-w-7xl p-4 bg-white">
         {contextHolder}
-        <Col
-          span={12}
-          style={{ borderRight: "1px solid #e5e5e5", paddingRight: "10px" }}
+        <div
+          className="fixed py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10"
+          style={{
+            backgroundColor: `rgba(255, 255, 255, ${(
+              scrollPosition / 150
+            ).toFixed(1)})`,
+          }}
         >
+          <div className="">
+            <LeftOutlined
+              onClick={() => navigate("/")}
+              className={
+                scrollPosition === 0
+                  ? "w-8 h-8 text-lg text-white rounded-full bg-zinc-400 opacity-80"
+                  : "w-8 h-8 text-lg text-blue-500"
+              }
+            />
+          </div>
+        </div>
+        <Col className="max-w-full md:pr-3" span={12}>
           <img
-            style={{
-              height: "400px",
-              width: "100%",
-              objectFit: "contain",
-              display: "block",
-              borderRadius: "12px",
-            }}
+            className="h-60 md:h-96 w-full object-contain block rounded-xl"
             src={productDetails?.image}
             alt="img product"
             preview={false}
           />
 
-          <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
+          {/* <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
             <WrapperStyleColImage span={4}>
               <WrapperStyleImageSmall
                 src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
@@ -161,11 +176,11 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                 preview={false}
               />
             </WrapperStyleColImage>
-          </Row>
+          </Row> */}
         </Col>
 
-        <Col span={12} style={{ paddingLeft: "20px" }}>
-          <WrapperStyleNameProduct>
+        <Col span={12} className="max-w-full md:pl-5">
+          <WrapperStyleNameProduct className="text-slate-900 md:text-2xl text-xl md:mt-0 mt-3">
             {productDetails?.name}{" "}
           </WrapperStyleNameProduct>
           {productDetails?.countInStock === 0 && (
@@ -187,49 +202,46 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             )}
           </div>
 
-          <WrapperPriceProduct>
-            <WrapperPriceTextProduct
-              style={{
-                color: productDetails?.discount ? "rgb(255, 66, 78)" : "#333",
-              }}
+          <div className="flex items-end bg-gray-100 md:px-3 px-2 md:py-5 py-3 rounded">
+            <div
+              className={
+                productDetails?.discount
+                  ? "md:text-3xl text-2xl font-medium mr-2 text-red-500"
+                  : "md:text-3xl text-2xl font-medium mr-2 text-black"
+              }
             >
               {productDetails?.discount
                 ? convertPrice(
                     priceDiscount(productDetails?.price, productDetails)
                   )
                 : convertPrice(productDetails?.price)}
-            </WrapperPriceTextProduct>
+            </div>
 
             {productDetails?.discount > 0 && (
-              <WrapperPriceTextProduct
-                style={{
-                  textDecorationLine: "line-through",
-                  fontSize: "16px",
-                  lineHeight: "40px",
-                  color: "#808089",
-                  fontWeight: 400,
-                }}
-              >
-                {convertPrice(productDetails?.price)}
-              </WrapperPriceTextProduct>
-            )}
-            {productDetails?.discount > 0 && (
-              <div
-                style={{
-                  color: "rgb(255, 66, 78)",
-                  fontWeight: 500,
-                  lineHeight: "40px",
-                }}
-              >
-                -{productDetails?.discount}%
+              <div className="flex items-center -mb-2">
+                <span className="line-through text-sm md:text-base font-medium mr-2 text-gray-400">
+                  {convertPrice(productDetails?.price)}
+                </span>
+
+                {productDetails?.discount > 0 && (
+                  <span
+                    style={{
+                      color: "rgb(255, 66, 78)",
+                      fontWeight: 500,
+                      lineHeight: "40px",
+                    }}
+                  >
+                    -{productDetails?.discount}%
+                  </span>
+                )}
               </div>
             )}
-          </WrapperPriceProduct>
+          </div>
 
           <WrapperDescriptionProduct>
-            <span style={{ fontSize: "16px" }}>
+            {/* <span style={{ fontSize: "16px" }}>
               Mô tả sản phẩm: {productDetails?.description}
-            </span>
+            </span> */}
           </WrapperDescriptionProduct>
           <WrapperAddressProduct>
             <span style={{ fontSize: "16px" }}>Giao đến </span>
@@ -283,10 +295,10 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
           </div>
 
           <div
-            style={
+            className={
               productDetails?.countInStock === 0
-                ? { display: "none" }
-                : { display: "flex", alignItems: "center", gap: "20px" }
+                ? "hidden"
+                : "fixed bottom-0 left-0 right-0 z-10 px-5 py-3 bg-white md:static flex flex-row-reverse md:flex-row items-center gap-5"
             }
           >
             <ButtonComponent

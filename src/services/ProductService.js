@@ -42,6 +42,13 @@ export const getDetailsProduct = async (id) => {
   return res.data;
 };
 
+export const getAllProductSimilar = async (id) => {
+  const res = await axios.get(
+    `https://dtstore-backend.onrender.com/api/product/get-product-similar/${id}`
+  );
+  return res.data;
+};
+
 export const createProduct = async (data) => {
   const res = await axios.post(
     "https://dtstore-backend.onrender.com/api/product/create-product",

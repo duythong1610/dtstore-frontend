@@ -23,6 +23,10 @@
   height: 30px;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   height: 30px;
@@ -31,6 +35,15 @@
 
 .btn-sign-up:disable {
   background: #ccc;
+}
+
+.one-line {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .ant-popover-inner {
