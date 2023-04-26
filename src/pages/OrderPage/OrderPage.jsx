@@ -619,7 +619,7 @@ const OrderPage = () => {
                   </span>
                 </span>
               </div>
-              <div className="px-5 md:p-0 bg-white">
+              <div className="px-5 pb-2 md:p-0  bg-white">
                 <ButtonComponent
                   className="w-full m-0 md:w-80 md:mt-2"
                   onClick={() => handleAddCard()}
