@@ -9,7 +9,7 @@ import {
 } from "./style";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useDispatch } from "react-redux";
@@ -27,6 +27,9 @@ function HeaderComponent() {
   const [userAvatar, setUserAvatar] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  console.log(pathname);
 
   const handleNavigate = () => {
     navigate("/sign-in");
@@ -91,7 +94,9 @@ function HeaderComponent() {
         justifyContent: "center",
       }}
     >
-      <WrapperHeader>
+      <WrapperHeader
+        className={pathname === "/order" ? "!hidden md:!flex" : "flex"}
+      >
         <Col span={4}>
           <span className="hidden md:block">Logo nhe anh em</span>
         </Col>

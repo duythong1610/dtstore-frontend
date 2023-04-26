@@ -2,13 +2,11 @@ import { Checkbox, Form, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   WrapperCountOrder,
-  WrapperInfo,
   WrapperItemOrder,
   WrapperLeft,
   WrapperListOrder,
   WrapperStyleHeader,
   WrapperStyleHeaderDilivery,
-  WrapperTotal,
 } from "./style";
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -35,11 +33,13 @@ import { useNavigate } from "react-router-dom";
 import StepComponent from "../../components/StepComponent/StepComponent";
 import MySwal from "../../components/SweetAlert/SweetAlert";
 import { priceDiscount } from "../../until";
+import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const [voucherCode, setVoucherCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [moreInfoOrder, setMoreInfoOrder] = useState(false);
 
   const [isVoucher, setIsVoucher] = useState(false);
   const [priceVoucher, setPriceVoucher] = useState(0);
@@ -279,16 +279,16 @@ const OrderPage = () => {
   };
   const itemsDelivery = [
     {
-      title: "20.000 VND",
-      description: "Dưới 200.000 VND",
+      title: "Phí giao hàng 20K",
+      description: "Đơn hàng dưới 200K",
     },
     {
-      title: "10.000 VND",
-      description: "Từ 200.000 VND đến dưới 500.000 VND",
+      title: "Phí giao hàng 10K",
+      description: "Đơn hàng từ 200K đến 500K",
     },
     {
-      title: "0 VND",
-      description: "Trên 500.000 VND",
+      title: "Freeship",
+      description: "Đơn hàng trên 500K",
     },
   ];
   return (
@@ -313,7 +313,7 @@ const OrderPage = () => {
                 }
               />
             </WrapperStyleHeaderDilivery>
-            <WrapperStyleHeader className="top-60 md:top-28">
+            <WrapperStyleHeader className="top-60 md:top-28 justify-between">
               <span>
                 <Checkbox
                   onChange={handleOnchangeCheckAll}
@@ -345,7 +345,7 @@ const OrderPage = () => {
                 </Tooltip>
               </div>
             </WrapperStyleHeader>
-            <WrapperListOrder className="flex-col md:flex-row">
+            <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto mb-[65%] md:mb-0">
               {order?.orderItems?.map((order) => {
                 console.log({ order });
                 return (
@@ -353,7 +353,7 @@ const OrderPage = () => {
                     className="flex-col md:flex-row"
                     key={order?.product}
                   >
-                    <div class="flex items-center gap-3 w-full md:w-96">
+                    <div class="flex items-center gap-3 w-full md:w-64">
                       <Checkbox
                         onChange={onChange}
                         value={order?.product}
@@ -367,25 +367,27 @@ const OrderPage = () => {
                           objectFit: "cover",
                         }}
                       />
-                      <div
-                        className="md:w-60 w-full"
-                        style={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {order?.name}
+                      <div className="flex flex-col">
+                        <span className="md:w-60 w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                          {order?.name}
+                        </span>
+                        {order?.discount > 0 && (
+                          <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
+                            {convertPrice(order?.price)}
+                          </span>
+                        )}
+
+                        <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                          {order?.discount
+                            ? convertPrice(
+                                priceDiscount(order?.price, order) *
+                                  order?.amount
+                              )
+                            : convertPrice(order?.price * order?.amount)}
+                        </span>
                       </div>
                     </div>
-                    <div
-                      style={{
-                        flex: 1,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
+                    <div className="flex items-center justify-between w-full mt-2">
                       <span className="hidden md:block">
                         <span style={{ fontSize: "13px", color: "#242424" }}>
                           {order?.discount
@@ -393,7 +395,7 @@ const OrderPage = () => {
                             : convertPrice(order?.price)}
                         </span>
                       </span>
-                      <WrapperCountOrder>
+                      <WrapperCountOrder className="ml-9">
                         <button
                           style={{
                             padding: "0px 8px",
@@ -441,13 +443,7 @@ const OrderPage = () => {
                           />
                         </button>
                       </WrapperCountOrder>
-                      <span
-                        style={{
-                          color: "rgb(255, 66, 78)",
-                          fontSize: "13px",
-                          fontWeight: 500,
-                        }}
-                      >
+                      <span className="hidden md:block md:text-red-500 text-sm font-medium">
                         {order?.discount
                           ? convertPrice(
                               priceDiscount(order?.price, order) * order?.amount
@@ -464,19 +460,18 @@ const OrderPage = () => {
               })}
             </WrapperListOrder>
           </WrapperLeft>
-          <div className="mt-5 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
-            <div
-              style={{
-                width: "100%",
-                position: "sticky",
-                top: "21px",
-                left: 0,
-              }}
-            >
-              <WrapperInfo>
+          <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
+            <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
+              <div
+                className={
+                  moreInfoOrder
+                    ? "px-5 py-3 md:py-5 bg-white"
+                    : "px-5 py-3 md:py-5 bg-white"
+                }
+              >
                 <div style={{ display: "flex" }}>
                   <InputComponent
-                    style={{ width: 200, marginRight: "5px" }}
+                    className="md:w-48 w-full mr-2"
                     type="text"
                     placeholder="Nhập mã giảm giá"
                     onChange={onChangeVoucher}
@@ -498,8 +493,14 @@ const OrderPage = () => {
                 >
                   {messageVoucher}
                 </span>
-              </WrapperInfo>
-              <WrapperInfo>
+              </div>
+              <div
+                className={
+                  moreInfoOrder
+                    ? "px-5 py-1 md:py-5 bg-white"
+                    : "px-5 py-1 md:py-5 bg-white"
+                }
+              >
                 <div>
                   <span>Địa chỉ: </span>
                   <span style={{ fontWeight: "bold" }}>
@@ -512,15 +513,15 @@ const OrderPage = () => {
                     Thay đổi
                   </span>
                 </div>
-              </WrapperInfo>
-              <WrapperInfo>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+              </div>
+              <div
+                className={
+                  moreInfoOrder
+                    ? "block px-5 py-1 md:py-5 bg-white"
+                    : "md:block px-5 py-1 md:py-5 hidden bg-white"
+                }
+              >
+                <div className="flex items-center justify-between">
                   <span>Tạm tính</span>
                   <span
                     style={{
@@ -571,45 +572,65 @@ const OrderPage = () => {
                     {convertPrice(diliveryPriceMemo)}
                   </span>
                 </div>
-              </WrapperInfo>
-              <WrapperTotal>
-                <span>Tổng tiền</span>
+              </div>
+              <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
+                <div className="flex items-center gap-1 leading-none">
+                  <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
+                    Tổng cộng
+                  </span>
+                  {listChecked?.length > 0 && (
+                    <div>
+                      {moreInfoOrder ? (
+                        <CaretDownOutlined className="text-gray-500" />
+                      ) : (
+                        <CaretUpOutlined className="text-gray-500" />
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <span style={{ display: "flex", flexDirection: "column" }}>
                   <span
-                    style={{
-                      color: "rgb(254, 56, 52)",
-                      fontSize: "24px",
-                      fontWeight: "bold",
-                    }}
+                    className={
+                      listChecked?.length === 0
+                        ? "text-sm font-medium md:text-base text-red-500"
+                        : "text-xl font-medium md:text-base text-red-500"
+                    }
                   >
-                    {isVoucher
-                      ? `${priceAddVoucher(totalPriceMemo)
-                          .toLocaleString()
-                          .replaceAll(",", ".")} VNĐ`
-                      : convertPrice(
-                          diliveryPriceMemo
-                            ? priceMemo - diliveryPriceMemo - priceVoucher
-                            : priceMemo
-                        )}
+                    {listChecked?.length === 0
+                      ? "Vui lòng chọn sản phẩm"
+                      : `${
+                          isVoucher
+                            ? `${priceAddVoucher(totalPriceMemo)
+                                .toLocaleString()
+                                .replaceAll(",", ".")} VNĐ`
+                            : convertPrice(
+                                diliveryPriceMemo
+                                  ? priceMemo - diliveryPriceMemo - priceVoucher
+                                  : priceMemo
+                              )
+                        }`}
                   </span>
-                  <span style={{ color: "#000", fontSize: "11px" }}>
+                  <span
+                    className={listChecked?.length === 0 ? "hidden" : "block"}
+                    style={{ color: "#000", fontSize: "11px" }}
+                  >
                     (Đã bao gồm VAT nếu có)
                   </span>
                 </span>
-              </WrapperTotal>
+              </div>
               <ButtonComponent
+                className="w-full m-0 md:w-80 md:mt-2"
                 onClick={() => handleAddCard()}
                 size={40}
                 styleButton={{
                   background: "#422AFB",
                   height: "48px",
-                  width: "320px",
                   border: "none",
                   borderRadius: "4px",
                   color: "#fff",
                   fontSize: "15px",
                   fontWeight: "700",
-                  marginTop: "10px",
                 }}
                 textButton={`Mua hàng (${listChecked?.length})`}
               ></ButtonComponent>

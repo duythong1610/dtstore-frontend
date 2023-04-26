@@ -2,7 +2,6 @@ import { Row } from "antd";
 import styled from "styled-components";
 
 export const WrapperHeader = styled(Row)`
-  display: flex;
   align-items: center;
   padding: 10px 0;
   width: 1270px;
