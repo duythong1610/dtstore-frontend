@@ -292,7 +292,7 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div style={{ background: "#f5f5fa", width: "100%", minHeight: "100vh" }}>
+    <div className="bg-slate-100 w-full min-h-screen">
       <div className="h-full max-w-7xl px-5 m-auto">
         <h1 style={{ padding: "12px 0", fontSize: "24px", margin: "0" }}>
           GIỎ HÀNG

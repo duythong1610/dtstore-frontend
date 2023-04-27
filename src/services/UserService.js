@@ -49,7 +49,7 @@ export const getDetailsUser = async (id, access_token) => {
   return res.data;
 };
 
-export const updateUser = async (id, access_token, data) => {
+export const updateUser = async (id, data, access_token) => {
   const res = await axiosJWT.put(
     `https://dtstore-backend.onrender.com/api/user/update-user/${id}`,
     data,

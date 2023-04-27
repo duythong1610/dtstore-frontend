@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperTypeProduct, WrapperButtonMore } from "./index";
+import { WrapperButtonMore } from "./index";
 import SliderComponent from "../../components/Slider/SliderComponent";
 import Slider1 from "../../assets/img/slider1.png";
 import Slider2 from "../../assets/img/slider2.png";
@@ -53,16 +53,13 @@ function Home() {
 
   return (
     <>
-      <WrapperTypeProduct>
+      <div className="flex my-2 text-base h-10 font-normal m-auto text-zinc-400 max-w-7xl">
         {typeProduct.map((item, index) => {
           return <TypeProduct key={index} name={item} />;
         })}
-      </WrapperTypeProduct>
+      </div>
 
-      <div
-        className="min-h-screen"
-        style={{ width: "100%", backgroundColor: "#efefef" }}
-      >
+      <div className="min-h-screen h-full w-full bg-slate-100">
         <div
           id="container"
           style={{
@@ -74,7 +71,7 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
           <Loading isLoading={isLoading}>
-            <div className="grid gap-5 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid gap-5 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
               {products?.data?.map((product) => {
                 return (
                   <CardComponent
@@ -95,18 +92,13 @@ function Home() {
             </div>
           </Loading>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "10px",
-            }}
-          >
+          <div className="flex justify-center -mt-[80px]">
             <WrapperButtonMore
               textButton={isPreviousData ? "Loading..." : "Xem thêm"}
               type="outline"
               styleButton={{
                 backgroundColor: "#422AFB",
+                marginBottom: "20%",
                 color: "#fff",
                 width: "240px",
                 height: "38px",

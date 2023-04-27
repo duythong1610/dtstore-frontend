@@ -9,12 +9,14 @@ const SliderComponent = ({ arrImages }) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
   };
   return (
-    <WrapperSliderStyle {...settings}>
+    <WrapperSliderStyle className="md:pt-5" {...settings}>
       {arrImages.map((img, index) => {
         return (
           <Image
+            className="!h-36 md:!h-auto"
             key={index}
             src={img}
             alt="slider"

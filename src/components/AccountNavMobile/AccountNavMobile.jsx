@@ -16,7 +16,7 @@ import {
   RightOutlined,
 } from "@ant-design/icons";
 
-const AccountNavMobile = () => {
+const AccountNavMobile = ({ handleToggleClass }) => {
   const user = useSelector((state) => state.user);
 
   return (
@@ -24,7 +24,7 @@ const AccountNavMobile = () => {
       <div className="max-w-7xl m-auto">
         <div className="content pt-5 px-5 flex flex-col md:flex-row">
           <div className="content-left md:w-1/4 md:px-5">
-            <div className="flex gap-2 mb-10">
+            <div className="flex gap-5 mb-10">
               <img
                 src={user?.avatar}
                 alt="user-avatar"
@@ -32,24 +32,24 @@ const AccountNavMobile = () => {
               />
               <div className="info flex flex-col">
                 <span>Tài khoản của</span>
-                <div className="flex items-center gap-1">
-                  <span className="font-medium">{user?.name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-xl">{user?.name}</span>
                   {user?.isAdmin && (
                     <CheckCircleFilled className="text-blue-500" />
                   )}
                 </div>
                 <span>
-                  Thành viên từ {new Date(user?.createdAt).toLocaleDateString()}
+                  Thành viên từ: {new Date(user?.createdAt).toLocaleDateString()}
                 </span>
               </div>
             </div>
-            <div className="h-[80vh] flex flex-col justify-between">
+            <div className="h-[70vh] flex flex-col justify-between">
               <ul>
                 {user?.isAdmin && (
                   <li>
                     <Link
                       to="/system-admin"
-                      className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                      className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                     >
                       <div className="flex items-center justify-center gap-3">
                         <SettingOutlined />
@@ -60,10 +60,10 @@ const AccountNavMobile = () => {
                     <hr />
                   </li>
                 )}
-                <li>
+                <li onClick={handleToggleClass}>
                   <Link
-                    to=""
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                    to="/profile-user"
+                    className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
                       <UserOutlined />
@@ -76,7 +76,7 @@ const AccountNavMobile = () => {
                 <li>
                   <Link
                     to=""
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                    className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
                       <OrderedListOutlined />
@@ -89,7 +89,7 @@ const AccountNavMobile = () => {
                 <li>
                   <Link
                     to=""
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                    className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
                       <EyeFilled className="text-gray-500" />
@@ -101,7 +101,7 @@ const AccountNavMobile = () => {
                 </li>
               </ul>
               <button
-                className="py-2 w-full bg-blue-600 text-sm md:text-base font-medium text-white h-10 md:w-1/4 rounded-lg"
+                className="py-5 w-full bg-blue-600 text-sm font-medium text-white h-14 rounded-lg"
                 // onClick={handleUpdate}
               >
                 Đăng xuất

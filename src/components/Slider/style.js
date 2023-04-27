@@ -3,10 +3,6 @@ import styled from "styled-components";
 
 export const WrapperSliderStyle = styled(Slider)`
   width: 100%;
-  padding-top: 20px;
-  .slick-list {
-    border-radius: 12px;
-  }
   & .slick-arrow.slick-prev {
     left: 12px;
     top: 50%;
@@ -20,7 +16,7 @@ export const WrapperSliderStyle = styled(Slider)`
   }
 
   & .slick-arrow.slick-next {
-    right: 28px;
+    right: 40px;
     top: 50%;
     z-index: 10;
     &::before {

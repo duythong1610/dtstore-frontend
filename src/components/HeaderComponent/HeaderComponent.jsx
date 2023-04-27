@@ -51,7 +51,7 @@ function HeaderComponent() {
     dispatch(searchProduct(searchText));
   };
 
-  const handleToggleClass = (e) => {
+  const handleToggleClass = () => {
     setIsToggle((current) => !current);
   };
 
@@ -218,7 +218,7 @@ function HeaderComponent() {
               className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
               onClick={handleToggleClass}
             />
-            <AccountNavMobile />
+            <AccountNavMobile handleToggleClass={handleToggleClass} />
           </div>
         </div>
       </div>
