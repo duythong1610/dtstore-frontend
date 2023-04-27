@@ -53,13 +53,11 @@ function Home() {
 
   return (
     <>
-      <div style={{ maxWidth: "1270px", margin: "0 auto" }}>
-        <WrapperTypeProduct>
-          {typeProduct.map((item, index) => {
-            return <TypeProduct key={index} name={item} />;
-          })}
-        </WrapperTypeProduct>
-      </div>
+      <WrapperTypeProduct>
+        {typeProduct.map((item, index) => {
+          return <TypeProduct key={index} name={item} />;
+        })}
+      </WrapperTypeProduct>
 
       <div
         className="min-h-screen"

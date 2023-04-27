@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Popover } from "antd";
+import { Badge, Button, Col, Popover, Row } from "antd";
 // import Search from "antd/lib/transfer/search";
-import {
-  WrapperContentPopup,
-  WrapperHeader,
-  WrapperHeaderAccount,
-  WrapperHeaderAccountText,
-} from "./style";
+import { WrapperContentPopup, WrapperHeaderAccount } from "./style";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -17,8 +12,12 @@ import { resetUser } from "../../redux/slides/userSlice";
 import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlice";
 import { HomeOutlined } from "@ant-design/icons";
+import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
+import { CloseCircleFilled } from "@ant-design/icons";
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
+  const [isToggle, setIsToggle] = useState(false);
+
   const [active, setActive] = useState(false);
   const order = useSelector((state) => state.order);
   const [searchText, setSearchText] = useState("");
@@ -52,7 +51,9 @@ function HeaderComponent() {
     dispatch(searchProduct(searchText));
   };
 
-  console.log({ user });
+  const handleToggleClass = (e) => {
+    setIsToggle((current) => !current);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -87,18 +88,12 @@ function HeaderComponent() {
   );
 
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <WrapperHeader
+    <div className="h-0 md:h-full md:max-w-7xl md:m-auto md:py-3">
+      <Row
         className={
           pathname !== "/" && pathname !== "/profile-user"
             ? "!hidden md:!flex"
-            : "flex"
+            : "md:flex flex-nowrap md:items-center md:w-7xl"
         }
       >
         <Col span={4}>
@@ -109,6 +104,11 @@ function HeaderComponent() {
           className="flex-none md:flex-initial max-w-none m-auto md:m-0"
         >
           <ButtonInputSearch
+            className={
+              pathname === "/profile-user" && pathname === "/"
+                ? "hidden md:block"
+                : "hidden md:block"
+            }
             border="none"
             placeholder="Tìm sản phẩm "
             textButton="Tìm kiếm"
@@ -157,11 +157,19 @@ function HeaderComponent() {
                     trigger="click"
                     content={content}
                     style={{ padding: "0px" }}
+                    className="hidden md:block"
                   >
-                    <span className="text-sm md:text-base cursor-pointer">
+                    {" "}
+                    <span className="text-sm md:text-base !block  cursor-pointer">
                       Tài khoản
                     </span>
                   </Popover>
+                  <span
+                    className="text-sm md:text-base md:hidden cursor-pointer"
+                    onClick={handleToggleClass}
+                  >
+                    Tài khoản
+                  </span>
                 </>
               ) : (
                 <div onClick={handleNavigate}>
@@ -197,7 +205,23 @@ function HeaderComponent() {
             <span className="text-sm md:text-base">Giỏ hàng</span>
           </NavLink>
         </Col>
-      </WrapperHeader>
+      </Row>
+
+      <div className={!isToggle ? "nav nav-black" : "nav visible nav-black"}>
+        <div className={!isToggle ? "nav nav-pink" : "nav visible nav-pink"}>
+          <div
+            className={
+              !isToggle ? "nav nav-white relative" : "nav visible nav-white"
+            }
+          >
+            <CloseCircleFilled
+              className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
+              onClick={handleToggleClass}
+            />
+            <AccountNavMobile />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
