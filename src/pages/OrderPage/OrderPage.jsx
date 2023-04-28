@@ -1,4 +1,4 @@
-import { Checkbox, Form, Tooltip } from "antd";
+import { Badge, Checkbox, Form, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   WrapperCountOrder,
@@ -29,11 +29,16 @@ import * as UserService from "../../services/UserService";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/Message";
 import { updateUser } from "../../redux/slides/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import StepComponent from "../../components/StepComponent/StepComponent";
 import MySwal from "../../components/SweetAlert/SweetAlert";
 import { priceDiscount } from "../../until";
-import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import {
+  CaretUpOutlined,
+  CaretDownOutlined,
+  LeftOutlined,
+} from "@ant-design/icons";
+
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
@@ -292,92 +297,171 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div className="bg-slate-100 w-full min-h-screen">
-      <div className="h-full max-w-7xl px-5 m-auto">
-        <h1 style={{ padding: "12px 0", fontSize: "24px", margin: "0" }}>
-          GIỎ HÀNG
-        </h1>
-        <div className="flex justify-center flex-col md:flex-row">
-          <WrapperLeft>
-            <WrapperStyleHeaderDilivery>
-              <StepComponent
-                items={itemsDelivery}
-                current={
-                  diliveryPriceMemo === 10000
-                    ? 2
-                    : diliveryPriceMemo === 20000
-                    ? 1
-                    : order.orderItemsSelected.length === 0
-                    ? 0
-                    : 3
-                }
-              />
-            </WrapperStyleHeaderDilivery>
-            <WrapperStyleHeader className="top-60 md:top-28 justify-between">
-              <span>
-                <Checkbox
-                  onChange={handleOnchangeCheckAll}
-                  checked={listChecked?.length === order?.orderItems?.length}
-                ></Checkbox>
-                <span style={{ marginLeft: "15px" }}>
-                  Tất cả ({order?.orderItems?.length} sản phẩm)
+    <div className="bg-slate-100 w-full min-h-screen mt-12 md:mt-0">
+      <div className="h-full max-w-7xl px-5 m-auto pt-5 md:pt-0">
+        <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
+          <div className="flex justify-center items-center">
+            <LeftOutlined
+              onClick={() => navigate(-1)}
+              className={"w-8 h-8 text-lg text-blue-500 text-center"}
+            />
+          </div>
+          <div className="text-center w-full mr-8">
+            <h1 style={{ padding: "12px 0", fontSize: "24px", margin: "0" }}>
+              GIỎ HÀNG
+            </h1>
+          </div>
+        </div>
+        {order?.orderItems?.length === 0 ? (
+          <span>Chua co cai gi het ban oi</span>
+        ) : (
+          <div className="flex justify-center flex-col md:flex-row">
+            <WrapperLeft>
+              <WrapperStyleHeaderDilivery>
+                <StepComponent
+                  items={itemsDelivery}
+                  current={
+                    diliveryPriceMemo === 10000
+                      ? 2
+                      : diliveryPriceMemo === 20000
+                      ? 1
+                      : order.orderItemsSelected.length === 0
+                      ? 0
+                      : 3
+                  }
+                />
+              </WrapperStyleHeaderDilivery>
+              <WrapperStyleHeader className="top-60 md:top-28 justify-between">
+                <span>
+                  <Checkbox
+                    onChange={handleOnchangeCheckAll}
+                    checked={listChecked?.length === order?.orderItems?.length}
+                  ></Checkbox>
+                  <span style={{ marginLeft: "15px" }}>
+                    Tất cả ({order?.orderItems?.length} sản phẩm)
+                  </span>
                 </span>
-              </span>
-              <div className="md:flex-1 flex items-center">
-                <span className="hidden md:block">Đơn giá</span>
-                <span
-                  className="hidden md:block"
-                  style={{ marginRight: "-10px" }}
-                >
-                  Số lượng
-                </span>
-                <span
-                  className="hidden md:block"
-                  style={{ marginRight: "-20px" }}
-                >
-                  Thành tiền
-                </span>
-                <Tooltip placement="bottom" title={"Xóa các mục đã chọn"}>
-                  <DeleteOutlined
-                    style={{ cursor: "pointer" }}
-                    onClick={handleRemoveAllOrder}
-                  />
-                </Tooltip>
-              </div>
-            </WrapperStyleHeader>
-            <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto mb-[65%] md:mb-0">
-              {order?.orderItems?.map((order) => {
-                console.log({ order });
-                return (
-                  <WrapperItemOrder
-                    className="flex-col md:flex-row"
-                    key={order?.product}
+                <div className="md:flex-1 flex items-center">
+                  <span className="hidden md:block">Đơn giá</span>
+                  <span
+                    className="hidden md:block"
+                    style={{ marginRight: "-10px" }}
                   >
-                    <div class="flex items-center gap-3 w-full md:w-64">
-                      <Checkbox
-                        onChange={onChange}
-                        value={order?.product}
-                        checked={listChecked.includes(order?.product)}
-                      ></Checkbox>
-                      <img
-                        src={order?.image}
-                        style={{
-                          width: "77px",
-                          height: "79px",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <div className="flex flex-col">
-                        <span className="md:w-60 w-full overflow-hidden text-ellipsis whitespace-nowrap">
-                          {order?.name}
-                        </span>
-                        {order?.discount > 0 && (
-                          <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
-                            {convertPrice(order?.price)}
+                    Số lượng
+                  </span>
+                  <span
+                    className="hidden md:block"
+                    style={{ marginRight: "-20px" }}
+                  >
+                    Thành tiền
+                  </span>
+                  <Tooltip placement="bottom" title={"Xóa các mục đã chọn"}>
+                    <DeleteOutlined
+                      style={{ cursor: "pointer" }}
+                      onClick={handleRemoveAllOrder}
+                    />
+                  </Tooltip>
+                </div>
+              </WrapperStyleHeader>
+              <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto mb-[65%] md:mb-0">
+                {order?.orderItems?.map((order) => {
+                  console.log({ order });
+                  return (
+                    <WrapperItemOrder
+                      className="flex-col md:flex-row"
+                      key={order?.product}
+                    >
+                      <div class="flex items-center gap-3 w-full md:w-64">
+                        <Checkbox
+                          onChange={onChange}
+                          value={order?.product}
+                          checked={listChecked.includes(order?.product)}
+                        ></Checkbox>
+                        <img
+                          src={order?.image}
+                          style={{
+                            width: "77px",
+                            height: "79px",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <div className="flex flex-col">
+                          <span className="md:w-60 w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                            {order?.name}
                           </span>
-                        )}
+                          {order?.discount > 0 && (
+                            <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
+                              {convertPrice(order?.price)}
+                            </span>
+                          )}
 
-                        <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                          <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                            {order?.discount
+                              ? convertPrice(
+                                  priceDiscount(order?.price, order) *
+                                    order?.amount
+                                )
+                              : convertPrice(order?.price * order?.amount)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between w-full mt-2">
+                        <span className="hidden md:block">
+                          <span style={{ fontSize: "13px", color: "#242424" }}>
+                            {order?.discount
+                              ? convertPrice(priceDiscount(order?.price, order))
+                              : convertPrice(order?.price)}
+                          </span>
+                        </span>
+                        <WrapperCountOrder className="ml-9">
+                          <button
+                            style={{
+                              padding: "0px 8px",
+                              border: "none",
+                              background: "transparent",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              handleChangeCount(
+                                "decrease",
+                                order?.product,
+                                order?.amount === 1
+                              )
+                            }
+                          >
+                            <MinusOutlined
+                              style={{ color: "#000", fontSize: "10px" }}
+                            />
+                          </button>
+                          <WrapperInputNumber
+                            defaultValue={order?.amount}
+                            value={order?.amount}
+                            size="small"
+                            min={1}
+                            max={order?.countInstock}
+                          />
+                          <button
+                            style={{
+                              padding: "0px 8px",
+                              border: "none",
+                              background: "transparent",
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              handleChangeCount(
+                                "increase",
+                                order?.product,
+                                order?.amount === order.countInstock,
+                                order?.amount === 1
+                              )
+                            }
+                          >
+                            <PlusOutlined
+                              style={{ color: "#000", fontSize: "10px" }}
+                            />
+                          </button>
+                        </WrapperCountOrder>
+                        <span className="hidden md:block md:text-red-500 text-sm font-medium">
                           {order?.discount
                             ? convertPrice(
                                 priceDiscount(order?.price, order) *
@@ -385,163 +469,80 @@ const OrderPage = () => {
                               )
                             : convertPrice(order?.price * order?.amount)}
                         </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between w-full mt-2">
-                      <span className="hidden md:block">
-                        <span style={{ fontSize: "13px", color: "#242424" }}>
-                          {order?.discount
-                            ? convertPrice(priceDiscount(order?.price, order))
-                            : convertPrice(order?.price)}
-                        </span>
-                      </span>
-                      <WrapperCountOrder className="ml-9">
-                        <button
-                          style={{
-                            padding: "0px 8px",
-                            border: "none",
-                            background: "transparent",
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            handleChangeCount(
-                              "decrease",
-                              order?.product,
-                              order?.amount === 1
-                            )
-                          }
-                        >
-                          <MinusOutlined
-                            style={{ color: "#000", fontSize: "10px" }}
-                          />
-                        </button>
-                        <WrapperInputNumber
-                          defaultValue={order?.amount}
-                          value={order?.amount}
-                          size="small"
-                          min={1}
-                          max={order?.countInstock}
+                        <DeleteOutlined
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleDeleteOrder(order?.product)}
                         />
-                        <button
-                          style={{
-                            padding: "0px 8px",
-                            border: "none",
-                            background: "transparent",
-                            cursor: "pointer",
-                          }}
-                          onClick={() =>
-                            handleChangeCount(
-                              "increase",
-                              order?.product,
-                              order?.amount === order.countInstock,
-                              order?.amount === 1
-                            )
-                          }
-                        >
-                          <PlusOutlined
-                            style={{ color: "#000", fontSize: "10px" }}
-                          />
-                        </button>
-                      </WrapperCountOrder>
-                      <span className="hidden md:block md:text-red-500 text-sm font-medium">
-                        {order?.discount
-                          ? convertPrice(
-                              priceDiscount(order?.price, order) * order?.amount
-                            )
-                          : convertPrice(order?.price * order?.amount)}
-                      </span>
-                      <DeleteOutlined
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleDeleteOrder(order?.product)}
-                      />
-                    </div>
-                  </WrapperItemOrder>
-                );
-              })}
-            </WrapperListOrder>
-          </WrapperLeft>
-          <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
-            <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
-              <div
-                className={
-                  moreInfoOrder
-                    ? "px-5 py-3 md:py-5 bg-white"
-                    : "px-5 py-3 md:py-5 bg-white"
-                }
-              >
-                <div style={{ display: "flex" }}>
-                  <InputComponent
-                    className="md:w-48 w-full mr-2"
-                    type="text"
-                    placeholder="Nhập mã giảm giá"
-                    onChange={onChangeVoucher}
-                    value={voucherCode}
-                  />
-                  <ButtonComponent
-                    onClick={handleAddVoucher}
-                    textButton="Áp dụng"
-                    style={{ background: "rgb(66, 42, 251)", color: "#fff" }}
-                  ></ButtonComponent>
-                </div>
-                <span
-                  style={{
-                    color: "rgb(254, 56, 52)",
-                    display: "block",
-                    marginTop: "5px",
-                    fontSize: "14px",
-                  }}
+                      </div>
+                    </WrapperItemOrder>
+                  );
+                })}
+              </WrapperListOrder>
+            </WrapperLeft>
+
+            <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
+              <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
+                <div
+                  className={
+                    moreInfoOrder
+                      ? "px-5 py-3 md:py-5 bg-white"
+                      : "px-5 py-3 md:py-5 bg-white"
+                  }
                 >
-                  {messageVoucher}
-                </span>
-              </div>
-              <div
-                className={
-                  moreInfoOrder
-                    ? "px-5 py-1 md:py-5 bg-white"
-                    : "px-5 py-1 md:py-5 bg-white"
-                }
-              >
-                <div>
-                  <span>Địa chỉ: </span>
-                  <span style={{ fontWeight: "bold" }}>
-                    {`${user?.address}, ${user?.city}`}{" "}
-                  </span>
-                  <span
-                    onClick={handleChangeAddress}
-                    style={{ color: "blue", cursor: "pointer" }}
-                  >
-                    Thay đổi
-                  </span>
-                </div>
-              </div>
-              <div
-                className={
-                  moreInfoOrder
-                    ? "block px-5 py-1 md:py-5 bg-white"
-                    : "md:block px-5 py-1 md:py-5 hidden bg-white"
-                }
-              >
-                <div className="flex items-center justify-between">
-                  <span>Tạm tính</span>
+                  <div style={{ display: "flex" }}>
+                    <InputComponent
+                      className="md:w-48 w-full mr-2"
+                      type="text"
+                      placeholder="Nhập mã giảm giá"
+                      onChange={onChangeVoucher}
+                      value={voucherCode}
+                    />
+                    <ButtonComponent
+                      onClick={handleAddVoucher}
+                      textButton="Áp dụng"
+                      style={{ background: "rgb(66, 42, 251)", color: "#fff" }}
+                    ></ButtonComponent>
+                  </div>
                   <span
                     style={{
-                      color: "#000",
+                      color: "rgb(254, 56, 52)",
+                      display: "block",
+                      marginTop: "5px",
                       fontSize: "14px",
-                      fontWeight: "bold",
                     }}
                   >
-                    {convertPrice(priceMemo)}
+                    {messageVoucher}
                   </span>
                 </div>
-                {isVoucher && (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span>Giảm giá</span>
+                <div
+                  className={
+                    moreInfoOrder
+                      ? "px-5 py-1 md:py-5 bg-white"
+                      : "px-5 py-1 md:py-5 bg-white"
+                  }
+                >
+                  <div>
+                    <span>Địa chỉ: </span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {`${user?.address}, ${user?.city}`}{" "}
+                    </span>
+                    <span
+                      onClick={handleChangeAddress}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      Thay đổi
+                    </span>
+                  </div>
+                </div>
+                <div
+                  className={
+                    moreInfoOrder
+                      ? "block px-5 py-1 md:py-5 bg-white"
+                      : "md:block px-5 py-1 md:py-5 hidden bg-white"
+                  }
+                >
+                  <div className="flex items-center justify-between">
+                    <span>Tạm tính</span>
                     <span
                       style={{
                         color: "#000",
@@ -549,96 +550,118 @@ const OrderPage = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {convertPrice(priceVoucher)}
+                      {convertPrice(priceMemo)}
                     </span>
                   </div>
-                )}
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span>Phí giao hàng</span>
-                  <span
-                    style={{
-                      color: "#000",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {convertPrice(diliveryPriceMemo)}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
-                <div className="flex items-center gap-1 leading-none">
-                  <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
-                    Tổng cộng
-                  </span>
-                  {listChecked?.length > 0 && (
-                    <div>
-                      {moreInfoOrder ? (
-                        <CaretDownOutlined className="text-gray-500" />
-                      ) : (
-                        <CaretUpOutlined className="text-gray-500" />
-                      )}
+                  {isVoucher && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span>Giảm giá</span>
+                      <span
+                        style={{
+                          color: "#000",
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {convertPrice(priceVoucher)}
+                      </span>
                     </div>
                   )}
-                </div>
 
-                <span style={{ display: "flex", flexDirection: "column" }}>
-                  <span
-                    className={
-                      listChecked?.length === 0
-                        ? "text-sm font-medium md:text-base text-red-500"
-                        : "text-xl font-medium md:text-base text-red-500"
-                    }
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    {listChecked?.length === 0
-                      ? "Vui lòng chọn sản phẩm"
-                      : `${
-                          isVoucher
-                            ? `${priceAddVoucher(totalPriceMemo)
-                                .toLocaleString()
-                                .replaceAll(",", ".")} VNĐ`
-                            : convertPrice(
-                                diliveryPriceMemo
-                                  ? priceMemo - diliveryPriceMemo - priceVoucher
-                                  : priceMemo
-                              )
-                        }`}
+                    <span>Phí giao hàng</span>
+                    <span
+                      style={{
+                        color: "#000",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {convertPrice(diliveryPriceMemo)}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
+                  <div className="flex items-center gap-1 leading-none">
+                    <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
+                      Tổng cộng
+                    </span>
+                    {listChecked?.length > 0 && (
+                      <div>
+                        {moreInfoOrder ? (
+                          <CaretDownOutlined className="text-gray-500" />
+                        ) : (
+                          <CaretUpOutlined className="text-gray-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <span style={{ display: "flex", flexDirection: "column" }}>
+                    <span
+                      className={
+                        listChecked?.length === 0
+                          ? "text-sm font-medium md:text-base text-red-500"
+                          : "text-xl font-medium md:text-base text-red-500"
+                      }
+                    >
+                      {listChecked?.length === 0
+                        ? "Vui lòng chọn sản phẩm"
+                        : `${
+                            isVoucher
+                              ? `${priceAddVoucher(totalPriceMemo)
+                                  .toLocaleString()
+                                  .replaceAll(",", ".")} VNĐ`
+                              : convertPrice(
+                                  diliveryPriceMemo
+                                    ? priceMemo -
+                                        diliveryPriceMemo -
+                                        priceVoucher
+                                    : priceMemo
+                                )
+                          }`}
+                    </span>
+                    <span
+                      className={listChecked?.length === 0 ? "hidden" : "block"}
+                      style={{ color: "#000", fontSize: "11px" }}
+                    >
+                      (Đã bao gồm VAT nếu có)
+                    </span>
                   </span>
-                  <span
-                    className={listChecked?.length === 0 ? "hidden" : "block"}
-                    style={{ color: "#000", fontSize: "11px" }}
-                  >
-                    (Đã bao gồm VAT nếu có)
-                  </span>
-                </span>
-              </div>
-              <div className="px-5 pb-2 md:p-0  bg-white">
-                <ButtonComponent
-                  className="w-full m-0 md:w-80 md:mt-2"
-                  onClick={() => handleAddCard()}
-                  size={40}
-                  styleButton={{
-                    background: "#422AFB",
-                    height: "48px",
-                    border: "none",
-                    borderRadius: "4px",
-                    color: "#fff",
-                    fontSize: "15px",
-                    fontWeight: "700",
-                  }}
-                  textButton={`Mua hàng (${listChecked?.length})`}
-                ></ButtonComponent>
+                </div>
+                <div className="px-5 pb-2 md:p-0  bg-white">
+                  <ButtonComponent
+                    className="w-full m-0 md:w-80 md:mt-2"
+                    onClick={() => handleAddCard()}
+                    size={40}
+                    styleButton={{
+                      background: "#422AFB",
+                      height: "48px",
+                      border: "none",
+                      borderRadius: "4px",
+                      color: "#fff",
+                      fontSize: "15px",
+                      fontWeight: "700",
+                    }}
+                    textButton={`Mua hàng (${listChecked?.length})`}
+                  ></ButtonComponent>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <ModalComponent
         title="Cập nhật thông tin giao hàng"

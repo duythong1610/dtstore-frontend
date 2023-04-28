@@ -1,4 +1,4 @@
-import { Col, Image, Rate, Row, notification } from "antd";
+import { Badge, Col, Image, Rate, Row, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined, StarFilled, MinusOutlined } from "@ant-design/icons";
 import {
@@ -16,10 +16,10 @@ import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlice";
 import { convertPrice, priceDiscount } from "../../until";
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -42,6 +42,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.order);
+
   const [numProduct, setNumProduct] = useState(1);
   const onChange = () => {};
   const fetchProductDetails = async (context) => {
@@ -106,22 +108,40 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
       <Row className="flex flex-col md:flex-row max-w-7xl p-4 bg-white">
         {contextHolder}
         <div
-          className="fixed py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10"
+          className="fixed flex items-center justify-between py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10"
           style={{
             backgroundColor: `rgba(255, 255, 255, ${(
               scrollPosition / 150
             ).toFixed(1)})`,
           }}
         >
-          <div className="">
+          <div className="flex justify-center items-center">
             <LeftOutlined
               onClick={() => navigate("/")}
               className={
                 scrollPosition === 0
-                  ? "w-8 h-8 text-lg text-white rounded-full bg-zinc-400 opacity-80"
-                  : "w-8 h-8 text-lg text-blue-500"
+                  ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80"
+                  : "w-8 h-8 text-lg text-blue-500 text-center"
               }
             />
+          </div>
+          <div>
+            <NavLink to={"/order"}>
+              <Badge
+                className="top-1"
+                count={order?.orderItems?.length}
+                size="small"
+              >
+                <ShoppingCartOutlined
+                  // onClick={navigate("/order")}
+                  className={
+                    scrollPosition === 0
+                      ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80"
+                      : "w-8 h-8 text-lg text-blue-500 text-center"
+                  }
+                />
+              </Badge>
+            </NavLink>
           </div>
         </div>
         <Col className="max-w-full md:pr-3" span={12}>

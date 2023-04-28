@@ -6,6 +6,7 @@ import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import * as message from "../../components/Message/Message";
 import * as UserService from "../../services/UserService";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlice";
@@ -14,6 +15,7 @@ import { searchProduct } from "../../redux/slides/productSlice";
 import { HomeOutlined } from "@ant-design/icons";
 import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
 import { CloseCircleFilled } from "@ant-design/icons";
+
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
@@ -39,6 +41,9 @@ function HeaderComponent() {
   const handleLogout = async () => {
     setLoading(true);
     await UserService.logoutUser();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    message.success("Đăng xuất thành công!");
     dispatch(resetUser());
     setLoading(false);
   };

@@ -10,19 +10,25 @@ import jwt_decode from "jwt-decode";
 import { updateUser } from "./redux/slides/userSlice";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/theme";
+import Loading from "./components/LoadingComponent/Loading";
+import { useState } from "react";
 
 function App() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
   useEffect(() => {
+    setIsLoading(true);
     const { storageData, decoded } = handleDecoded();
     if (decoded?.id) {
-      handleGetDetailUser(decoded.id, storageData);
+      handleGetDetailUser(decoded?.id, storageData);
     }
+    setIsLoading(false);
   }, []);
 
   const handleDecoded = () => {
-    let storageData = localStorage.getItem("access_token");
+    let storageData =
+      user?.access_token || localStorage.getItem("access_token");
     let decoded = {};
     if (storageData && isJsonString(storageData) && !user?.access_token) {
       storageData = JSON.parse(storageData);
@@ -33,11 +39,12 @@ function App() {
 
   UserService.axiosJWT.interceptors.request.use(
     async (config) => {
+      const currentTime = new Date();
+
       const { decoded } = handleDecoded();
       let storageRefreshToken = localStorage.getItem("refresh_token");
       const refreshToken = JSON.parse(storageRefreshToken);
       const decodedRefreshToken = jwt_decode(refreshToken);
-      const currentTime = new Date();
       if (decoded?.exp < currentTime.getTime() / 1000) {
         if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
           const data = await UserService.refreshToken(refreshToken);
@@ -54,34 +61,44 @@ function App() {
   );
 
   const handleGetDetailUser = async (id, access_token) => {
+    let storageRefreshToken = localStorage.getItem("refresh_token");
+    const refreshToken = JSON.parse(storageRefreshToken);
     const res = await UserService.getDetailsUser(id, access_token);
-    dispatch(updateUser({ ...res?.data, access_token: access_token }));
+    dispatch(
+      updateUser({
+        ...res?.data,
+        access_token: access_token,
+        refreshToken: refreshToken,
+      })
+    );
   };
 
   return (
     <div className="App">
       <ChakraProvider theme={theme}>
         {/* <ThemeEditorProvider> */}
-        <Router>
-          <Routes>
-            {routes.map((route, index) => {
-              const Page = route.component;
-              const isCheckAuth = route.isPrivate && user.isAdmin;
-              const Layout = route.isDefaultLayout ? DefaultLayout : Fragment;
-              return (
-                <Route
-                  key={index}
-                  path={isCheckAuth ? route.pathAdmin : route.path}
-                  element={
-                    <Layout>
-                      <Page />
-                    </Layout>
-                  }
-                />
-              );
-            })}
-          </Routes>
-        </Router>
+        <Loading isLoading={isLoading}>
+          <Router>
+            <Routes>
+              {routes.map((route, index) => {
+                const Page = route.component;
+                const isCheckAuth = route.isPrivate && user.isAdmin;
+                const Layout = route.isDefaultLayout ? DefaultLayout : Fragment;
+                return (
+                  <Route
+                    key={index}
+                    path={isCheckAuth ? route.pathAdmin : route.path}
+                    element={
+                      <Layout>
+                        <Page />
+                      </Layout>
+                    }
+                  />
+                );
+              })}
+            </Routes>
+          </Router>
+        </Loading>
         {/* </ThemeEditorProvider> */}
       </ChakraProvider>
     </div>
