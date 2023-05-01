@@ -183,8 +183,10 @@ const OrderPage = () => {
   }, [priceMemo, diliveryPriceMemo]);
 
   const handleRemoveAllOrder = () => {
-    if (listChecked?.length > 1) {
+    if (listChecked?.length >= 1) {
       dispatch(removeAllOrderProduct({ listChecked }));
+    } else {
+      message.error("Vui lòng chọn sản phẩm");
     }
   };
 
@@ -297,7 +299,7 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div className="bg-slate-100 w-full min-h-screen mt-12 md:mt-0">
+    <div className="bg-slate-100 w-full min-h-screen pt-12 md:pt-0">
       <div className="h-full max-w-7xl px-5 m-auto pt-5 md:pt-0">
         <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
           <div className="flex justify-center items-center">

@@ -83,7 +83,9 @@ const AdminProduct = () => {
   }, [rowSelected, isOpenDrawer]);
 
   useEffect(() => {
-    form.setFieldsValue(stateProductDetails);
+    if (!isModalOpen) {
+      form.setFieldsValue(stateProductDetails);
+    }
   }, [form, stateProductDetails]);
 
   const handleDetailsProduct = () => {

@@ -10,9 +10,11 @@ import {
 import Soldout from "../../assets/img/sold_out.png";
 import { convertPrice } from "../../until";
 import { Rate } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const ProductSimilar = ({ idProduct }) => {
   const [productSimilar, setProductSimilar] = useState("");
+  const navigate = useNavigate();
   const fetchProductSimilar = async () => {
     const res = await ProductService.getAllProductSimilar(idProduct);
     setProductSimilar(res.data);
@@ -31,13 +33,14 @@ const ProductSimilar = ({ idProduct }) => {
 
   return (
     <>
-      <div className="p-4">
+      <div className="p-4 md:p-0 max-w-7xl m-auto">
         <p className="text-base font-medium mb-0 md:text-2xl">
           Sản phẩm tương tự
         </p>
         <div className="overflow-y-hidden scrollbar-hide flex w-full gap-3 py-2">
           {productSimilar.length > 0 &&
             productSimilar?.map((product) => {
+              console.log({ product });
               return (
                 <WrapperCardStyle
                   className="w-[40vw]"

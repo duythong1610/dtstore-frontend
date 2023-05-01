@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { Breadcrumb } from "antd";
 import Comment from "../../components/Comment/Comment";
 import ProductSimilar from "../../components/ProductSimilarComponent/ProductSimilar";
+import DescriptionProduct from "../../components/DescriptionProduct/DescriptionProduct";
 
 function ProductDetailsPage() {
   const [productDetails, setProductDetails] = useState("");
@@ -36,6 +37,7 @@ function ProductDetailsPage() {
           idProduct={id}
         />
       </div>
+      <DescriptionProduct productDescription={productDetails?.description} />
       <ProductSimilar idProduct={id} />
       <Comment idProduct={id} />
     </div>

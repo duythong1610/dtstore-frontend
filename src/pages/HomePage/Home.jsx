@@ -10,18 +10,21 @@ import Slider5 from "../../assets/img/slider5.png";
 import Slider6 from "../../assets/img/slider6.png";
 
 import CardComponent from "../../components/CardComponent/CardComponent";
-import NavbarComponent from "../../components/NavbarComponent/NavbarComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/LoadingComponent/Loading";
 import useDebounce from "../../hooks/useDebounce";
+import { SearchOutlined } from "@ant-design/icons";
+import { searchProduct } from "../../redux/slides/productSlice";
 
 function Home() {
-  const searchProduct = useSelector((state) => state.product.search);
-  const searchDebounce = useDebounce(searchProduct, 1000);
+  const searchProductMobile = useSelector((state) => state.product.search);
+  const searchDebounce = useDebounce(searchProductMobile, 1000);
   const [typeProduct, setTypeProduct] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const [limit, setLimit] = useState(10);
+  const dispatch = useDispatch();
 
   const fetchAllProduct = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1];
@@ -35,6 +38,20 @@ function Home() {
 
     setTypeProduct(res.data);
     return res;
+  };
+
+  const onSearch = (e) => {
+    setSearchText(e.target.value);
+  };
+
+  const handleSearch = () => {
+    dispatch(searchProduct(searchText));
+  };
+
+  const handleSearchEnter = (e) => {
+    if (e.keyCode == 13) {
+      dispatch(searchProduct(searchText));
+    }
   };
 
   useEffect(() => {
@@ -53,12 +70,27 @@ function Home() {
 
   return (
     <>
-      <div className="flex my-2 text-base h-10 font-normal m-auto text-zinc-400 max-w-7xl">
+      <div className="hidden md:flex my-2 text-base h-10 font-normal m-auto text-zinc-400 max-w-7xl ">
         {typeProduct.map((item, index) => {
           return <TypeProduct key={index} name={item} />;
         })}
       </div>
-
+      <div className="px-5 py-3 fixed top-0 left-0 right-0 z-10 bg-white md:hidden">
+        <div className="flex justify-between border border-zinc-300 w-full rounded-lg overflow-hidden">
+          <input
+            type="text"
+            placeholder="Bạn tìm gì..."
+            className="outline-none px-3 py-2 h-10 w-full"
+            onChange={onSearch}
+            onKeyDown={handleSearchEnter}
+          />
+          <div>
+            <button className="outline-none w-10 h-10" onClick={handleSearch}>
+              <SearchOutlined className="text-xl text-zinc-400" />
+            </button>
+          </div>
+        </div>
+      </div>
       <div className="min-h-screen h-full w-full bg-slate-100">
         <div
           id="container"
@@ -71,7 +103,7 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
           <Loading isLoading={isLoading}>
-            <div className="grid gap-5 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
+            <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
               {products?.data?.map((product) => {
                 return (
                   <CardComponent

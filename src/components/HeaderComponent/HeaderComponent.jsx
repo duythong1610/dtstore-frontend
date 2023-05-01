@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button, Col, Popover, Row } from "antd";
 // import Search from "antd/lib/transfer/search";
 import { WrapperContentPopup, WrapperHeaderAccount } from "./style";
-import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  ShoppingCartOutlined,
+  AppstoreOutlined,
+  CloseCircleFilled,
+  HomeOutlined,
+} from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -12,9 +18,7 @@ import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlice";
 import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlice";
-import { HomeOutlined } from "@ant-design/icons";
 import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
-import { CloseCircleFilled } from "@ant-design/icons";
 
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
@@ -105,8 +109,8 @@ function HeaderComponent() {
           <span className="hidden md:block">Logo nhe anh em</span>
         </Col>
         <Col
-          span={8}
-          className="flex-none md:flex-initial max-w-none m-auto md:m-0"
+          span={11}
+          // className="flex-none md:flex-initial m-auto md:m-0"
         >
           <ButtonInputSearch
             className={
@@ -115,7 +119,7 @@ function HeaderComponent() {
                 : "hidden md:block"
             }
             border="none"
-            placeholder="Tìm sản phẩm "
+            placeholder="Bạn tìm sản phẩm gì... "
             textButton="Tìm kiếm"
             enterButton="Search"
             size="large"
@@ -124,8 +128,8 @@ function HeaderComponent() {
           />
         </Col>
         <Col
-          className="flex flex-none justify-center gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
-          span={10}
+          className="flex flex-none justify-center md:gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
+          span={7}
         >
           <NavLink
             to="/"
@@ -138,6 +142,25 @@ function HeaderComponent() {
             <HomeOutlined style={{ fontSize: "22px" }} />
 
             <span className="text-sm md:text-base">Trang chủ</span>
+          </NavLink>
+          <NavLink
+            to="/order"
+            className={({ isActive }) =>
+              setActive(isActive) ?? active
+                ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
+                : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+            }
+          >
+            <AppstoreOutlined
+              className={
+                active
+                  ? "text-blue-600 font-medium hover:text-blue-600"
+                  : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+              }
+              style={{ fontSize: "22px" }}
+            />
+
+            <span className="text-sm md:text-base">Danh mục</span>
           </NavLink>
           <Loading isLoading={loading}>
             <WrapperHeaderAccount className="flex-col md:flex-row gap-1 md:gap-2">

@@ -1,6 +1,7 @@
 import AdminPage from "../pages/AdminPage/AdminPage";
 import Home from "../pages/HomePage/Home";
 import Login from "../pages/LoginPage/Login";
+import MyOrder from "../pages/MyOrderPage/MyOrder";
 import OrderPage from "../pages/OrderPage/OrderPage";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
@@ -22,6 +23,11 @@ export const routes = [
     isDefaultLayout: true,
   },
 
+  {
+    path: "/my-order",
+    component: MyOrder,
+    isDefaultLayout: true,
+  },
   {
     path: "/payment",
     component: PaymentPage,
