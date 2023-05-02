@@ -43,6 +43,7 @@ const ProductSimilar = ({ idProduct }) => {
               console.log({ product });
               return (
                 <WrapperCardStyle
+                  key={product?._id}
                   className="w-[40vw]"
                   hoverable
                   bodyStyle={{ padding: 10, width: "40vw" }}

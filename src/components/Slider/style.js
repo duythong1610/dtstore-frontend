@@ -8,9 +8,9 @@ export const WrapperSliderStyle = styled(Slider)`
     top: 50%;
     z-index: 10;
     &::before {
-      opacity: 0.5;
       font-size: 30px;
       color: #fff;
+      top: 0;
       position: absolute;
     }
   }
@@ -20,8 +20,8 @@ export const WrapperSliderStyle = styled(Slider)`
     top: 50%;
     z-index: 10;
     &::before {
-      opacity: 0.5;
       font-size: 30px;
+      top: 0;
       color: #fff;
       position: absolute;
     }

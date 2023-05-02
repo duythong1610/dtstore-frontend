@@ -38,7 +38,6 @@ export const WrapperStyleHeaderDilivery = styled.div`
   margin-bottom: 12px;
   border-radius: 12px;
   position: sticky;
-  top: 20px;
   left: 0;
   z-index: 6;
   ::before {
@@ -81,7 +80,3 @@ export const WrapperCountOrder = styled.div`
   border: 1px solid #ccc;
   border-radius: 4px;
 `;
-
-
-
-

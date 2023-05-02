@@ -299,7 +299,7 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div className="bg-slate-100 w-full min-h-screen pt-12 md:pt-0">
+    <div className="bg-slate-100 w-full min-h-screen pt-12 md:pt-5">
       <div className="h-full max-w-7xl px-5 m-auto pt-5 md:pt-0">
         <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
           <div className="flex justify-center items-center">
@@ -319,7 +319,7 @@ const OrderPage = () => {
         ) : (
           <div className="flex justify-center flex-col md:flex-row">
             <WrapperLeft>
-              <WrapperStyleHeaderDilivery>
+              <WrapperStyleHeaderDilivery className="top-5 md:top-0">
                 <StepComponent
                   items={itemsDelivery}
                   current={
@@ -334,7 +334,7 @@ const OrderPage = () => {
                 />
               </WrapperStyleHeaderDilivery>
               <WrapperStyleHeader className="top-60 md:top-28 justify-between">
-                <span>
+                <span className="md:mr-[110px]">
                   <Checkbox
                     onChange={handleOnchangeCheckAll}
                     checked={listChecked?.length === order?.orderItems?.length}
@@ -343,8 +343,8 @@ const OrderPage = () => {
                     Tất cả ({order?.orderItems?.length} sản phẩm)
                   </span>
                 </span>
-                <div className="md:flex-1 flex items-center">
-                  <span className="hidden md:block">Đơn giá</span>
+                <div className="md:justify-between md:flex-1 flex items-center">
+                  <span className="hidden md:block md:mr-7">Đơn giá</span>
                   <span
                     className="hidden md:block"
                     style={{ marginRight: "-10px" }}
@@ -388,7 +388,7 @@ const OrderPage = () => {
                           }}
                         />
                         <div className="flex flex-col">
-                          <span className="md:w-60 w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                          <span className="md:w-60 w-full font-medium overflow-hidden text-ellipsis whitespace-nowrap">
                             {order?.name}
                           </span>
                           {order?.discount > 0 && (
@@ -681,9 +681,9 @@ const OrderPage = () => {
             form={form}
           >
             <Form.Item
-              label="Name"
+              label="Họ và tên"
               name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
+              rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
             >
               <InputComponent
                 value={stateUserDetails["name"]}
@@ -692,9 +692,9 @@ const OrderPage = () => {
               />
             </Form.Item>
             <Form.Item
-              label="City"
+              label="Thành Phố"
               name="city"
-              rules={[{ required: true, message: "Please input your city!" }]}
+              rules={[{ required: true, message: "Vui lòng nhập Thành phố!" }]}
             >
               <InputComponent
                 value={stateUserDetails["city"]}
@@ -703,9 +703,11 @@ const OrderPage = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Phone"
+              label="Số điện thoại"
               name="phone"
-              rules={[{ required: true, message: "Please input your  phone!" }]}
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại!" },
+              ]}
             >
               <InputComponent
                 value={stateUserDetails.phone}
@@ -715,10 +717,10 @@ const OrderPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Adress"
+              label="Địa chỉ"
               name="address"
               rules={[
-                { required: true, message: "Please input your  address!" },
+                { required: true, message: "Vui lòng nhập địa chỉ address!" },
               ]}
             >
               <InputComponent

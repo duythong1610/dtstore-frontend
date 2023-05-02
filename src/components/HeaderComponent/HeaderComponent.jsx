@@ -14,27 +14,31 @@ import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as message from "../../components/Message/Message";
 import * as UserService from "../../services/UserService";
+import * as ProductService from "../../services/ProductService";
+
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlice";
 import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlice";
 import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
+import logo from "../../assets/img/logo.png";
+import TypeProduct from "../TypeProduct/TypeProduct";
 
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
+  const [isToggleContent, setIsToggleContent] = useState(false);
 
   const [active, setActive] = useState(false);
   const order = useSelector((state) => state.order);
   const [searchText, setSearchText] = useState("");
   const user = useSelector((state) => state.user);
   const [userName, setUserName] = useState("");
+  const [typeProduct, setTypeProduct] = useState([]);
   const [userAvatar, setUserAvatar] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  console.log(pathname);
 
   const handleNavigate = () => {
     navigate("/sign-in");
@@ -64,6 +68,23 @@ function HeaderComponent() {
     setIsToggle((current) => !current);
   };
 
+  const handleToggleClassContent = () => {
+    setIsToggleContent((current) => !current);
+  };
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+
+    setTypeProduct(res.data);
+    return res;
+  };
+  console.log(typeProduct);
+
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
+
+  console.log({ isToggleContent });
   useEffect(() => {
     setLoading(true);
     setUserName(user?.name);
@@ -100,13 +121,17 @@ function HeaderComponent() {
     <div className="h-0 md:h-full md:max-w-7xl md:m-auto md:py-3">
       <Row
         className={
-          pathname !== "/" && pathname !== "/profile-user"
-            ? "!hidden md:!flex"
+          pathname !== "/" &&
+          pathname !== "/profile-user" &&
+          !pathname.startsWith("/product/")
+            ? "!hidden md:!flex md:items-center"
             : "md:flex flex-nowrap md:items-center md:w-7xl"
         }
       >
         <Col span={4}>
-          <span className="hidden md:block">Logo nhe anh em</span>
+          <span className="hidden md:block">
+            <img src={logo} alt="logo" className="w-16 h-16 object-contain" />
+          </span>
         </Col>
         <Col
           span={11}
@@ -144,7 +169,7 @@ function HeaderComponent() {
             <span className="text-sm md:text-base">Trang chủ</span>
           </NavLink>
           <NavLink
-            to="/order"
+            onClick={handleToggleClassContent}
             className={({ isActive }) =>
               setActive(isActive) ?? active
                 ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
@@ -247,6 +272,34 @@ function HeaderComponent() {
               onClick={handleToggleClass}
             />
             <AccountNavMobile handleToggleClass={handleToggleClass} />
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={
+          !isToggleContent
+            ? "content-typepro content-bg"
+            : "content-typepro visible content-bg"
+        }
+      >
+        <CloseCircleFilled
+          className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
+          onClick={handleToggleClassContent}
+        />
+        <div className="p-5">
+          <h1 className="text-xl">Danh mục sản phẩm</h1>
+          <div className="grid grid-cols-2">
+            {typeProduct.map((item, index) => {
+              return (
+                <TypeProduct
+                  key={index}
+                  name={item}
+                  // thumbnail={thumb}
+                  handleToggleClassContent={handleToggleClassContent}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

@@ -215,11 +215,11 @@ function TypeProductPage() {
       );
     }
     if (type === "name") {
-      return <div>Hello tụi mày</div>;
+      return <div>Hello Quý Dị</div>;
     }
 
     if (type === "rating") {
-      return <div>Hello tụi mày rating</div>;
+      return <div>Hello Quý Dị rating</div>;
     }
   }
 
@@ -250,9 +250,10 @@ function TypeProductPage() {
               height: "calc(100% - 50px)",
             }}
           >
-            <div className="filter fixed top-0 left-0 right-0 bg-white z-10 px-5 py-2">
-              <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
-                {/* <div className="item inline-block mr-2">
+            <div className="relative md:pb-10">
+              <div className="filter fixed md:absolute top-0 left-0 right-0 bg-white z-10 md:p-0 px-5 py-2">
+                <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+                  {/* <div className="item inline-block mr-2">
                   <button
                     className="py-1 px-5 border border-gray-300 rounded-md"
                     onClick={() => handleButton("price")}
@@ -260,7 +261,21 @@ function TypeProductPage() {
                     Giá
                   </button>
                 </div> */}
-                {renderFilter()}
+                  {renderFilter()}
+                </div>
+              </div>
+              <div
+                className={`hidden w-screen h-[45vh] p-5 fixed md:shadow-xl md:absolute md:h-auto md:!w-[30vw] md:rounded-xl top-11 md:top-9 left-0 right-0 z-10 bg-white ${
+                  isToggle && "!block"
+                } `}
+              >
+                <div className="text-right -mt-5">
+                  <CloseCircleOutlined
+                    className="text-zinc-300 w-5 h-5 text-2xl"
+                    onClick={() => setIsToggle("")}
+                  />
+                </div>
+                {renderItem(activeFilter)}
               </div>
             </div>
             <div
@@ -270,7 +285,7 @@ function TypeProductPage() {
                 justifyContent: "space-between",
               }}
             >
-              <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
+              <div className="mt-6 md:mt-0 grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
                 {productsViews.length > 0 &&
                   productsViews
                     ?.filter((pro) => {
@@ -311,19 +326,6 @@ function TypeProductPage() {
                 style={{ textAlign: "center", marginTop: "20px" }}
               />
             </div>
-          </div>
-          <div
-            className={`hidden w-screen h-[45vh] p-5 fixed top-11 left-0 right-0 z-10 bg-white ${
-              isToggle && "!block"
-            } `}
-          >
-            <div className="text-right -mt-5">
-              <CloseCircleOutlined
-                className="text-zinc-300 w-5 h-5 text-2xl"
-                onClick={() => setIsToggle("")}
-              />
-            </div>
-            {renderItem(activeFilter)}
           </div>
         </div>
       </div>
