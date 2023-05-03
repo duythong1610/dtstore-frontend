@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TypeProductItem } from "./style";
 import laptopThumbnail from "../../assets/img/laptop.jpg";
 import phoneThumbnail from "../../assets/img/phone.jpg";
@@ -10,11 +10,11 @@ const TypeProduct = ({ name, handleToggleClassContent }) => {
   const navigate = useNavigate();
   const handleNavigateType = (type) => {
     navigate(
-      `product/${type
+      `/product/${type
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        ?.replace(/ /g, "-")}`,
-      { state: type }
+        .replace(/ /g, "-")}`,
+      { replace: true, state: type }
     );
     handleToggleClassContent();
   };

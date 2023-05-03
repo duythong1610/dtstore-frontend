@@ -9,7 +9,7 @@ import ProductPage from "../pages/ProductPage/ProductPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
-// import Settings from "../pages/AdminPage/dataTables";
+import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
 export const routes = [
   {
     path: "/",
@@ -31,6 +31,12 @@ export const routes = [
   {
     path: "/payment",
     component: PaymentPage,
+    isDefaultLayout: true,
+  },
+
+  {
+    path: "/order-success",
+    component: OrderSuccess,
     isDefaultLayout: true,
   },
   {

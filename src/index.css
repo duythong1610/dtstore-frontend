@@ -50,6 +50,19 @@
   padding: 0px !important;
 }
 
+.ant-modal-title {
+  font-size: 20px !important;
+}
+
+.ant-form-item .ant-form-item-label {
+  text-align: left;
+  min-width: 120px;
+  padding: 0px;
+}
+.ant-form-item .ant-form-item-label > label {
+  font-size: 16px;
+}
+
 .ant-input-number-sm input.ant-input-number-input {
   padding: 0;
   text-align: center;

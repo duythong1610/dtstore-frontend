@@ -14,10 +14,6 @@ export const WrapperStyleHeader = styled.div`
   }
 `;
 
-export const WrapperLeft = styled.div`
-  width: 910px;
-`;
-
 export const WrapperListOrder = styled.div``;
 
 export const WrapperItemOrder = styled.div`
@@ -55,8 +51,6 @@ export const WrapperInfo = styled.div`
   padding: 17px 20px;
   border-bottom: 1px solid #f5f5f5;
   background: #fff;
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
   width: 100%;
 `;
 
@@ -66,8 +60,6 @@ export const WrapperTotal = styled.div`
   justify-content: space-between;
   padding: 17px 20px;
   background: #fff;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
 `;
 
 export const Lable = styled.span`

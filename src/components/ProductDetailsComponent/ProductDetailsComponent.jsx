@@ -105,7 +105,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
 
   return (
     <>
-      <Row className="flex flex-col w-full md:flex-row md:flex-nowrap md:flex max-w-7xl p-4 bg-white">
+      <Row className="flex flex-col w-full md:flex-row md:flex-nowrap md:flex max-w-7xl p-4 bg-white md:rounded-xl">
         {contextHolder}
         <div
           className="fixed flex items-center justify-between py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10"

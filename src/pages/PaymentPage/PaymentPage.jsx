@@ -1,13 +1,6 @@
-import { Form, Radio } from "antd";
+import { AutoComplete, Form, Radio } from "antd";
 import React, { useEffect, useState } from "react";
-import {
-  Lable,
-  WrapperInfo,
-  WrapperLeft,
-  WrapperRadio,
-  WrapperRight,
-  WrapperTotal,
-} from "./style";
+import { WrapperInfo, WrapperRight, WrapperTotal } from "./style";
 
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +18,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlice";
 import { PayPalButton } from "react-paypal-button-v2";
 import * as PaymentService from "../../services/PaymentService";
-
+import { LeftOutlined } from "@ant-design/icons";
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
@@ -35,12 +28,46 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [districtsRender, setDistrictsRender] = useState([]);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
     phone: "",
     address: "",
+    district: "",
     city: "",
   });
+
+  const { provinces, districts } = state;
+
+  const handleOnChangeProvince = (data, option) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      city: data,
+    });
+
+    console.log(option.code);
+    const res = districts.filter((dis) => {
+      return dis?.province_code === option?.code;
+    });
+    console.log({ res }, { districts });
+    setDistrictsRender(res);
+  };
+
+  const handleOnChangeDistrict = (data) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      district: data,
+    });
+  };
+
+  const province = provinces.map((pro) => {
+    return { value: pro?.name, code: pro.code };
+  });
+
+  const district = districtsRender?.map((dis) => {
+    return { value: dis?.name };
+  });
+
   const [form] = Form.useForm();
 
   const dispatch = useDispatch();
@@ -55,6 +82,7 @@ const PaymentPage = () => {
         city: user?.city,
         name: user?.name,
         address: user?.address,
+        district: user?.district,
         phone: user?.phone,
       });
     }
@@ -104,6 +132,7 @@ const PaymentPage = () => {
       order?.orderItemsSelected &&
       user?.name &&
       user?.address &&
+      user?.district &&
       user?.phone &&
       user?.city &&
       priceMemo &&
@@ -155,7 +184,7 @@ const PaymentPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt hàng thành công");
-      navigate("/orderSuccess", {
+      navigate("/order-success", {
         state: {
           delivery,
           payment,
@@ -168,7 +197,7 @@ const PaymentPage = () => {
     }
   }, [isSuccess, isError]);
 
-  const handleCancleUpdate = () => {
+  const handleCancelUpdate = () => {
     setStateUserDetails({
       name: "",
       email: "",
@@ -198,14 +227,14 @@ const PaymentPage = () => {
     });
   };
 
-  const handleUpdateInforUser = () => {
-    const { name, address, city, phone } = stateUserDetails;
+  const handleUpdateInfoUser = () => {
+    const { name, address, district, city, phone } = stateUserDetails;
     if (name && address && city && phone) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, district, city, phone }));
             setIsOpenModalUpdateInfo(false);
           },
         }
@@ -219,12 +248,21 @@ const PaymentPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const handleDilivery = (e) => {
+  const handleDelivery = (e) => {
     setDelivery(e.target.value);
   };
 
   const handlePayment = (e) => {
     setPayment(e.target.value);
+  };
+
+  const handleDeliveryPrice = (payment) => {
+    if (delivery === "go_jek") {
+      return 40000;
+    }
+    if (delivery === "fast") {
+      return 30000;
+    }
   };
 
   const addPaypalScript = async () => {
@@ -248,53 +286,68 @@ const PaymentPage = () => {
   }, []);
 
   return (
-    <div style={{ background: "#f5f5fa", with: "100%", height: "100vh" }}>
+    <div className="bg-slate-100 w-full h-screen">
       <Loading isLoading={isLoadingAddOrder}>
-        <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
-          <h3>Thanh toán</h3>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <WrapperLeft>
+        <div className="h-full max-w-7xl m-auto md:pt-5">
+          <div className="fixed top-0 left-0 right-0 h-12 bg-white py-3 px-5 flex items-center md:hidden">
+            <div className="flex justify-center items-center">
+              <LeftOutlined
+                onClick={() => navigate(-1)}
+                className={"w-8 h-8 text-lg text-blue-500 text-center"}
+              />
+            </div>
+            <div className="text-center mr-8 w-full">
+              <h1 className="text-xl mb-0 ">XÁC NHẬN ĐƠN HÀNG</h1>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-center pt-16 md:pt-0 px-5 md:px-0">
+            <div className="md:flex-1">
               <WrapperInfo>
                 <div>
-                  <Lable>Chọn phương thức giao hàng</Lable>
-                  <WrapperRadio onChange={handleDilivery} value={delivery}>
+                  <h1 className="font-medium text-sm md:text-base">
+                    Chọn phương thức giao hàng
+                  </h1>
+                  <Radio.Group
+                    className="mt-2 bg-blue-50 border border-blue-200 rounded h-24 p-4 flex flex-col gap-3 justify-center md:w-[500px]"
+                    onChange={handleDelivery}
+                    value={delivery}
+                  >
                     <Radio value="fast">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                         FAST
                       </span>{" "}
                       Giao hàng tiết kiệm
                     </Radio>
-                    <Radio value="gojek">
+                    <Radio value="go_jek">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
                         GO_JEK
                       </span>{" "}
                       Giao hàng tiết kiệm
                     </Radio>
-                  </WrapperRadio>
+                  </Radio.Group>
                 </div>
               </WrapperInfo>
               <WrapperInfo>
                 <div>
-                  <Lable>Chọn phương thức thanh toán</Lable>
-                  <WrapperRadio onChange={handlePayment} value={payment}>
+                  <h1 className="font-medium text-sm md:text-base">
+                    Chọn phương thức thanh toán
+                  </h1>
+                  <Radio.Group
+                    className="mt-2 bg-blue-50 border border-blue-200 rounded h-24 p-4 flex flex-col gap-3 justify-center md:w-[500px]"
+                    onChange={handlePayment}
+                    value={payment}
+                  >
                     <Radio value="later_money">
                       {" "}
                       Thanh toán tiền mặt khi nhận hàng
                     </Radio>
                     <Radio value="paypal"> Thanh toán tiền bằng paypal</Radio>
-                  </WrapperRadio>
+                  </Radio.Group>
                 </div>
               </WrapperInfo>
-            </WrapperLeft>
-            <WrapperRight>
-              <div
-                style={{
-                  width: "100%",
-                  position: "sticky",
-                  top: "21px",
-                  left: 0,
-                }}
-              >
+            </div>
+            <div className="mt-5 md:mt-0 md:ml-5 max-w-xs flex flex-col gap-2 md:gap-3 items-center">
+              <div className="w-full fixed bottom-0 right-0 md:sticky md:top-5 left-0">
                 {/* <WrapperInfo>
                   <div style={{ display: "flex" }}>
                     <InputComponent
@@ -321,21 +374,30 @@ const PaymentPage = () => {
                     {messageVoucher}
                   </span>
                 </WrapperInfo> */}
-                <WrapperInfo>
+                <div className="p-5 border-b-zinc-100 border-b-[1px] bg-white w-full">
+                  <div className="flex items-center justify-between">
+                    <span>Giao tới</span>
+                    <div>
+                      <span
+                        onClick={handleChangeAddress}
+                        style={{ color: "blue", cursor: "pointer" }}
+                      >
+                        Thay đổi
+                      </span>
+                    </div>
+                  </div>
+                  <div className="customer_info flex items-center">
+                    <span className="font-medium">{user?.name}</span>
+                    <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
+                    <span className="font-medium">{user?.phone}</span>
+                  </div>
                   <div>
-                    <span>Địa chỉ: </span>
-                    <span style={{ fontWeight: "bold" }}>
-                      {`${user?.address} ${user?.city}`}{" "}
-                    </span>
-                    <span
-                      onClick={handleChangeAddress}
-                      style={{ color: "blue", cursor: "pointer" }}
-                    >
-                      Thay đổi
+                    <span className="font-medium text-zinc-500">
+                      {`${user?.address}, ${user?.district}, ${user?.city}`}{" "}
                     </span>
                   </div>
-                </WrapperInfo>
-                <WrapperInfo>
+                </div>
+                <div className="p-5 border-b-zinc-100 border-b-[1px] bg-white w-full">
                   <div
                     style={{
                       display: "flex",
@@ -381,7 +443,7 @@ const PaymentPage = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <span>Phí giao hàng</span>
+                    <span>Phí vận chuyển</span>
                     <span
                       style={{
                         color: "#000",
@@ -389,20 +451,26 @@ const PaymentPage = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {convertPrice(diliveryPriceMemo)}
+                      {convertPrice(handleDeliveryPrice(payment))}
                     </span>
                   </div>
-                </WrapperInfo>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>Khuyến mãi vận chuyển</span>
+                    <span className="text-sm font-medium text-green-400">
+                      - {convertPrice(handleDeliveryPrice(payment))}
+                    </span>
+                  </div>
+                </div>
                 <WrapperTotal>
                   <span>Tổng tiền</span>
                   <span style={{ display: "flex", flexDirection: "column" }}>
-                    <span
-                      style={{
-                        color: "rgb(254, 56, 52)",
-                        fontSize: "24px",
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <span className="text-xl font-medium md:text-base text-red-500">
                       {state?.totalPrice}
                     </span>
                     <span style={{ color: "#000", fontSize: "11px" }}>
@@ -410,45 +478,50 @@ const PaymentPage = () => {
                     </span>
                   </span>
                 </WrapperTotal>
-                <ButtonComponent
-                  onClick={() => handleAddOrder()}
-                  size={40}
-                  styleButton={{
-                    background: "#422AFB",
-                    height: "48px",
-                    width: "320px",
-                    border: "none",
-                    borderRadius: "4px",
-                    color: "#fff",
-                    fontSize: "15px",
-                    fontWeight: "700",
-                    marginTop: "10px",
-                  }}
-                  textButton={`Đặt mua`}
-                ></ButtonComponent>
+                <div className="bg-white px-5 pb-2 md:p-0">
+                  <ButtonComponent
+                    onClick={() => handleAddOrder()}
+                    size={40}
+                    styleButton={{
+                      background: "#422AFB",
+                      height: "48px",
+                      width: "100%",
+                      border: "none",
+                      borderRadius: "4px",
+                      color: "#fff",
+                      fontSize: "15px",
+                      fontWeight: "700",
+                    }}
+                    textButton={`Đặt mua`}
+                  ></ButtonComponent>
+                </div>
               </div>
-            </WrapperRight>
+            </div>
           </div>
         </div>
         <ModalComponent
+          footer={null}
           title="Cập nhật thông tin giao hàng"
           open={isOpenModalUpdateInfo}
-          onCancel={handleCancleUpdate}
-          onOk={handleUpdateInforUser}
+          onCancel={handleCancelUpdate}
+          // onOk={handleUpdateInfoUser}
         >
           <Loading isLoading={isLoading}>
             <Form
               name="basic"
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
-              // onFinish={onUpdateUser}
+              onFinish={handleUpdateInfoUser}
               autoComplete="on"
               form={form}
             >
               <Form.Item
-                label="Name"
+                className="font-medium p-0"
+                label="Họ và tên"
                 name="name"
-                rules={[{ required: true, message: "Please input your name!" }]}
+                rules={[
+                  { required: true, message: "Vui lòng nhập họ và tên!" },
+                ]}
               >
                 <InputComponent
                   value={stateUserDetails["name"]}
@@ -457,21 +530,11 @@ const PaymentPage = () => {
                 />
               </Form.Item>
               <Form.Item
-                label="City"
-                name="city"
-                rules={[{ required: true, message: "Please input your city!" }]}
-              >
-                <InputComponent
-                  value={stateUserDetails["city"]}
-                  onChange={handleOnchangeDetails}
-                  name="city"
-                />
-              </Form.Item>
-              <Form.Item
-                label="Phone"
+                className="font-medium p-0"
+                label="Số điện thoại"
                 name="phone"
                 rules={[
-                  { required: true, message: "Please input your  phone!" },
+                  { required: true, message: "Vui lòng nhập số điện thoại!" },
                 ]}
               >
                 <InputComponent
@@ -480,13 +543,66 @@ const PaymentPage = () => {
                   name="phone"
                 />
               </Form.Item>
+              <Form.Item
+                className="font-medium p-0"
+                label="Tỉnh, thành phố"
+                name="city"
+                rules={[
+                  { required: true, message: "Vui lòng chọn Thành phố!" },
+                ]}
+              >
+                {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+                <AutoComplete
+                  options={province}
+                  placeholder="Chọn tỉnh, thành phố"
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={handleOnChangeProvince}
+                  value={stateUserDetails["city"]}
+                  name="city"
+                />
+              </Form.Item>
+              <Form.Item
+                className="font-medium p-0"
+                label="Quận, huyện"
+                name="district"
+                rules={[
+                  { required: true, message: "Vui lòng chọn Quận, Huyện!" },
+                ]}
+              >
+                {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+                <AutoComplete
+                  options={district}
+                  placeholder="Chọn quận, huyện"
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={handleOnChangeDistrict}
+                  value={stateUserDetails["district"]}
+                  name="district"
+                />
+              </Form.Item>
 
               <Form.Item
-                label="Adress"
+                className="font-medium p-0"
+                label="Địa chỉ"
                 name="address"
-                rules={[
-                  { required: true, message: "Please input your  address!" },
-                ]}
+                rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
               >
                 <InputComponent
                   value={stateUserDetails.address}
@@ -494,6 +610,12 @@ const PaymentPage = () => {
                   name="address"
                 />
               </Form.Item>
+              <button
+                type="submit"
+                className="w-full m-0 md:w-80 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+              >
+                Xác nhận
+              </button>
             </Form>
           </Loading>
         </ModalComponent>

@@ -1,4 +1,4 @@
-import { Badge, Checkbox, Form, Tooltip } from "antd";
+import { AutoComplete, Badge, Checkbox, Form, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   WrapperCountOrder,
@@ -38,6 +38,7 @@ import {
   CaretDownOutlined,
   LeftOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -45,6 +46,9 @@ const OrderPage = () => {
   const [voucherCode, setVoucherCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [moreInfoOrder, setMoreInfoOrder] = useState(false);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [districtsRender, setDistrictsRender] = useState([]);
 
   const [isVoucher, setIsVoucher] = useState(false);
   const [priceVoucher, setPriceVoucher] = useState(0);
@@ -55,14 +59,41 @@ const OrderPage = () => {
     name: "",
     phone: "",
     address: "",
+    district: "",
     city: "",
   });
 
+  const fetchProvince = async () => {
+    const res = await axios.get("https://provinces.open-api.vn/api/");
+    console.log({ res });
+    setProvinces(res.data);
+  };
+
+  const fetchDistrict = async () => {
+    const res = await axios.get("https://provinces.open-api.vn/api/d");
+    console.log({ res });
+    setDistricts(res.data);
+  };
+
+  useEffect(() => {
+    fetchProvince();
+    fetchDistrict();
+  }, []);
   useEffect(() => {
     if (isVoucher) {
       setDiscount(priceVoucher);
     }
   }, [order?.orderItems]);
+
+  const province = provinces.map((pro) => {
+    return { value: pro?.name, code: pro.code };
+  });
+
+  const district = districtsRender?.map((dis) => {
+    return { value: dis?.name };
+  });
+
+  console.log({ province });
 
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -121,9 +152,13 @@ const OrderPage = () => {
     form.setFieldsValue(stateUserDetails);
   }, [form, stateUserDetails]);
 
+  console.log({
+    stateUserDetails,
+  });
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
+        district: user?.district,
         city: user?.city,
         name: user?.name,
         address: user?.address,
@@ -139,7 +174,6 @@ const OrderPage = () => {
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
       if (cur?.discount) {
-        const abc = ((cur?.price * cur?.discount) / 100) * cur?.amount;
         return (
           total +
           (cur?.price - (cur?.price * cur?.discount) / 100) * cur?.amount
@@ -163,7 +197,7 @@ const OrderPage = () => {
   //   return 0;
   // }, [order]);
 
-  const diliveryPriceMemo = useMemo(() => {
+  const deliveryPriceMemo = useMemo(() => {
     if (priceMemo >= 200000 && priceMemo < 500000) {
       return 10000;
     } else if (priceMemo >= 500000 || order?.orderItemsSelected?.length === 0) {
@@ -178,9 +212,9 @@ const OrderPage = () => {
     return (
       Number(priceMemo) -
       // Number(priceDiscountMemo) +
-      Number(diliveryPriceMemo)
+      Number(deliveryPriceMemo)
     );
-  }, [priceMemo, diliveryPriceMemo]);
+  }, [priceMemo, deliveryPriceMemo]);
 
   const handleRemoveAllOrder = () => {
     if (listChecked?.length >= 1) {
@@ -204,11 +238,13 @@ const OrderPage = () => {
                 .toLocaleString()
                 .replaceAll(",", ".")} VNĐ`
             : convertPrice(
-                diliveryPriceMemo
-                  ? totalPriceMemo - diliveryPriceMemo - priceVoucher
+                deliveryPriceMemo
+                  ? totalPriceMemo - deliveryPriceMemo - priceVoucher
                   : totalPriceMemo
               ),
           price: convertPrice(totalPriceMemo),
+          districts: districts,
+          provinces: provinces,
         },
       });
     }
@@ -252,7 +288,7 @@ const OrderPage = () => {
 
   const { isLoading, data } = mutationUpdate;
 
-  const handleCancleUpdate = () => {
+  const handleCancelUpdate = () => {
     setStateUserDetails({
       name: "",
       email: "",
@@ -263,15 +299,17 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
 
-  const handleUpdateInforUser = () => {
-    const { name, address, city, phone } = stateUserDetails;
+  console.log({ district }, { districtsRender });
+  const handleUpdateInfoUser = () => {
+    const { name, address, district, city, phone } = stateUserDetails;
     if (name && address && city && phone) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, district, city, phone }));
             setIsOpenModalUpdateInfo(false);
+            message.success("Cập nhật thông tin thành công");
           },
         }
       );
@@ -282,6 +320,27 @@ const OrderPage = () => {
     setStateUserDetails({
       ...stateUserDetails,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleOnChangeProvince = (data, option) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      city: data,
+    });
+
+    console.log(option.code);
+    const res = districts.filter((dis) => {
+      return dis?.province_code === option?.code;
+    });
+    console.log({ res }, { districts });
+    setDistrictsRender(res);
+  };
+
+  const handleOnChangeDistrict = (data) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      district: data,
     });
   };
   const itemsDelivery = [
@@ -309,9 +368,7 @@ const OrderPage = () => {
             />
           </div>
           <div className="text-center w-full mr-8">
-            <h1 style={{ padding: "12px 0", fontSize: "24px", margin: "0" }}>
-              GIỎ HÀNG
-            </h1>
+            <h1 className="text-xl font-medium m-0">GIỎ HÀNG</h1>
           </div>
         </div>
         {order?.orderItems?.length === 0 ? (
@@ -323,9 +380,9 @@ const OrderPage = () => {
                 <StepComponent
                   items={itemsDelivery}
                   current={
-                    diliveryPriceMemo === 10000
+                    deliveryPriceMemo === 10000
                       ? 2
-                      : diliveryPriceMemo === 20000
+                      : deliveryPriceMemo === 20000
                       ? 1
                       : order.orderItemsSelected.length === 0
                       ? 0
@@ -519,28 +576,39 @@ const OrderPage = () => {
                 <div
                   className={
                     moreInfoOrder
-                      ? "px-5 py-1 md:py-5 bg-white"
-                      : "px-5 py-1 md:py-5 bg-white"
+                      ? "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
+                      : "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
                   }
                 >
                   <div>
-                    <span>Địa chỉ: </span>
-                    <span style={{ fontWeight: "bold" }}>
-                      {`${user?.address}, ${user?.city}`}{" "}
-                    </span>
-                    <span
-                      onClick={handleChangeAddress}
-                      style={{ color: "blue", cursor: "pointer" }}
-                    >
-                      Thay đổi
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span>Giao tới</span>
+                      <div>
+                        <span
+                          onClick={handleChangeAddress}
+                          style={{ color: "blue", cursor: "pointer" }}
+                        >
+                          Thay đổi
+                        </span>
+                      </div>
+                    </div>
+                    <div className="customer_info flex items-center">
+                      <span className="font-medium">{user?.name}</span>
+                      <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
+                      <span className="font-medium">{user?.phone}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-zinc-500">
+                        {`${user?.address}, ${user?.district}, ${user?.city}`}{" "}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div
                   className={
                     moreInfoOrder
                       ? "block px-5 py-1 md:py-5 bg-white"
-                      : "md:block px-5 py-1 md:py-5 hidden bg-white"
+                      : "md:block px-5 py-1 md:py-5 hidden bg-white border-b-zinc-100 border-b-[1px]"
                   }
                 >
                   <div className="flex items-center justify-between">
@@ -591,7 +659,7 @@ const OrderPage = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {convertPrice(diliveryPriceMemo)}
+                      {convertPrice(deliveryPriceMemo)}
                     </span>
                   </div>
                 </div>
@@ -601,7 +669,7 @@ const OrderPage = () => {
                       Tổng cộng
                     </span>
                     {listChecked?.length > 0 && (
-                      <div>
+                      <div className="md:hidden">
                         {moreInfoOrder ? (
                           <CaretDownOutlined className="text-gray-500" />
                         ) : (
@@ -627,9 +695,9 @@ const OrderPage = () => {
                                   .toLocaleString()
                                   .replaceAll(",", ".")} VNĐ`
                               : convertPrice(
-                                  diliveryPriceMemo
+                                  deliveryPriceMemo
                                     ? priceMemo -
-                                        diliveryPriceMemo -
+                                        deliveryPriceMemo -
                                         priceVoucher
                                     : priceMemo
                                 )
@@ -652,6 +720,7 @@ const OrderPage = () => {
                       background: "#422AFB",
                       height: "48px",
                       border: "none",
+                      width: "100%",
                       borderRadius: "4px",
                       color: "#fff",
                       fontSize: "15px",
@@ -666,21 +735,23 @@ const OrderPage = () => {
         )}
       </div>
       <ModalComponent
+        footer={null}
         title="Cập nhật thông tin giao hàng"
         open={isOpenModalUpdateInfo}
-        onCancel={handleCancleUpdate}
-        onOk={handleUpdateInforUser}
+        onCancel={handleCancelUpdate}
+        // onOk={handleUpdateInfoUser}
       >
         <Loading isLoading={isLoading}>
           <Form
             name="basic"
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 20 }}
-            // onFinish={onUpdateUser}
+            onFinish={handleUpdateInfoUser}
             autoComplete="on"
             form={form}
           >
             <Form.Item
+              className="font-medium p-0"
               label="Họ và tên"
               name="name"
               rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
@@ -692,17 +763,7 @@ const OrderPage = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Thành Phố"
-              name="city"
-              rules={[{ required: true, message: "Vui lòng nhập Thành phố!" }]}
-            >
-              <InputComponent
-                value={stateUserDetails["city"]}
-                onChange={handleOnchangeDetails}
-                name="city"
-              />
-            </Form.Item>
-            <Form.Item
+              className="font-medium p-0"
               label="Số điện thoại"
               name="phone"
               rules={[
@@ -715,13 +776,64 @@ const OrderPage = () => {
                 name="phone"
               />
             </Form.Item>
+            <Form.Item
+              className="font-medium p-0"
+              label="Tỉnh, thành phố"
+              name="city"
+              rules={[{ required: true, message: "Vui lòng chọn Thành phố!" }]}
+            >
+              {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+              <AutoComplete
+                options={province}
+                placeholder="Chọn tỉnh, thành phố"
+                filterOption={(inputValue, option) =>
+                  option.value
+                    .toUpperCase()
+                    .indexOf(inputValue.toUpperCase()) !== -1
+                }
+                onChange={handleOnChangeProvince}
+                value={stateUserDetails["city"]}
+                name="city"
+              />
+            </Form.Item>
+            <Form.Item
+              className="font-medium p-0"
+              label="Quận, huyện"
+              name="district"
+              rules={[
+                { required: true, message: "Vui lòng chọn Quận, Huyện!" },
+              ]}
+            >
+              {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+              <AutoComplete
+                options={district}
+                placeholder="Chọn quận, huyện"
+                filterOption={(inputValue, option) =>
+                  option.value
+                    .toUpperCase()
+                    .indexOf(inputValue.toUpperCase()) !== -1
+                }
+                onChange={handleOnChangeDistrict}
+                value={stateUserDetails["district"]}
+                name="district"
+              />
+            </Form.Item>
 
             <Form.Item
+              className="font-medium p-0"
               label="Địa chỉ"
               name="address"
-              rules={[
-                { required: true, message: "Vui lòng nhập địa chỉ address!" },
-              ]}
+              rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
             >
               <InputComponent
                 value={stateUserDetails.address}
@@ -729,6 +841,12 @@ const OrderPage = () => {
                 name="address"
               />
             </Form.Item>
+            <button
+              type="submit"
+              className="w-full m-0 md:w-80 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+            >
+              Xác nhận
+            </button>
           </Form>
         </Loading>
       </ModalComponent>
