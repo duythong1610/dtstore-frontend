@@ -2,6 +2,7 @@ import React from "react";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertPrice } from "../../until";
+import { CheckCircleFilled } from "@ant-design/icons";
 
 const OrderSuccess = () => {
   const navigate = useNavigate();
@@ -16,7 +17,10 @@ const OrderSuccess = () => {
       />
       <div className="p-5 bg-slate-100 min-h-screen ">
         <div className="p-5 bg-white rounded-xl shadow-md">
-          <p className="text-sm font-medium">Yay! Đặt hàng thành công!</p>
+          <p className="text-sm font-medium flex items-center gap-2">
+            Yay! Đặt hàng thành công!{" "}
+            <CheckCircleFilled className="text-green-500" />{" "}
+          </p>
           <p className="text-sm font-medium">
             Chuẩn bị tiền mặt{" "}
             <span className="text-red-500">
