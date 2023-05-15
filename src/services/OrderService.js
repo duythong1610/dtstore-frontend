@@ -41,13 +41,15 @@ export const cancelOrder = async (id, access_token, orderItems, userId) => {
   const data = { orderItems, orderId: id };
   const res = await axiosJWT.delete(
     `https://dtstore-backend.onrender.com/api/order/cancel-order/${userId}`,
-    { data },
     {
       headers: {
+        // "Content-Type": "application/json",
         token: `Bearer ${access_token}`,
       },
+      data: data,
     }
   );
+  console.log({ res });
   return res.data;
 };
 

@@ -7,7 +7,7 @@ import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as message from "../../components/Message/Message";
 import { updateUser } from "../../redux/slides/userSlice";
 import { getBase64 } from "../../until";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   CheckCircleFilled,
   UserOutlined,
@@ -16,6 +16,7 @@ import {
   SettingOutlined,
   EditOutlined,
   RightOutlined,
+  LeftOutlined,
 } from "@ant-design/icons";
 import Loading from "../../components/LoadingComponent/Loading";
 
@@ -26,6 +27,7 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
   const [avatar, setAvatar] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -93,96 +95,12 @@ const ProfilePage = () => {
       access_token: user?.access_token,
     });
   };
-  console.log({ address });
 
   return (
     <Loading isLoading={isLoading}>
       <div className="main bg-gray-100 h-auto min-h-screen md:h-screen">
         <div className="max-w-7xl m-auto">
-          {/* <WrapperHeader>Thông tin người dùng</WrapperHeader>
-      <WrapperContentProfile>
-        <WrapperInput>
-          <WrapperLabel htmlFor="name">Name</WrapperLabel>
-          <InputForm
-            id="name"
-            style={{ width: "500px" }}
-            value={name}
-            onChange={handleChangeName}
-          />
-        </WrapperInput>
-        <WrapperInput>
-          <WrapperLabel htmlFor="email">Email</WrapperLabel>
-          <InputForm
-            id="email"
-            style={{ width: "500px" }}
-            value={email}
-            onChange={handleChangeEmail}
-          />
-        </WrapperInput>
-        <WrapperInput>
-          <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
-          <InputForm
-            id="phone"
-            style={{ width: "500px" }}
-            value={phone}
-            onChange={handleChangePhone}
-          />
-        </WrapperInput>
-        <WrapperInput>
-          <WrapperLabel htmlFor="address">Address</WrapperLabel>
-          <InputForm
-            id="address"
-            style={{ width: "500px" }}
-            value={address}
-            onChange={handleChangeAddress}
-          />
-        </WrapperInput>
-
-        <WrapperInput>
-          <WrapperUploadFile maxCount={1} onChange={handleChangeAvatar}>
-            {avatar ? (
-              <img
-                src={avatar}
-                style={{
-                  height: "60px",
-                  width: "60px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-                alt="avatar"
-              />
-            ) : (
-              <img
-                src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
-                style={{
-                  height: "60px",
-                  width: "60px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-                alt="avatar"
-              />
-            )}
-          </WrapperUploadFile>
-        </WrapperInput>
-        <ButtonComponent
-          onClick={handleUpdate}
-          size={40}
-          styleButton={{
-            color: "rgb(26,148,255)",
-            fontSize: "15px",
-            fontWeight: "700",
-            height: "30px",
-            width: "fit-content",
-            border: "1px solid rgb(26,148,255)",
-            borderRadius: "4px",
-            padding: "4px 8px",
-          }}
-          textButton={"Cập nhật"}
-        />
-      </WrapperContentProfile> */}
-
-          <div className="content pt-5 px-5 flex flex-col md:flex-row">
+          <div className="content pt-16 md:pt-5 px-5 flex flex-col md:flex-row">
             <div className="content-left md:w-1/4 md:px-5 hidden md:block">
               <div className="flex gap-2 mb-3">
                 <img
@@ -254,7 +172,20 @@ const ProfilePage = () => {
               </ul>
             </div>
             <div className="content-right mb-[80px] w-full bg-white p-5 rounded-xl">
-              <div className="text-center md:text-start">
+              <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
+                <div className="flex justify-center items-center">
+                  <LeftOutlined
+                    onClick={() => navigate(-1)}
+                    className={"w-8 h-8 text-lg text-blue-500 text-center"}
+                  />
+                </div>
+                <div className="text-center w-full mr-8">
+                  <h1 className="text-xl font-medium m-0">
+                    THÔNG TIN TÀI KHOẢN
+                  </h1>
+                </div>
+              </div>
+              <div className="hidden md:block text-start">
                 <h1 className="mb-5 text-lg md:text-xl">Thông tin tài khoản</h1>
               </div>
               <div className="info flex flex-col-reverse md:flex-row items-center">

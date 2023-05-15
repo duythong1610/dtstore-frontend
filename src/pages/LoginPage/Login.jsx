@@ -20,7 +20,6 @@ import { HSeparator } from "../../components/separator/Separator";
 import * as message from "../../components/Message/Message";
 
 // // Assets
-import FixedPlugin from "../../components/FixedPlugin/FixedPlugin";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
@@ -397,7 +396,6 @@ function Login() {
         </Box>
         {/* <Footer /> */}
       </Flex>
-      <FixedPlugin />
     </Flex>
   );
 }

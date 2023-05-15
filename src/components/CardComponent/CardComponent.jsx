@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { convertPrice } from "../../until";
 import Soldout from "../../assets/img/sold_out.png";
 import { Rate } from "antd";
+import * as UserService from "../../services/UserService";
+import { useSelector } from "react-redux";
 
 const CardComponent = ({
   discount,
@@ -25,7 +27,12 @@ const CardComponent = ({
   id,
 }) => {
   const navigate = useNavigate();
-  const handleProductDetails = () => {
+  const user = useSelector((state) => state.user);
+  const handleProductDetails = async () => {
+    if (user?.id) {
+      await UserService.viewedProducts(id, user?.id, user?.access_token);
+      navigate(`/product-detail/${id}`);
+    }
     navigate(`/product-detail/${id}`);
   };
   return (
@@ -59,7 +66,7 @@ const CardComponent = ({
         </span>
 
         <span className="text-xs md:text-sm">
-          {sold && `| Đã bán ${sold}`}{" "}
+          {sold > 0 && `| Đã bán ${sold}`}{" "}
         </span>
       </WrapperReportText>
 

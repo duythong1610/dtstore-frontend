@@ -9,6 +9,7 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import useDebounce from "../../hooks/useDebounce";
 import { CloseCircleOutlined } from "@ant-design/icons";
+import { convertPrice } from "../../until";
 
 function TypeProductPage() {
   const searchProduct = useSelector((state) => state?.product?.search);
@@ -16,8 +17,8 @@ function TypeProductPage() {
   const { state } = useLocation();
   const [products, setProducts] = useState("");
   const [productsViews, setProductsView] = useState("");
-  const [minValue, setMinValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(0);
+  const [minValue, setMinValue] = useState(300000);
+  const [maxValue, setMaxValue] = useState(50000000);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
   const [active, setActive] = useState("");
@@ -89,14 +90,15 @@ function TypeProductPage() {
     }
   };
 
-  console.log({ products }, { productsViews });
-
-  const handleSliderPrice = (value) => {
+  const handleOnChangeSliderPrice = (value) => {
     setProductsView(products);
     setMinValue(value[0]);
     setMaxValue(value[1]);
     const productFilter = products.filter((item) => {
-      return item.price >= minValue + "000" && item.price <= maxValue + "000";
+      return (
+        item.price - (item.price * item.discount) / 100 >= minValue &&
+        item.price - (item.price * item.discount) / 100 <= maxValue
+      );
     });
     setProductsView(productFilter);
   };
@@ -147,6 +149,7 @@ function TypeProductPage() {
     },
   ];
 
+  const formatter = (value) => `${convertPrice(value)}`;
   function renderFilter() {
     return itemsFilter.map((item) => {
       return (
@@ -188,18 +191,22 @@ function TypeProductPage() {
           <div>
             <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
             <Slider
-              min={300}
-              max={40000}
+              step={10000}
+              min={300000}
+              max={50000000}
               range
-              defaultValue={[300, 40000]}
-              onChange={handleSliderPrice}
-              tooltip={false}
+              value={[minValue, maxValue]}
+              defaultValue={[300000, 50000000]}
+              onChange={handleOnChangeSliderPrice}
+              tooltip={{ formatter }}
             />
           </div>
           <div className="flex gap-5 justify-between">
             <button
               onClick={() => {
                 setActive(false);
+                setMinValue(300000);
+                setMaxValue(50000000);
                 fetchProductType(state, paginate.page, paginate.limit);
               }}
               className="px-3 py-1 border border-blue-500 rounded-md font-medium text-red-400 w-1/2"
@@ -207,7 +214,10 @@ function TypeProductPage() {
               Bỏ chọn
             </button>
 
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium w-1/2">
+            <button
+              className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium w-1/2"
+              // onClick={handleViewResult}
+            >
               Xem {productsViews.length} kết quả
             </button>
           </div>

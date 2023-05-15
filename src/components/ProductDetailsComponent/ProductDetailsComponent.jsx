@@ -94,6 +94,9 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             amount: numProduct,
             image: productDetails?.image,
             price: productDetails?.price,
+            priceDiscount:
+              productDetails?.price -
+              (productDetails?.price * productDetails?.discount) / 100,
             product: productDetails?._id,
             discount: productDetails?.discount,
             countInstock: productDetails?.countInStock,
@@ -120,8 +123,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
               onClick={() => navigate("/")}
               className={
                 scrollPosition === 0
-                  ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80"
-                  : "w-8 h-8 text-lg text-blue-500 text-center"
+                  ? "w-8 h-8 text-lg text-white text-center !block rounded-full bg-zinc-400 opacity-80"
+                  : "w-8 h-8 text-lg text-blue-500 text-center !block"
               }
             />
           </div>
@@ -136,8 +139,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                   // onClick={navigate("/order")}
                   className={
                     scrollPosition === 0
-                      ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80"
-                      : "w-8 h-8 text-lg text-blue-500 text-center"
+                      ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80 !block"
+                      : "w-8 h-8 text-lg text-blue-500 text-center !block"
                   }
                 />
               </Badge>
@@ -201,11 +204,11 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
 
         <Col span={12} className="max-w-full md:pl-5">
           <WrapperStyleNameProduct className="text-slate-900 md:text-2xl text-xl md:mt-0 mt-3">
-            {productDetails?.name}{" "}
+            {productDetails?.name}
           </WrapperStyleNameProduct>
           {productDetails?.countInStock === 0 && (
             <p style={{ color: "#e83a45", marginTop: "-10px" }}>
-              TẠM THỜI HẾT HÀNG{" "}
+              TẠM THỜI HẾT HÀNG
             </p>
           )}
 
@@ -215,7 +218,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
               value={productDetails?.rating}
               style={{ fontSize: "12px", color: "#e83a45" }}
             />
-            {productDetails?.sold && (
+            {productDetails?.sold > 0 && (
               <WrapperStyleTextSell>
                 {` | Đã bán ${productDetails?.sold}`}
               </WrapperStyleTextSell>

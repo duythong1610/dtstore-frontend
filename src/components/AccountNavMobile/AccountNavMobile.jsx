@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as message from "../../components/Message/Message";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   CheckCircleFilled,
@@ -19,6 +19,7 @@ const AccountNavMobile = ({ handleToggleClass }) => {
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     setLoading(true);
@@ -29,6 +30,26 @@ const AccountNavMobile = ({ handleToggleClass }) => {
     message.success("Đăng xuất thành công!");
     dispatch(resetUser());
     setLoading(false);
+  };
+
+  const handleNavigate = (type) => {
+    // if (type === "profile") {
+    //   navigate("/profile-user");
+    //   handleToggleClass();
+    // }
+    // if (type === "admin") {
+    //   navigate("/system-admin");
+    //   handleToggleClass();
+    // }
+    if (type === "my-order") {
+      navigate("/my-order", {
+        state: { id: user?.id, token: user?.access_token },
+      });
+      handleToggleClass();
+    } else {
+      navigate(type);
+      handleToggleClass();
+    }
   };
   return (
     <Loading isLoading={loading}>
@@ -59,63 +80,63 @@ const AccountNavMobile = ({ handleToggleClass }) => {
               <div className="h-[70vh] flex flex-col justify-between">
                 <ul>
                   {user?.isAdmin && (
-                    <li>
-                      <Link
-                        to="/system-admin"
-                        className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                      >
+                    <li
+                      className="cursor-pointer"
+                      onClick={() => handleNavigate("/system-admin")}
+                    >
+                      <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                         <div className="flex items-center justify-center gap-3">
                           <SettingOutlined />
                           <span>Quản lý hệ thống</span>
                         </div>
                         <RightOutlined className="md:hidden text-gray-500" />
-                      </Link>
+                      </div>
                       <hr />
                     </li>
                   )}
-                  <li onClick={handleToggleClass}>
-                    <Link
-                      to="/profile-user"
-                      className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                    >
+                  <li
+                    onClick={() => handleNavigate("/profile-user")}
+                    className="cursor-pointer"
+                  >
+                    <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                       <div className="flex items-center justify-center gap-3">
                         <UserOutlined />
                         <span>Thông tin tài khoản</span>
                       </div>
                       <RightOutlined className="md:hidden text-gray-500" />
-                    </Link>
+                    </div>
                     <hr />
                   </li>
-                  <li>
-                    <Link
-                      to=""
-                      className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                    >
+                  <li
+                    className="cursor-pointer"
+                    onClick={() => handleNavigate("my-order")}
+                  >
+                    <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                       <div className="flex items-center justify-center gap-3">
                         <OrderedListOutlined />
                         <span>Quản lý đơn hàng</span>
                       </div>
                       <RightOutlined className="md:hidden text-gray-500" />
-                    </Link>
+                    </div>
                     <hr />
                   </li>
-                  <li>
-                    <Link
-                      to=""
-                      className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                    >
+                  <li
+                    className="cursor-pointer"
+                    onClick={() => handleNavigate("viewed-products")}
+                  >
+                    <div className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                       <div className="flex items-center justify-center gap-3">
                         <EyeFilled className="text-gray-500" />
                         <span>Sản phẩm đã xem</span>
                       </div>
                       <RightOutlined className="md:hidden text-gray-500" />
-                    </Link>
+                    </div>
                     <hr />
                   </li>
                 </ul>
                 <button
                   onClick={handleLogout}
-                  className="py-5 w-full bg-blue-600 text-sm font-medium text-white h-14 rounded-lg"
+                  className="h-12 w-full bg-blue-600 text-sm font-medium text-white rounded-lg"
                   // onClick={handleUpdate}
                 >
                   Đăng xuất

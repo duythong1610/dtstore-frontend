@@ -10,6 +10,8 @@ import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
+import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
+import ViewedProductsPage from "../pages/ViewedProductsPage/ViewedProductsPage";
 export const routes = [
   {
     path: "/",
@@ -26,6 +28,17 @@ export const routes = [
   {
     path: "/my-order",
     component: MyOrder,
+    isDefaultLayout: true,
+  },
+  {
+    path: "/viewed-products",
+    component: ViewedProductsPage,
+    isDefaultLayout: true,
+  },
+
+  {
+    path: "/details-order/:id",
+    component: DetailsOrderPage,
     isDefaultLayout: true,
   },
   {

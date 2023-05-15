@@ -38,7 +38,7 @@ const ProductSimilar = ({ idProduct }) => {
           Sản phẩm tương tự
         </p>
         <div className="overflow-y-hidden scrollbar-hide flex w-full gap-3 py-2">
-          {productSimilar.length > 0 &&
+          {productSimilar?.length > 0 &&
             productSimilar?.map((product) => {
               console.log({ product });
               return (

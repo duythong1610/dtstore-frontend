@@ -49,6 +49,30 @@ export const getDetailsUser = async (id, access_token) => {
   return res.data;
 };
 
+export const viewedProducts = async (productId, userId, access_token) => {
+  const res = await axiosJWT.post(
+    `https://dtstore-backend.onrender.com/api/user/viewed-products/${userId}`,
+    { productId },
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getViewedProducts = async (userId, access_token) => {
+  const res = await axios.get(
+    `https://dtstore-backend.onrender.com/api/user/get-viewed-products/${userId}`,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
 export const updateUser = async (id, data, access_token) => {
   const res = await axiosJWT.put(
     `https://dtstore-backend.onrender.com/api/user/update-user/${id}`,

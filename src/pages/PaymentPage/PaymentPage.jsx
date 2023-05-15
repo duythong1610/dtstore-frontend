@@ -99,33 +99,6 @@ const PaymentPage = () => {
     return result;
   }, [order]);
 
-  const priceDiscountMemo = useMemo(() => {
-    const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      const totalDiscount = cur.discount ? cur.discount : 0;
-      return total + (priceMemo * (totalDiscount * cur.amount)) / 100;
-    }, 0);
-    if (Number(result)) {
-      return result;
-    }
-    return 0;
-  }, [order]);
-
-  const diliveryPriceMemo = useMemo(() => {
-    if (priceMemo > 200000) {
-      return 10000;
-    } else if (priceMemo === 0) {
-      return 0;
-    } else {
-      return 20000;
-    }
-  }, [priceMemo]);
-
-  const totalPriceMemo = useMemo(() => {
-    return (
-      Number(priceMemo) - Number(priceDiscountMemo) + Number(diliveryPriceMemo)
-    );
-  }, [priceMemo, priceDiscountMemo, diliveryPriceMemo]);
-
   const handleAddOrder = () => {
     if (
       user?.access_token &&
@@ -135,6 +108,7 @@ const PaymentPage = () => {
       user?.district &&
       user?.phone &&
       user?.city &&
+      user?.district &&
       priceMemo &&
       user?.id
     ) {
@@ -146,10 +120,12 @@ const PaymentPage = () => {
         address: user?.address,
         phone: user?.phone,
         city: user?.city,
+        district: user?.district,
         paymentMethod: payment,
-        itemsPrice: priceMemo,
-        shippingPrice: diliveryPriceMemo,
-        totalPrice: totalPriceMemo,
+        delivery,
+        itemsPrice: state?.price,
+        shippingPrice: handleDeliveryPrice(),
+        totalPrice: state?.totalPrice,
         user: user?.id,
         email: user?.email,
       });
@@ -161,6 +137,8 @@ const PaymentPage = () => {
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
   });
+
+  console.log({ state });
 
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
@@ -189,7 +167,7 @@ const PaymentPage = () => {
           delivery,
           payment,
           orders: order?.orderItemsSelected,
-          totalPriceMemo: totalPriceMemo,
+          totalPriceMemo: state?.totalPrice,
         },
       });
     } else if (isError) {
@@ -207,7 +185,7 @@ const PaymentPage = () => {
     form.resetFields();
     setIsOpenModalUpdateInfo(false);
   };
-
+  console.log({ state });
   const onSuccessPaypal = (details, data) => {
     mutationAddOrder.mutate({
       token: user?.access_token,
@@ -216,10 +194,11 @@ const PaymentPage = () => {
       address: user?.address,
       phone: user?.phone,
       city: user?.city,
+      district: user?.district,
       paymentMethod: payment,
       itemsPrice: priceMemo,
-      shippingPrice: diliveryPriceMemo,
-      totalPrice: totalPriceMemo,
+      shippingPrice: 0,
+      totalPrice: state?.totalPrice,
       user: user?.id,
       isPaid: true,
       paidAt: details.update_time,
@@ -256,8 +235,8 @@ const PaymentPage = () => {
     setPayment(e.target.value);
   };
 
-  const handleDeliveryPrice = (payment) => {
-    if (delivery === "go_jek") {
+  const handleDeliveryPrice = () => {
+    if (delivery === "now") {
       return 40000;
     }
     if (delivery === "fast") {
@@ -318,11 +297,11 @@ const PaymentPage = () => {
                       </span>{" "}
                       Giao hàng tiết kiệm
                     </Radio>
-                    <Radio value="go_jek">
+                    <Radio value="now">
                       <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                        GO_JEK
+                        NOW
                       </span>{" "}
-                      Giao hàng tiết kiệm
+                      Giao siêu tốc
                     </Radio>
                   </Radio.Group>
                 </div>
@@ -413,7 +392,7 @@ const PaymentPage = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      {state.price}
+                      {convertPrice(state.price)}
                     </span>
                   </div>
 
@@ -471,7 +450,7 @@ const PaymentPage = () => {
                   <span>Tổng tiền</span>
                   <span style={{ display: "flex", flexDirection: "column" }}>
                     <span className="text-xl font-medium md:text-base text-red-500">
-                      {state?.totalPrice}
+                      {convertPrice(state?.totalPrice)}
                     </span>
                     <span style={{ color: "#000", fontSize: "11px" }}>
                       (Đã bao gồm VAT nếu có)

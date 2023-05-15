@@ -19,7 +19,6 @@ import { NavLink } from "react-router-dom";
 import { HSeparator } from "../../components/separator/Separator";
 
 // // Assets
-import FixedPlugin from "../../components/FixedPlugin/FixedPlugin";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
@@ -517,7 +516,6 @@ function SignUpPage() {
         </Box>
         {/* <Footer /> */}
       </Flex>
-      <FixedPlugin />
     </Flex>
   );
 }

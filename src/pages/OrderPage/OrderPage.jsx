@@ -39,6 +39,7 @@ import {
   LeftOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import EmptyCart from "../../assets/img/empty-cart.jpg";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -168,7 +169,13 @@ const OrderPage = () => {
   }, [isOpenModalUpdateInfo]);
 
   const handleChangeAddress = () => {
-    setIsOpenModalUpdateInfo(true);
+    if (!user.name) {
+      message.error(
+        "Bạn chưa đăng nhập! Vui lòng đăng nhập để thay đổi địa chỉ"
+      );
+    } else {
+      setIsOpenModalUpdateInfo(true);
+    }
   };
 
   const priceMemo = useMemo(() => {
@@ -225,28 +232,30 @@ const OrderPage = () => {
   };
 
   const handleAddCard = () => {
-    if (!order?.orderItemsSelected?.length) {
-      message.error("Vui lòng chọn sản phẩm");
-    } else if (!user?.phone || !user.address || !user.name || !user.city) {
-      setIsOpenModalUpdateInfo(true);
+    if (!user.name) {
+      message.error(
+        "Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục mua hàng."
+      );
     } else {
-      navigate("/payment", {
-        state: {
-          priceVoucher: priceVoucher,
-          totalPrice: isVoucher
-            ? `${priceAddVoucher(totalPriceMemo)
-                .toLocaleString()
-                .replaceAll(",", ".")} VNĐ`
-            : convertPrice(
-                deliveryPriceMemo
-                  ? totalPriceMemo - deliveryPriceMemo - priceVoucher
-                  : totalPriceMemo
-              ),
-          price: convertPrice(totalPriceMemo),
-          districts: districts,
-          provinces: provinces,
-        },
-      });
+      if (!order?.orderItemsSelected?.length) {
+        message.error("Vui lòng chọn sản phẩm");
+      } else if (!user?.phone || !user.address || !user.name || !user.city) {
+        setIsOpenModalUpdateInfo(true);
+      } else {
+        navigate("/payment", {
+          state: {
+            priceVoucher: priceVoucher,
+            totalPrice: isVoucher
+              ? `${priceAddVoucher(totalPriceMemo)}`
+              : deliveryPriceMemo
+              ? totalPriceMemo - deliveryPriceMemo - priceVoucher
+              : totalPriceMemo,
+            price: totalPriceMemo,
+            districts: districts,
+            provinces: provinces,
+          },
+        });
+      }
     }
   };
 
@@ -372,7 +381,22 @@ const OrderPage = () => {
           </div>
         </div>
         {order?.orderItems?.length === 0 ? (
-          <span>Chua co cai gi het ban oi</span>
+          <div className="text-center">
+            <img
+              src={EmptyCart}
+              alt=""
+              className="inline-block mix-blend-darken md:w-1/3"
+            />
+            <p className="text-base font-medium mb-4 md:mb-3">
+              Bạn chưa có sản phẩm nào trong giỏ hàng!
+            </p>
+            <ButtonComponent
+              className="bg-[#422AFB] h-12 w-full md:w-72 rounded-md text-white text-base font-bold"
+              onClick={() => navigate("/")}
+              size={40}
+              textButton={"Tiếp tục mua sắm"}
+            ></ButtonComponent>
+          </div>
         ) : (
           <div className="flex justify-center flex-col md:flex-row">
             <WrapperLeft>
@@ -592,16 +616,27 @@ const OrderPage = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="customer_info flex items-center">
-                      <span className="font-medium">{user?.name}</span>
-                      <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
-                      <span className="font-medium">{user?.phone}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-zinc-500">
-                        {`${user?.address}, ${user?.district}, ${user?.city}`}{" "}
+                    {user?.name ? (
+                      <div>
+                        <div className="customer_info flex items-center">
+                          <span className="font-medium">{user?.name}</span>
+                          <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
+                          <span className="font-medium">{user?.phone}</span>
+                        </div>
+
+                        <div>
+                          <span className="font-medium text-zinc-500">
+                            {`${user?.address}${user?.district ? "," : ""} ${
+                              user?.district
+                            }${user?.city ? "," : ""} ${user?.city}`}{" "}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-red-500 font-medium">
+                        Bạn quên đăng nhập rồi này!
                       </span>
-                    </div>
+                    )}
                   </div>
                 </div>
                 <div
@@ -841,12 +876,14 @@ const OrderPage = () => {
                 name="address"
               />
             </Form.Item>
-            <button
-              type="submit"
-              className="w-full m-0 md:w-80 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
-            >
-              Xác nhận
-            </button>
+            <div className=" md:text-right">
+              <button
+                type="submit"
+                className="w-full m-0 md:w-40 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+              >
+                Xác nhận
+              </button>
+            </div>
           </Form>
         </Loading>
       </ModalComponent>

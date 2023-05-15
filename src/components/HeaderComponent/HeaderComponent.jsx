@@ -30,6 +30,7 @@ function HeaderComponent() {
   const [isToggleContent, setIsToggleContent] = useState(false);
 
   const [active, setActive] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(false);
   const order = useSelector((state) => state.order);
   const [searchText, setSearchText] = useState("");
   const user = useSelector((state) => state.user);
@@ -43,8 +44,6 @@ function HeaderComponent() {
   const handleNavigate = () => {
     navigate("/sign-in");
   };
-
-  console.log({ active });
 
   const handleLogout = async () => {
     setLoading(true);
@@ -70,7 +69,9 @@ function HeaderComponent() {
 
   const handleToggleClassContent = () => {
     setIsToggleContent((current) => !current);
+    setActiveCategory((current) => !current);
   };
+  console.log({ activeCategory });
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
@@ -93,13 +94,23 @@ function HeaderComponent() {
   }, [user?.name, user?.avatar]);
 
   const content = (
-    <div>
+    <div className="hidden md:block">
       <WrapperContentPopup
         onClick={() => {
           navigate("/profile-user");
         }}
       >
         Thông tin tài khoản
+      </WrapperContentPopup>
+
+      <WrapperContentPopup
+        onClick={() => {
+          navigate("/my-order", {
+            state: { id: user?.id, token: user?.access_token },
+          });
+        }}
+      >
+        Đơn hàng của tôi
       </WrapperContentPopup>
 
       {user?.isAdmin && (
@@ -170,68 +181,92 @@ function HeaderComponent() {
           </NavLink>
           <NavLink
             onClick={handleToggleClassContent}
-            className={({ isActive }) =>
-              setActive(isActive) ?? active
+            className={
+              activeCategory
                 ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
                 : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
             }
           >
-            <AppstoreOutlined
-              className={
-                active
-                  ? "text-blue-600 font-medium hover:text-blue-600"
-                  : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
-              }
-              style={{ fontSize: "22px" }}
-            />
+            <AppstoreOutlined style={{ fontSize: "22px" }} />
 
             <span className="text-sm md:text-base">Danh mục</span>
           </NavLink>
           <Loading isLoading={loading}>
-            <WrapperHeaderAccount className="flex-col md:flex-row gap-1 md:gap-2">
-              {userAvatar ? (
-                <img
-                  src={userAvatar}
-                  alt="avatar"
-                  style={{
-                    height: "30px",
-                    width: "30px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                ></img>
-              ) : (
-                <UserOutlined style={{ fontSize: "22px" }} />
-              )}
+            <div className="hidden md:block">
+              <Popover
+                trigger="click"
+                content={content}
+                style={{ padding: "0px" }}
+                className="hidden md:block"
+              >
+                <WrapperHeaderAccount className="flex-col md:flex-row gap-1 md:gap-2">
+                  {userAvatar ? (
+                    <img
+                      src={userAvatar}
+                      alt="avatar"
+                      style={{
+                        height: "30px",
+                        width: "30px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    ></img>
+                  ) : (
+                    <UserOutlined style={{ fontSize: "22px" }} />
+                  )}
 
-              {user?.access_token ? (
-                <>
-                  <Popover
-                    trigger="click"
-                    content={content}
-                    style={{ padding: "0px" }}
-                    className="hidden md:block"
-                  >
-                    {" "}
-                    <span className="text-sm md:text-base !block  cursor-pointer">
+                  {user?.access_token ? (
+                    <>
+                      {" "}
+                      <span className="text-base cursor-pointer">
+                        Tài khoản
+                      </span>
+                    </>
+                  ) : (
+                    <div onClick={handleNavigate}>
+                      <span className="text-sm md:text-base cursor-pointer">
+                        Tài khoản
+                      </span>
+                    </div>
+                  )}
+                </WrapperHeaderAccount>
+              </Popover>
+            </div>
+            <div className="md:hidden">
+              <WrapperHeaderAccount
+                className="flex-col md:flex-row gap-1 md:gap-2"
+                onClick={handleToggleClass}
+              >
+                {userAvatar ? (
+                  <img
+                    src={userAvatar}
+                    alt="avatar"
+                    style={{
+                      height: "22px",
+                      width: "22px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  ></img>
+                ) : (
+                  <UserOutlined style={{ fontSize: "22px" }} />
+                )}
+
+                {user?.access_token ? (
+                  <>
+                    <span className="text-sm md:text-base md:hidden cursor-pointer">
                       Tài khoản
                     </span>
-                  </Popover>
-                  <span
-                    className="text-sm md:text-base md:hidden cursor-pointer"
-                    onClick={handleToggleClass}
-                  >
-                    Tài khoản
-                  </span>
-                </>
-              ) : (
-                <div onClick={handleNavigate}>
-                  <span className="text-sm md:text-base cursor-pointer">
-                    Tài khoản
-                  </span>
-                </div>
-              )}
-            </WrapperHeaderAccount>
+                  </>
+                ) : (
+                  <div onClick={handleNavigate}>
+                    <span className="text-sm md:text-base cursor-pointer">
+                      Tài khoản
+                    </span>
+                  </div>
+                )}
+              </WrapperHeaderAccount>
+            </div>
           </Loading>
           <NavLink
             to="/order"
