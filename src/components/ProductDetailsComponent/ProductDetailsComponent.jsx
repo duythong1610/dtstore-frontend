@@ -120,7 +120,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
         >
           <div className="flex justify-center items-center">
             <LeftOutlined
-              onClick={() => navigate("/")}
+              onClick={() => navigate(-1)}
               className={
                 scrollPosition === 0
                   ? "w-8 h-8 text-lg text-white text-center !block rounded-full bg-zinc-400 opacity-80"
