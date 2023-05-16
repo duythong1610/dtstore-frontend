@@ -114,7 +114,15 @@ function Home() {
           <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
             {loading
               ? Array.from({ length: products?.data?.length || 0 }).map(
-                  (_, index) => <Skeleton key={index} active />
+                  (_, index) => (
+                    <div key={index} className="flex flex-col gap-2">
+                      <div className="skeleton h-36 w-full rounded-md" />
+                      <div className="skeleton h-6 w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                      <div className="skeleton h-5 w-full rounded-md" />
+                    </div>
+                  )
                 )
               : products?.data?.map((product) => {
                   return (
