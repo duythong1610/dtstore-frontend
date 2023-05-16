@@ -61,27 +61,39 @@ function TypeProductPage() {
     switch (type) {
       case "2to4":
         result = products.filter((item) => {
-          return item.price >= 2000000 && item.price <= 4000000;
+          return (
+            item.price - (item.price * item.discount) / 100 >= 2000000 &&
+            item.price - (item.price * item.discount) / 100 <= 4000000
+          );
         });
         return setProductsView(result);
       case "4to7":
         result = products.filter((item) => {
-          return item.price >= 4000000 && item.price <= 7000000;
+          return (
+            item.price - (item.price * item.discount) / 100 >= 4000000 &&
+            item.price - (item.price * item.discount) / 100 <= 7000000
+          );
         });
         return setProductsView(result);
       case "7to13":
         result = products.filter((item) => {
-          return item.price >= 7000000 && item.price <= 13000000;
+          return (
+            item.price - (item.price * item.discount) / 100 >= 7000000 &&
+            item.price - (item.price * item.discount) / 100 <= 13000000
+          );
         });
         return setProductsView(result);
       case "13to20":
         result = products.filter((item) => {
-          return item.price >= 13000000 && item.price <= 20000000;
+          return (
+            item.price - (item.price * item.discount) / 100 >= 13000000 &&
+            item.price - (item.price * item.discount) / 100 <= 20000000
+          );
         });
         return setProductsView(result);
       case "20upto":
         result = products.filter((item) => {
-          return item.price >= 20000000;
+          return item.price - (item.price * item.discount) / 100 >= 20000000;
         });
         return setProductsView(result);
 
