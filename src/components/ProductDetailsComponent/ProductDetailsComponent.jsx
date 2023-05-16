@@ -21,9 +21,18 @@ import { addOrderProduct } from "../../redux/slides/orderSlice";
 import { convertPrice, priceDiscount } from "../../until";
 import { LeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import SkeletonComponent from "../SkeletonComponent/SkeletonComponent";
+import history from "../../history";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.order);
+  // const [isNavigatedBack, setIsNavigatedBack] = useState(false);
+  const [numProduct, setNumProduct] = useState(1);
   const handleScroll = () => {
     const position = window.pageYOffset;
     setScrollPosition(position);
@@ -37,15 +46,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     };
   }, []);
 
-  console.log(scrollPosition);
-  const [api, contextHolder] = notification.useNotification();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const order = useSelector((state) => state.order);
-
-  const [numProduct, setNumProduct] = useState(1);
   const onChange = () => {};
   const fetchProductDetails = async (context) => {
     const id = context?.queryKey && context?.queryKey[1];
@@ -78,7 +78,11 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
       setNumProduct(numProduct - 1);
     }
   };
-  console.log({ productDetails });
+
+  const handleBackPage = () => {
+    window.scrollTo(0, 0);
+    history.back();
+  };
 
   const handleAddOrderProduct = () => {
     api.success({
@@ -122,11 +126,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
           <div className="flex justify-center items-center">
             <LeftOutlined
               onClick={() => {
-                navigate(-1);
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
+                handleBackPage();
               }}
               className={
                 scrollPosition === 0

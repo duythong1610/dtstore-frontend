@@ -31,11 +31,11 @@ const ProductSimilar = ({ idProduct }) => {
   console.log(loading);
 
   const handleProductDetails = (id) => {
-    navigate(`/product-detail/${id}`);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+    navigate(`/product-detail/${id}`);
   };
 
   console.log(productSimilar.length);
@@ -46,7 +46,7 @@ const ProductSimilar = ({ idProduct }) => {
         <p className="text-base font-medium mb-0 md:text-2xl">
           Sản phẩm tương tự
         </p>
-        <div className="overflow-y-hidden scrollbar-hide flex w-full gap-3 py-2">
+        <div className="overflow-y-hidden scrollbar-item md:overflow-y-auto flex w-full gap-3 py-2">
           {loading
             ? Array.from({ length: productSimilar?.length || 0 }).map(
                 (_, index) => (
@@ -68,15 +68,15 @@ const ProductSimilar = ({ idProduct }) => {
                 return (
                   <WrapperCardStyle
                     key={product?._id}
-                    className="w-[40vw] md:w-[20%]"
+                    className="min-w-[40vw] md:min-w-[calc(20%-12px)]"
                     hoverable
-                    bodyStyle={{ padding: 10, width: "40vw" }}
+                    bodyStyle={{ padding: 10 }}
                     onClick={() => handleProductDetails(product?._id)}
                   >
                     <div className="relative">
                       <img
                         src={product?.image}
-                        className="my-2 md:my-4 mx-0 h-36 md:h-60 object-contain"
+                        className="my-2 md:my-4 mx-0 object-contain"
                       />
                       {product?.countInStock === 0 && (
                         <span

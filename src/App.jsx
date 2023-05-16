@@ -12,6 +12,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/theme";
 import Loading from "./components/LoadingComponent/Loading";
 import { useState } from "react";
+import history from "./history";
 
 function App() {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ function App() {
       <ChakraProvider theme={theme}>
         {/* <ThemeEditorProvider> */}
         <Loading isLoading={isLoading}>
-          <Router>
+          <Router history={history}>
             <Routes>
               {routes.map((route, index) => {
                 const Page = route.component;

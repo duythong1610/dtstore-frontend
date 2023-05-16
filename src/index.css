@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 ::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: #fff;
@@ -20,13 +24,23 @@
 ::-webkit-scrollbar {
   width: 8px;
   background-color: #ccc;
-  height: 30px;
+  height: 10px;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
+.scrollbar-item::-webkit-scrollbar {
   display: none;
 }
 
+.scrollbar-item::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #fff;
+  height: 2px;
+}
+.scrollbar-item::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  height: 2px;
+  background-color: #d2d8d8;
+}
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   height: 30px;
@@ -137,4 +151,10 @@
   width: 100%;
   position: relative;
   transition-delay: 0.2s;
+}
+
+@media only screen and (min-width: 768px) {
+  .scrollbar-item::-webkit-scrollbar {
+    display: block;
+  }
 }
