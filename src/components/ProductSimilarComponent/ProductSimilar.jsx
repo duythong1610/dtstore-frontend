@@ -17,21 +17,25 @@ const ProductSimilar = ({ idProduct }) => {
   const [loading, setLoading] = useState();
   const navigate = useNavigate();
   const fetchProductSimilar = async () => {
-    setLoading(true);
     const res = await ProductService.getAllProductSimilar(idProduct);
-    setLoading(false);
     setProductSimilar(res.data);
     return res.data;
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchProductSimilar();
+    setLoading(false);
   }, [idProduct]);
 
-  console.log({ loading });
+  console.log(loading);
 
   const handleProductDetails = (id) => {
     navigate(`/product-detail/${id}`);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   console.log(productSimilar.length);
