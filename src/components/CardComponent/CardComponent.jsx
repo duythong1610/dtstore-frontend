@@ -32,8 +32,16 @@ const CardComponent = ({
     if (user?.id) {
       await UserService.viewedProducts(id, user?.id, user?.access_token);
       navigate(`/product-detail/${id}`);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }
     navigate(`/product-detail/${id}`);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
   return (
     <WrapperCardStyle

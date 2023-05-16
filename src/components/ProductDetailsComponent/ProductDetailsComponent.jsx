@@ -121,7 +121,13 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
         >
           <div className="flex justify-center items-center">
             <LeftOutlined
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                navigate(-1);
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
               className={
                 scrollPosition === 0
                   ? "w-8 h-8 text-lg text-white text-center !block rounded-full bg-zinc-400 opacity-80"
