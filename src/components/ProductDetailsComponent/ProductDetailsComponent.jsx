@@ -20,6 +20,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlice";
 import { convertPrice, priceDiscount } from "../../until";
 import { LeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import SkeletonComponent from "../SkeletonComponent/SkeletonComponent";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -147,214 +148,176 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             </NavLink>
           </div>
         </div>
-        <Col className="max-w-full md:pr-3" span={12}>
-          <img
-            className="h-60 md:h-96 w-full object-contain block rounded-xl"
-            src={productDetails?.image}
-            alt="img product"
-            preview={false}
-          />
-
-          {/* <Row style={{ paddingTop: "10px", justifyContent: "space-between" }}>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
+        {isLoading ? (
+          <SkeletonComponent />
+        ) : (
+          <>
+            <Col className="max-w-full md:pr-3" span={12}>
+              <img
+                className="h-60 md:h-96 w-full object-contain block rounded-xl"
+                src={productDetails?.image}
+                alt="img product"
                 preview={false}
               />
-            </WrapperStyleColImage>
+            </Col>
 
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-            <WrapperStyleColImage span={4}>
-              <WrapperStyleImageSmall
-                src="https://img4.thuthuatphanmem.vn/uploads/2020/03/07/hinh-anh-con-de-dep_031137505.jpg"
-                alt="img product small"
-                preview={false}
-              />
-            </WrapperStyleColImage>
-          </Row> */}
-        </Col>
+            <Col span={12} className="max-w-full md:pl-5">
+              <WrapperStyleNameProduct className="text-slate-900 md:text-2xl text-xl md:mt-0 mt-3">
+                {productDetails?.name}
+              </WrapperStyleNameProduct>
+              {productDetails?.countInStock === 0 && (
+                <p style={{ color: "#e83a45", marginTop: "-10px" }}>
+                  TẠM THỜI HẾT HÀNG
+                </p>
+              )}
 
-        <Col span={12} className="max-w-full md:pl-5">
-          <WrapperStyleNameProduct className="text-slate-900 md:text-2xl text-xl md:mt-0 mt-3">
-            {productDetails?.name}
-          </WrapperStyleNameProduct>
-          {productDetails?.countInStock === 0 && (
-            <p style={{ color: "#e83a45", marginTop: "-10px" }}>
-              TẠM THỜI HẾT HÀNG
-            </p>
-          )}
-
-          <div style={{ marginBottom: "10px" }}>
-            <Rate
-              disabled
-              value={productDetails?.rating}
-              style={{ fontSize: "12px", color: "#e83a45" }}
-            />
-            {productDetails?.sold > 0 && (
-              <WrapperStyleTextSell>
-                {` | Đã bán ${productDetails?.sold}`}
-              </WrapperStyleTextSell>
-            )}
-          </div>
-
-          <div className="flex items-end bg-gray-100 md:px-3 px-2 md:py-5 py-3 rounded">
-            <div
-              className={
-                productDetails?.discount
-                  ? "md:text-3xl text-2xl font-medium mr-2 text-red-500"
-                  : "md:text-3xl text-2xl font-medium mr-2 text-black"
-              }
-            >
-              {productDetails?.discount
-                ? convertPrice(
-                    priceDiscount(productDetails?.price, productDetails)
-                  )
-                : convertPrice(productDetails?.price)}
-            </div>
-
-            {productDetails?.discount > 0 && (
-              <div className="flex items-center -mb-2">
-                <span className="line-through text-sm md:text-base font-medium mr-2 text-gray-400">
-                  {convertPrice(productDetails?.price)}
-                </span>
-
-                {productDetails?.discount > 0 && (
-                  <span
-                    style={{
-                      color: "rgb(255, 66, 78)",
-                      fontWeight: 500,
-                      lineHeight: "40px",
-                    }}
-                  >
-                    -{productDetails?.discount}%
-                  </span>
+              <div style={{ marginBottom: "10px" }}>
+                <Rate
+                  disabled
+                  value={productDetails?.rating}
+                  style={{ fontSize: "12px", color: "#e83a45" }}
+                />
+                {productDetails?.sold > 0 && (
+                  <WrapperStyleTextSell>
+                    {` | Đã bán ${productDetails?.sold}`}
+                  </WrapperStyleTextSell>
                 )}
               </div>
-            )}
-          </div>
 
-          <WrapperDescriptionProduct>
-            {/* <span style={{ fontSize: "16px" }}>
+              <div className="flex items-end bg-gray-100 md:px-3 px-2 md:py-5 py-3 rounded">
+                <div
+                  className={
+                    productDetails?.discount
+                      ? "md:text-3xl text-2xl font-medium mr-2 text-red-500"
+                      : "md:text-3xl text-2xl font-medium mr-2 text-black"
+                  }
+                >
+                  {productDetails?.discount
+                    ? convertPrice(
+                        priceDiscount(productDetails?.price, productDetails)
+                      )
+                    : convertPrice(productDetails?.price)}
+                </div>
+
+                {productDetails?.discount > 0 && (
+                  <div className="flex items-center -mb-2">
+                    <span className="line-through text-sm md:text-base font-medium mr-2 text-gray-400">
+                      {convertPrice(productDetails?.price)}
+                    </span>
+
+                    {productDetails?.discount > 0 && (
+                      <span
+                        style={{
+                          color: "rgb(255, 66, 78)",
+                          fontWeight: 500,
+                          lineHeight: "40px",
+                        }}
+                      >
+                        -{productDetails?.discount}%
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <WrapperDescriptionProduct>
+                {/* <span style={{ fontSize: "16px" }}>
               Mô tả sản phẩm: {productDetails?.description}
             </span> */}
-          </WrapperDescriptionProduct>
-          <WrapperAddressProduct>
-            <span style={{ fontSize: "16px" }}>Giao đến </span>
-            <span className="address">
-              {user?.address
-                ? user?.address
-                : "43 Hồ văn Huê, Quận Phú Nhuận, Hồ Chí Minh"}{" "}
-            </span>
+              </WrapperDescriptionProduct>
+              <WrapperAddressProduct>
+                <span style={{ fontSize: "16px" }}>Giao đến </span>
+                <span className="address">
+                  {user?.address
+                    ? user?.address
+                    : "43 Hồ văn Huê, Quận Phú Nhuận, Hồ Chí Minh"}{" "}
+                </span>
 
-            <span className="change-address"> - Đổi địa chỉ</span>
-          </WrapperAddressProduct>
+                <span className="change-address"> - Đổi địa chỉ</span>
+              </WrapperAddressProduct>
 
-          <div
-            style={{
-              margin: "10px 0 20px",
-              padding: "10px 0",
-              borderTop: "1px solid #e5e5e5",
-              borderBottom: "1px solid #e5e5e5",
-            }}
-          >
-            <div
-              style={{
-                marginBottom: "10px",
-                fontSize: "16px",
-              }}
-            >
-              Số lượng
-            </div>
-            <WrapperQuantityProduct>
-              <WrapperBtnQuantityProduct
-                disabled={numProduct <= 1}
-                onClick={() => handleChangeCount("decrease")}
+              <div
+                style={{
+                  margin: "10px 0 20px",
+                  padding: "10px 0",
+                  borderTop: "1px solid #e5e5e5",
+                  borderBottom: "1px solid #e5e5e5",
+                }}
               >
-                <MinusOutlined style={{ color: "#000", fontSize: "20px" }} />
-              </WrapperBtnQuantityProduct>
+                <div
+                  style={{
+                    marginBottom: "10px",
+                    fontSize: "16px",
+                  }}
+                >
+                  Số lượng
+                </div>
+                <WrapperQuantityProduct>
+                  <WrapperBtnQuantityProduct
+                    disabled={numProduct <= 1}
+                    onClick={() => handleChangeCount("decrease")}
+                  >
+                    <MinusOutlined
+                      style={{ color: "#000", fontSize: "20px" }}
+                    />
+                  </WrapperBtnQuantityProduct>
 
-              <WrapperInputNumber
-                size="small"
-                defaultValue={1}
-                value={numProduct}
-                onChange={onChange}
-                min={1}
-                max={productDetails?.countInStock}
-              />
-              <WrapperBtnQuantityProduct
-                onClick={() => handleChangeCount("increase")}
+                  <WrapperInputNumber
+                    size="small"
+                    defaultValue={1}
+                    value={numProduct}
+                    onChange={onChange}
+                    min={1}
+                    max={productDetails?.countInStock}
+                  />
+                  <WrapperBtnQuantityProduct
+                    onClick={() => handleChangeCount("increase")}
+                  >
+                    <PlusOutlined style={{ color: "#000", fontSize: "20px" }} />
+                  </WrapperBtnQuantityProduct>
+                </WrapperQuantityProduct>
+              </div>
+
+              <div
+                className={
+                  productDetails?.countInStock === 0
+                    ? "hidden"
+                    : "fixed bottom-0 left-0 right-0 z-10 px-5 py-3 bg-white md:static flex flex-row-reverse md:flex-row items-center gap-5"
+                }
               >
-                <PlusOutlined style={{ color: "#000", fontSize: "20px" }} />
-              </WrapperBtnQuantityProduct>
-            </WrapperQuantityProduct>
-          </div>
-
-          <div
-            className={
-              productDetails?.countInStock === 0
-                ? "hidden"
-                : "fixed bottom-0 left-0 right-0 z-10 px-5 py-3 bg-white md:static flex flex-row-reverse md:flex-row items-center gap-5"
-            }
-          >
-            <ButtonComponent
-              size={40}
-              style={{
-                color: "#fff",
-                background: "rgb(66, 42, 251)",
-                fontSize: "15px",
-                fontWeight: "600",
-                height: "48px",
-                width: "220px",
-                border: "none",
-                borderRadius: "12px",
-              }}
-              textButton={"Chọn mua"}
-              onClick={() => handleAddOrderProduct()}
-            />
-            <ButtonComponent
-              size={40}
-              style={{
-                background: "#fff",
-                border: "1px solid rgb(13, 92, 182)",
-                color: "rgb(13, 92, 182)",
-                fontSize: "15px",
-                fontWeight: "600",
-                height: "48px",
-                width: "220px",
-                borderRadius: "12px",
-              }}
-              textButton={"Mua trả sau"}
-            />
-          </div>
-        </Col>
+                <ButtonComponent
+                  size={40}
+                  style={{
+                    color: "#fff",
+                    background: "rgb(66, 42, 251)",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    height: "48px",
+                    width: "220px",
+                    border: "none",
+                    borderRadius: "12px",
+                  }}
+                  textButton={"Chọn mua"}
+                  onClick={() => handleAddOrderProduct()}
+                />
+                <ButtonComponent
+                  size={40}
+                  style={{
+                    background: "#fff",
+                    border: "1px solid rgb(13, 92, 182)",
+                    color: "rgb(13, 92, 182)",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    height: "48px",
+                    width: "220px",
+                    borderRadius: "12px",
+                  }}
+                  textButton={"Mua trả sau"}
+                />
+              </div>
+            </Col>
+          </>
+        )}
       </Row>
     </>
   );
