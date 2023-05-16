@@ -39,25 +39,30 @@ const ViewedProductsPage = () => {
           </h1>
         </div>
       </div>
-      <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
-        {viewedProduct &&
-          viewedProduct?.map((product) => {
-            return (
-              <CardComponent
-                key={product._id}
-                name={product.name}
-                countInStock={product.countInStock}
-                description={product.description}
-                image={product.image}
-                price={product.price}
-                rating={product.rating}
-                type={product.type}
-                sold={product.sold}
-                discount={product.discount}
-                id={product._id}
-              />
-            );
-          })}
+      <div className="max-w-7xl m-auto">
+        <h1 className="hidden md:block text-xl">
+          Sản phẩm đã xem | {viewedProduct?.length} sản phẩm{" "}
+        </h1>
+        <div className="grid gap-3 px-5 md:px-0 md:py-0 py-16 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
+          {viewedProduct &&
+            viewedProduct?.map((product) => {
+              return (
+                <CardComponent
+                  key={product._id}
+                  name={product.name}
+                  countInStock={product.countInStock}
+                  description={product.description}
+                  image={product.image}
+                  price={product.price}
+                  rating={product.rating}
+                  type={product.type}
+                  sold={product.sold}
+                  discount={product.discount}
+                  id={product._id}
+                />
+              );
+            })}
+        </div>
       </div>
     </div>
   );
