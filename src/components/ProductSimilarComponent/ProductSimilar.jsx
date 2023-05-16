@@ -14,9 +14,12 @@ import { useNavigate } from "react-router-dom";
 
 const ProductSimilar = ({ idProduct }) => {
   const [productSimilar, setProductSimilar] = useState("");
+  const [loading, setLoading] = useState();
   const navigate = useNavigate();
   const fetchProductSimilar = async () => {
+    setLoading(true);
     const res = await ProductService.getAllProductSimilar(idProduct);
+    setLoading(false);
     setProductSimilar(res.data);
     return res.data;
   };
@@ -25,11 +28,13 @@ const ProductSimilar = ({ idProduct }) => {
     fetchProductSimilar();
   }, [idProduct]);
 
+  console.log({ loading });
+
   const handleProductDetails = (id) => {
     navigate(`/product-detail/${id}`);
   };
 
-  console.log(productSimilar);
+  console.log(productSimilar.length);
 
   return (
     <>
@@ -38,95 +43,110 @@ const ProductSimilar = ({ idProduct }) => {
           Sản phẩm tương tự
         </p>
         <div className="overflow-y-hidden scrollbar-hide flex w-full gap-3 py-2">
-          {productSimilar?.length > 0 &&
-            productSimilar?.map((product) => {
-              console.log({ product });
-              return (
-                <WrapperCardStyle
-                  key={product?._id}
-                  className="w-[40vw]"
-                  hoverable
-                  bodyStyle={{ padding: 10, width: "40vw" }}
-                  onClick={() => handleProductDetails(product?._id)}
-                >
-                  <div className="relative">
-                    <img
-                      src={product?.image}
-                      className="my-2 md:my-4 mx-0 h-36 md:h-60 object-contain"
-                    />
-                    {product?.countInStock === 0 && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          top: "30%",
-                          left: 0,
-                          right: 0,
-                        }}
-                      >
-                        <img
-                          src={Soldout}
-                          alt=""
-                          className="w-24 md:w-36 m-auto"
+          {loading
+            ? Array.from({ length: productSimilar?.length || 0 }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col gap-2 md:min-w-[20%] min-w-[40vw] overflow-y-hidden "
+                  >
+                    <div className="skeleton h-36 w-full rounded-md" />
+                    <div className="skeleton h-6 w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                    <div className="skeleton h-5 w-full rounded-md" />
+                  </div>
+                )
+              )
+            : productSimilar?.length > 0 &&
+              productSimilar?.map((product) => {
+                console.log({ product });
+                return (
+                  <WrapperCardStyle
+                    key={product?._id}
+                    className="w-[40vw] md:w-[20%]"
+                    hoverable
+                    bodyStyle={{ padding: 10, width: "40vw" }}
+                    onClick={() => handleProductDetails(product?._id)}
+                  >
+                    <div className="relative">
+                      <img
+                        src={product?.image}
+                        className="my-2 md:my-4 mx-0 h-36 md:h-60 object-contain"
+                      />
+                      {product?.countInStock === 0 && (
+                        <span
+                          style={{
+                            position: "absolute",
+                            top: "30%",
+                            left: 0,
+                            right: 0,
+                          }}
+                        >
+                          <img
+                            src={Soldout}
+                            alt=""
+                            className="w-24 md:w-36 m-auto"
+                          />
+                        </span>
+                      )}
+                    </div>
+
+                    <StyleNameProduct className="text-sm md:text-lg">
+                      {product?.name}
+                    </StyleNameProduct>
+                    <WrapperReportText className="md:text-sm">
+                      <span style={{ marginRight: "4px" }}>
+                        <Rate
+                          disabled
+                          value={product?.rating}
+                          style={{ fontSize: "11px", color: "#e83a45" }}
+                          className="md:!text-sm"
                         />
                       </span>
-                    )}
-                  </div>
 
-                  <StyleNameProduct className="text-sm md:text-lg">
-                    {product?.name}
-                  </StyleNameProduct>
-                  <WrapperReportText className="md:text-sm">
-                    <span style={{ marginRight: "4px" }}>
-                      <Rate
-                        disabled
-                        value={product?.rating}
-                        style={{ fontSize: "11px", color: "#e83a45" }}
-                        className="md:!text-sm"
-                      />
-                    </span>
-
-                    <span className="text-xs md:text-sm">
-                      {product?.sold && `| Đã bán ${product?.sold}`}{" "}
-                    </span>
-                  </WrapperReportText>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 5,
-                      alignItems: "center",
-                      marginTop: "5px",
-                    }}
-                  >
-                    <div
-                      className={
-                        product?.discount > 0
-                          ? "font-normal text-xs text-zinc-400 line-through"
-                          : "font-medium text-sm md:text-base text-red-500"
-                      }
-                    >
-                      <span>{convertPrice(product?.price)}</span>
-                    </div>
-                    {product?.discount > 0 && (
-                      <WrapperDiscountText>
-                        {`-${product?.discount}%` || "-5%"}
-                      </WrapperDiscountText>
-                    )}
-                  </div>
-
-                  {product?.discount > 0 && (
-                    <WrapperPriceText className="text-red-500 text-sm md:text-base">
-                      <span style={{ marginRight: "8px" }}>
-                        {convertPrice(
-                          product?.price -
-                            (product?.price * product?.discount) / 100
-                        )}
+                      <span className="text-xs md:text-sm">
+                        {product?.sold && `| Đã bán ${product?.sold}`}{" "}
                       </span>
-                    </WrapperPriceText>
-                  )}
-                </WrapperCardStyle>
-              );
-            })}
+                    </WrapperReportText>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 5,
+                        alignItems: "center",
+                        marginTop: "5px",
+                      }}
+                    >
+                      <div
+                        className={
+                          product?.discount > 0
+                            ? "font-normal text-xs text-zinc-400 line-through"
+                            : "font-medium text-sm md:text-base text-red-500"
+                        }
+                      >
+                        <span>{convertPrice(product?.price)}</span>
+                      </div>
+                      {product?.discount > 0 && (
+                        <WrapperDiscountText>
+                          {`-${product?.discount}%` || "-5%"}
+                        </WrapperDiscountText>
+                      )}
+                    </div>
+
+                    {product?.discount > 0 && (
+                      <WrapperPriceText className="text-red-500 text-sm md:text-base">
+                        <span style={{ marginRight: "8px" }}>
+                          {convertPrice(
+                            product?.price -
+                              (product?.price * product?.discount) / 100
+                          )}
+                        </span>
+                      </WrapperPriceText>
+                    )}
+                  </WrapperCardStyle>
+                );
+              })}
         </div>
       </div>
     </>

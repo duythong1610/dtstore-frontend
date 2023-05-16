@@ -27,7 +27,7 @@ function Home() {
   const [searchText, setSearchText] = useState("");
   const [limit, setLimit] = useState(10);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState();
 
   const fetchAllProduct = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1];
@@ -72,8 +72,6 @@ function Home() {
     retryDelay: 1000,
     keepPreviousData: true,
   });
-
-  console.log({ isLoading });
 
   return (
     <>
