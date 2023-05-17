@@ -12,15 +12,25 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import * as message from "../Message/Message";
+import { Dropdown } from "antd";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
   const [commentText, setCommentText] = useState({ text: "", createAt: "" });
+  const [replyText, setReplyText] = useState({
+    text: "",
+    createAt: "",
+    commentId: "",
+  });
   const [productDetails, setProductDetails] = useState([]);
+  const [commentId, setCommentId] = useState("");
+  const [commentIdReplying, setCommentIdReplying] = useState("");
   const fetchProductDetails = async () => {
     const res = await ProductService.getDetailsProduct(idProduct);
     setProductDetails(res.data);
     // return res.data;
   };
+
+  console.log(commentIdReplying);
 
   useEffect(() => {
     fetchProductDetails();
@@ -33,21 +43,144 @@ const Comment = ({ idProduct }) => {
         commentText,
         user?.access_token
       );
+      fetchProductDetails();
       if (res) {
-        message.success("Gửi đánh giá thành công");
-        fetchProductDetails();
         setCommentText({ text: "", createAt: "" });
+        message.success("Gửi đánh giá thành công");
       }
       return res;
     } else {
       message.error("Vui lòng nhập nội dung đánh giá");
     }
   };
+
+  const handleReplyComment = async () => {
+    if (replyText.text) {
+      const res = await ProductService.replyComment(
+        productDetails?._id,
+        replyText,
+        user?.access_token
+      );
+      fetchProductDetails();
+      if (res) {
+        message.success("Đã gửi câu trả lời");
+        setReplyText({ text: "", createAt: "", commentId: "" });
+      }
+      return res;
+    } else {
+      message.error("Vui lòng nhập nội dung.");
+    }
+  };
+
+  const handleReplyClick = (commentId) => {
+    if (commentIdReplying === commentId) {
+      setCommentIdReplying("");
+    } else {
+      setCommentIdReplying(commentId);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    const payload = {
+      commentId: commentId,
+      userId: user?.id,
+    };
+    const res = await ProductService.deleteComment(
+      productDetails?._id,
+      payload,
+      user?.access_token
+    );
+    fetchProductDetails();
+    if (res) {
+      message.success("Đã xóa bình luận");
+    }
+    return res;
+  };
+  const commentArr = productDetails?.comments?.map((item) => {
+    return item;
+  });
+  const replyArr = commentArr?.map((item) => {
+    return item?.reply;
+  });
+
+  console.log({ productDetails });
+  console.log({ replyArr });
+  console.log({ commentArr });
   const onChangeComment = (e) => {
     setCommentText({
       text: e.target.value,
       createAt: new Date(),
     });
+  };
+
+  const onChangeReply = (e) => {
+    setReplyText({
+      text: e.target.value,
+      createAt: new Date(),
+      commentId: commentIdReplying,
+    });
+  };
+
+  const handleTimeAgo = (createTime) => {
+    const timeAgo = Math.floor(
+      (new Date().getTime() - new Date(createTime).getTime()) / (1000 * 60)
+    );
+    return timeAgo;
+  };
+
+  const handleTimeJoin = (createTime) => {
+    const timeJoin = Math.floor(
+      (new Date().getTime() - new Date(createTime).getTime()) / (1000 * 60)
+    );
+    return timeJoin;
+  };
+
+  const timeAgoRender = (timeAgo) => {
+    if (timeAgo > 59 && timeAgo < 1439) {
+      let hour = Math.floor(timeAgo / 60);
+      return hour + " giờ trước";
+    } else if (timeAgo > 1439) {
+      let day = Math.floor(timeAgo / 60 / 24);
+      return day + " ngày trước";
+    } else {
+      return timeAgo === 0 ? "Vừa xong" : timeAgo + " phút trước";
+    }
+  };
+
+  const timeJoinRender = (timeJoin) => {
+    if (timeJoin > 59 && timeJoin < 1439) {
+      let hour = Math.floor(timeJoin / 60);
+      return "Đã tham gia " + hour + " giờ";
+    } else if (timeJoin > 1439) {
+      let day = Math.floor(timeJoin / 60 / 24);
+      return "Đã tham gia " + day + " ngày";
+    } else {
+      return "Đã tham gia " + timeJoin + " phút";
+    }
+  };
+
+  const items = [
+    {
+      label: "Xóa",
+      key: "1",
+    },
+    {
+      label: "Chỉnh sửa",
+      key: "2",
+    },
+  ];
+
+  const handleMenuClick = (e, commentId) => {
+    if (e.key == "1") {
+      handleDeleteComment(commentId);
+    } else {
+      console.log("alo");
+    }
+  };
+
+  const menuProps = {
+    items,
+    onClick: (e) => handleMenuClick(e, commentId),
   };
 
   return (
@@ -58,98 +191,242 @@ const Comment = ({ idProduct }) => {
         margin: "0 auto",
       }}
     >
-      <p className="text-base md:text-2xl px-4 mb-2 font-medium">
+      <p className="text-base md:text-2xl px-4 md:px-0 mb-2 font-medium">
         {" "}
-        Đánh giá sản phẩm:
+        Bình luận, hỏi đáp:
       </p>
 
-      <div className="comment-list px-4 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96">
+      <div className="comment-list px-4 md:px-0 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96 relative">
         {productDetails?.comments?.map((comment) => {
-          const timeAgo = Math.floor(
-            (new Date().getTime() - new Date(comment?.createAt).getTime()) /
-              (1000 * 60)
-          );
-
-          const timeJoin = Math.floor(
-            (new Date().getTime() -
-              new Date(comment?.postedBy?.createdAt).getTime()) /
-              (1000 * 60)
-          );
-
-          const timeAgoRender = (timeAgo) => {
-            if (timeAgo > 59 && timeAgo < 1439) {
-              let hour = Math.floor(timeAgo / 60);
-              return hour + " giờ trước";
-            } else if (timeAgo > 1439) {
-              let day = Math.floor(timeAgo / 60 / 24);
-              return day + " ngày trước";
-            } else {
-              return timeAgo === 0 ? "Vừa xong" : timeAgo + " phút trước";
-            }
-          };
-
-          const timeJoinRender = (timeJoin) => {
-            if (timeJoin > 59 && timeJoin < 1439) {
-              let hour = Math.floor(timeJoin / 60);
-              return "Đã tham gia " + hour + " giờ";
-            } else if (timeJoin > 1439) {
-              let day = Math.floor(timeJoin / 60 / 24);
-              return "Đã tham gia " + day + " ngày";
-            } else {
-              return "Đã tham gia " + timeJoin + " phút";
-            }
-          };
-
           return (
             <>
-              <div className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-2 rounded-xl">
-                <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
-                  <div
-                    className="user-info"
-                    style={{ display: "flex", gap: 10, alignItems: "center" }}
-                  >
-                    <div className="user-img">
-                      <img
-                        className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
-                        src={comment?.postedBy?.avatar}
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 w-24">
-                        <h1 className="user-name m-0 text-sm md:text-base one-line max-w-[100px]">
-                          {comment?.postedBy?.name}
-                        </h1>
-                        {comment?.postedBy?.isAdmin && (
-                          <CheckCircleFilled className="text-blue-500" />
-                        )}
+              <div className="mb-3">
+                <div
+                  key={comment?._id}
+                  className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl"
+                  onClick={() => setCommentId(comment?._id)}
+                >
+                  <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
+                    <div
+                      className="user-info"
+                      style={{ display: "flex", gap: 10, alignItems: "center" }}
+                    >
+                      <div className="user-img">
+                        <img
+                          className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
+                          src={comment?.postedBy?.avatar}
+                          alt=""
+                        />
                       </div>
-                      <h2 className="text-xs md:text-sm font-normal m-0">
-                        {timeJoinRender(timeJoin)}
-                      </h2>
+                      <div>
+                        <div className="flex items-center gap-2 w-full">
+                          <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
+                            {comment?.postedBy?.name}
+                          </h1>
+                          {comment?.postedBy?.isAdmin && (
+                            <CheckCircleFilled className="text-blue-500" />
+                          )}
+                        </div>
+                        <h2 className="text-xs md:text-sm font-normal m-0">
+                          {timeJoinRender(
+                            handleTimeJoin(comment.postedBy.createdAt)
+                          )}
+                        </h2>
+                      </div>
                     </div>
+
+                    {user?.id === comment?.postedBy._id && (
+                      <div>
+                        <Dropdown.Button menu={menuProps}></Dropdown.Button>
+                      </div>
+                    )}
                   </div>
-                  <div className="user-time justify-between flex-auto flex mb-3 md:mb-5 gap-2 md:gap-3">
+                  <div className="user-bottom">
+                    <p className="text-sm md:text-base md:pl-[58px] pl-[42px] mb-0">
+                      {comment?.text}
+                    </p>
+                  </div>
+                </div>
+                <div className="md:pl-[74px] pl-[50px] w-full md:w-1/2 flex justify-between items-center">
+                  <div className="flex gap-3">
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => handleReplyClick(comment?._id)}
+                    >
+                      Trả lời
+                    </span>
+                    <span className="cursor-pointer">Thích</span>
+                  </div>
+                  <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
                     <span className="flex items-center text-xs md:text-base">
                       {comment?.createAt && (
                         <FieldTimeOutlined style={{ marginRight: "5px" }} />
                       )}
-                      {timeAgoRender(timeAgo)}
+                      {timeAgoRender(handleTimeAgo(comment?.createAt))}
                     </span>
-                    <span className="text-xs md:text-base">
-                      {new Date(comment?.createAt).toLocaleDateString()}
-                    </span>
+                    {/* <span className="text-xs md:text-base">
+                        {new Date(comment?.createAt).toLocaleDateString()}
+                      </span> */}
                   </div>
                 </div>
-                <div className="user-bottom">
-                  <p className="text-sm md:text-base md:ml-14 ml-[42px]">
-                    {comment?.text}
-                  </p>
+
+                <div className="pl-[50px] md:pl-[74px] ">
+                  {commentIdReplying === comment?._id && (
+                    <div className="w-full md:w-1/2 mb-4 mt-1">
+                      <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={
+                              user?.avatar ||
+                              "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
+                            }
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                            }}
+                            alt="user-avatar"
+                          />
+                          <textarea
+                            className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+                            placeholder="Viết câu trả lời..."
+                            value={replyText?.text}
+                            type="text"
+                            onChange={onChangeReply}
+                          />
+                          <SendOutlined
+                            onClick={handleReplyComment}
+                            className={
+                              replyText?.text !== ""
+                                ? "text-blue-600"
+                                : "text-zinc-500"
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {Array.isArray(comment.reply) &&
+                    comment?.reply?.map((reply) => {
+                      return (
+                        <div className="w-full md:w-1/2">
+                          <div
+                            key={reply?._id}
+                            className="comment-item w-full bg-white md:p-4 p-2 mb-1 rounded-xl"
+                            onClick={() => setCommentId(reply?._id)}
+                          >
+                            <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
+                              <div
+                                className="user-info"
+                                style={{
+                                  display: "flex",
+                                  gap: 10,
+                                  alignItems: "center",
+                                }}
+                              >
+                                <div className="user-img">
+                                  <img
+                                    className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
+                                    src={reply?.postedBy?.avatar}
+                                    alt=""
+                                  />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2 w-full">
+                                    <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
+                                      {reply?.postedBy?.name}
+                                    </h1>
+                                    {reply?.postedBy?.isAdmin && (
+                                      <CheckCircleFilled className="text-blue-500" />
+                                    )}
+                                  </div>
+                                  <h2 className="text-xs md:text-sm font-normal m-0">
+                                    {timeJoinRender(
+                                      handleTimeJoin(reply.postedBy.createdAt)
+                                    )}
+                                  </h2>
+                                </div>
+                              </div>
+                              {user?.id === reply?.postedBy._id && (
+                                <div>
+                                  <Dropdown.Button
+                                    menu={menuProps}
+                                    additionalParam="Hello World"
+                                  ></Dropdown.Button>
+                                </div>
+                              )}
+                            </div>
+                            <div className="user-bottom">
+                              <p className="text-sm md:text-base ml-[42px] mb-0">
+                                {reply?.text}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="pl-[50px] flex justify-between items-center">
+                            <div className="flex gap-3">
+                              <span
+                                className="cursor-pointer"
+                                onClick={() => handleReplyClick(comment?._id)}
+                              >
+                                Trả lời
+                              </span>
+                              <span className="cursor-pointer">Thích</span>
+                            </div>
+                            <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
+                              <span className="flex items-center text-xs md:text-base">
+                                {reply?.createAt && (
+                                  <FieldTimeOutlined
+                                    style={{ marginRight: "5px" }}
+                                  />
+                                )}
+                                {timeAgoRender(handleTimeAgo(reply?.createAt))}
+                              </span>
+                              {/* <span className="text-xs md:text-base">
+                          {new Date(comment?.createAt).toLocaleDateString()}
+                        </span> */}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </>
           );
         })}
+        {false && (
+          <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white absolute z-20">
+            <div className="flex items-center gap-4">
+              <img
+                src={
+                  user?.avatar ||
+                  "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
+                }
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+                alt="user-avatar"
+              />
+              <textarea
+                className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+                placeholder={"Viết bình luận, hỏi đáp..."}
+                value={commentText?.text}
+                type="text"
+                onChange={onChangeComment}
+              />
+              <SendOutlined
+                onClick={handleComment}
+                className={
+                  commentText?.text !== "" ? "text-blue-600" : "text-zinc-500"
+                }
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:p-0  ">
@@ -170,7 +447,7 @@ const Comment = ({ idProduct }) => {
             />
             <textarea
               className="mt-3 w-full md:h-20 h-10 border-none outline-none"
-              placeholder={"Viết đánh giá..."}
+              placeholder={"Viết bình luận, hỏi đáp..."}
               value={commentText?.text}
               type="text"
               onChange={onChangeComment}

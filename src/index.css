@@ -82,6 +82,18 @@ html {
   text-align: center;
 }
 
+.ant-btn-compact-item:not(.ant-btn-compact-last-item) {
+  display: none;
+}
+
+.ant-btn-compact-item:not(.ant-btn-compact-first-item) {
+  border: none;
+}
+
+.ant-btn:not(:disabled):focus-visible {
+  outline: none;
+}
+
 .nav-btn {
   border: none;
   background-color: transparent;

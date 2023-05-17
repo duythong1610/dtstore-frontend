@@ -70,6 +70,33 @@ export const postComment = async (id, data, access_token) => {
   return res.data;
 };
 
+export const deleteComment = async (id, data, access_token) => {
+  console.log({ data });
+  const res = await axiosJWT.put(
+    `https://dtstore-backend.onrender.com/api/product/delete-comment/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const replyComment = async (id, data, access_token) => {
+  const res = await axiosJWT.put(
+    `https://dtstore-backend.onrender.com/api/product/reply-comment/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const updateProduct = async (id, access_token, data) => {
   const res = await axiosJWT.put(
     `https://dtstore-backend.onrender.com/api/product/update-product/${id}`,
