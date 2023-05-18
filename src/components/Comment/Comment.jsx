@@ -331,7 +331,7 @@ const Comment = ({ idProduct }) => {
                     <span
                       className={
                         isLikedByCurrentUser
-                          ? "text-blue-500"
+                          ? "text-blue-500 cursor-pointer"
                           : "" + "cursor-pointer"
                       }
                       onClick={() => handleLikeComment(comment?._id)}
@@ -484,7 +484,7 @@ const Comment = ({ idProduct }) => {
                               <span
                                 className={
                                   isLikedReplyByCurrentUser
-                                    ? "text-blue-500"
+                                    ? "text-blue-500 cursor-pointer"
                                     : "" + "cursor-pointer"
                                 }
                                 onClick={() => handleLikeComment(reply?._id)}
