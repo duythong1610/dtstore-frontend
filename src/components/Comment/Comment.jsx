@@ -302,7 +302,7 @@ const Comment = ({ idProduct }) => {
                     onClick={() => handleUserClick(comment?.likes)}
                   >
                     {comment.likes.length > 0 && (
-                      <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200">
+                      <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
                         <div>
                           <img src={likeSvg} alt="" width={18} height={18} />
                         </div>
@@ -456,7 +456,7 @@ const Comment = ({ idProduct }) => {
                                       handleUserClick(reply?.likes)
                                     }
                                   >
-                                    <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200">
+                                    <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
                                       <div>
                                         <img
                                           src={likeSvg}
