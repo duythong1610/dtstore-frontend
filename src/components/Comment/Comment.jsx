@@ -11,11 +11,17 @@ import {
   CheckCircleFilled,
   SendOutlined,
 } from "@ant-design/icons";
+import likeSvg from "../../assets/img/like.svg";
 import * as message from "../Message/Message";
-import { Dropdown } from "antd";
+import { Dropdown, Tooltip } from "antd";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import "./customModal.css";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
   const [commentText, setCommentText] = useState({ text: "", createAt: "" });
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [userLikeInfo, setUserLikeInfo] = useState("");
+
   const [replyText, setReplyText] = useState({
     text: "",
     createAt: "",
@@ -30,7 +36,9 @@ const Comment = ({ idProduct }) => {
     // return res.data;
   };
 
-  console.log(commentIdReplying);
+  const handleCancel = () => {
+    setIsOpenModal(false);
+  };
 
   useEffect(() => {
     fetchProductDetails();
@@ -80,6 +88,19 @@ const Comment = ({ idProduct }) => {
     }
   };
 
+  const handleLikeComment = async (commentId) => {
+    const payload = {
+      commentId,
+      userId: user?.id,
+    };
+    const res = await ProductService.likeComment(
+      productDetails._id,
+      payload,
+      user?.access_token
+    );
+    fetchProductDetails();
+  };
+
   const handleDeleteComment = async (commentId) => {
     const payload = {
       commentId: commentId,
@@ -99,13 +120,11 @@ const Comment = ({ idProduct }) => {
   const commentArr = productDetails?.comments?.map((item) => {
     return item;
   });
+
   const replyArr = commentArr?.map((item) => {
     return item?.reply;
   });
 
-  console.log({ productDetails });
-  console.log({ replyArr });
-  console.log({ commentArr });
   const onChangeComment = (e) => {
     setCommentText({
       text: e.target.value,
@@ -178,32 +197,63 @@ const Comment = ({ idProduct }) => {
     }
   };
 
+  const handleUserClick = (user) => {
+    setIsOpenModal(true);
+    setUserLikeInfo(user);
+  };
+
   const menuProps = {
     items,
     onClick: (e) => handleMenuClick(e, commentId),
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "1270px",
-        borderRadius: "12px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="max-w-7xl rounded-xl m-auto">
+      <ModalComponent
+        footer={null}
+        title="Được thích bởi"
+        open={isOpenModal}
+        onCancel={handleCancel}
+        // onOk={handleUpdateInfoUser}
+      >
+        {Array.isArray(userLikeInfo) &&
+          userLikeInfo?.map((user) => {
+            return (
+              <div className="flex items-center gap-4 mb-3">
+                <div className="relative">
+                  <div>
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      className="w-10 h-10 object-cover rounded-full"
+                    />
+                  </div>
+
+                  <div className="absolute -right-1 -bottom-1">
+                    <img src={likeSvg} alt="" width={18} height={18} />
+                  </div>
+                </div>
+                <span className="text-base font-medium">{user.name}</span>
+              </div>
+            );
+          })}
+      </ModalComponent>
       <p className="text-base md:text-2xl px-4 md:px-0 mb-2 font-medium">
         {" "}
         Bình luận, hỏi đáp:
       </p>
-
       <div className="comment-list px-4 md:px-0 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96 relative">
         {productDetails?.comments?.map((comment) => {
+          const isLikedByCurrentUser = comment.likes.some(
+            (like) => like._id === user.id
+          );
+
           return (
             <>
               <div className="mb-3">
                 <div
                   key={comment?._id}
-                  className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl"
+                  className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl relative"
                   onClick={() => setCommentId(comment?._id)}
                 >
                   <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
@@ -246,6 +296,28 @@ const Comment = ({ idProduct }) => {
                       {comment?.text}
                     </p>
                   </div>
+
+                  <div
+                    className="absolute -right-1 -bottom-1"
+                    onClick={() => handleUserClick(comment?.likes)}
+                  >
+                    {comment.likes.length > 0 && (
+                      <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200">
+                        <div>
+                          <img src={likeSvg} alt="" width={18} height={18} />
+                        </div>
+                        {comment.likes.length > 1 && (
+                          <div>{comment.likes.length}</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* {comment.likes.length > 1 && (
+                    <div className="absolute -right-1 -bottom-1">
+                      <img src={likeSvg} alt="" width={18} height={18} />
+                    </div>
+                  )} */}
                 </div>
                 <div className="md:pl-[74px] pl-[50px] w-full md:w-1/2 flex justify-between items-center">
                   <div className="flex gap-3">
@@ -255,7 +327,17 @@ const Comment = ({ idProduct }) => {
                     >
                       Trả lời
                     </span>
-                    <span className="cursor-pointer">Thích</span>
+
+                    <span
+                      className={
+                        isLikedByCurrentUser
+                          ? "text-blue-500"
+                          : "" + "cursor-pointer"
+                      }
+                      onClick={() => handleLikeComment(comment?._id)}
+                    >
+                      {isLikedByCurrentUser ? "Đã thích" : "Thích"}
+                    </span>
                   </div>
                   <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
                     <span className="flex items-center text-xs md:text-base">
@@ -309,11 +391,14 @@ const Comment = ({ idProduct }) => {
                   )}
                   {Array.isArray(comment.reply) &&
                     comment?.reply?.map((reply) => {
+                      const isLikedReplyByCurrentUser = reply.likes.some(
+                        (like) => like._id === user.id
+                      );
                       return (
                         <div className="w-full md:w-1/2">
                           <div
                             key={reply?._id}
-                            className="comment-item w-full bg-white md:p-4 p-2 mb-1 rounded-xl"
+                            className="comment-item w-full bg-white md:p-4 p-2 mb-1 rounded-xl relative"
                             onClick={() => setCommentId(reply?._id)}
                           >
                             <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
@@ -352,7 +437,6 @@ const Comment = ({ idProduct }) => {
                                 <div>
                                   <Dropdown.Button
                                     menu={menuProps}
-                                    additionalParam="Hello World"
                                   ></Dropdown.Button>
                                 </div>
                               )}
@@ -362,16 +446,53 @@ const Comment = ({ idProduct }) => {
                                 {reply?.text}
                               </p>
                             </div>
+
+                            {reply.likes.length > 0 &&
+                              reply?.likes?.map((like) => {
+                                return (
+                                  <div
+                                    className="absolute -right-1 -bottom-1"
+                                    onClick={() =>
+                                      handleUserClick(reply?.likes)
+                                    }
+                                  >
+                                    <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200">
+                                      <div>
+                                        <img
+                                          src={likeSvg}
+                                          alt=""
+                                          width={18}
+                                          height={18}
+                                        />
+                                      </div>
+                                      {reply.likes.length > 1 && (
+                                        <div>{reply.likes.length}</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
                           </div>
                           <div className="pl-[50px] flex justify-between items-center">
                             <div className="flex gap-3">
                               <span
                                 className="cursor-pointer"
-                                onClick={() => handleReplyClick(comment?._id)}
+                                onClick={() => handleReplyClick(reply?._id)}
                               >
                                 Trả lời
                               </span>
-                              <span className="cursor-pointer">Thích</span>
+                              <span
+                                className={
+                                  isLikedReplyByCurrentUser
+                                    ? "text-blue-500"
+                                    : "" + "cursor-pointer"
+                                }
+                                onClick={() => handleLikeComment(reply?._id)}
+                              >
+                                {isLikedReplyByCurrentUser
+                                  ? "Đã thích"
+                                  : "Thích"}
+                              </span>
                             </div>
                             <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
                               <span className="flex items-center text-xs md:text-base">
@@ -428,7 +549,6 @@ const Comment = ({ idProduct }) => {
           </div>
         )}
       </div>
-
       <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:p-0  ">
         <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
           <div className="flex items-center gap-4">

@@ -1,0 +1,4 @@
+.ant-modal .ant-modal-body {
+  max-height: 50vh;
+  overflow-y: auto;
+}

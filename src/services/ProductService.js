@@ -97,6 +97,19 @@ export const replyComment = async (id, data, access_token) => {
   return res.data;
 };
 
+export const likeComment = async (id, data, access_token) => {
+  const res = await axiosJWT.post(
+    `https://dtstore-backend.onrender.com/api/product/like-comment/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
 export const updateProduct = async (id, access_token, data) => {
   const res = await axiosJWT.put(
     `https://dtstore-backend.onrender.com/api/product/update-product/${id}`,
