@@ -10,13 +10,16 @@ const OrderSuccess = () => {
   const { state } = location;
   console.log({ state });
   return (
-    <div>
-      <img
-        src="https://media2.giphy.com/media/BPJmthQ3YRwD6QqcVD/giphy.gif"
-        alt=""
-      />
-      <div className="p-5 bg-slate-100 min-h-screen ">
-        <div className="p-5 bg-white rounded-xl shadow-md">
+    <div className="bg-slate-100">
+      <div className="p-5 max-w-7xl m-auto min-h-screen">
+        <div className="mb-5 flex items-center">
+          <img
+            src="https://media2.giphy.com/media/BPJmthQ3YRwD6QqcVD/giphy.gif"
+            alt=""
+            className="md:rounded-xl"
+          />
+        </div>
+        <div className="p-5 bg-white rounded-xl shadow-md md:max-w-md">
           <p className="text-sm font-medium flex items-center gap-2">
             Yay! Đặt hàng thành công!{" "}
             <CheckCircleFilled className="text-green-500" />{" "}

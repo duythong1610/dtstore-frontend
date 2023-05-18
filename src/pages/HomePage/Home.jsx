@@ -73,6 +73,7 @@ function Home() {
     keepPreviousData: true,
   });
 
+  console.log({ products });
   return (
     <>
       {/* <Loading isLoading={isLoading}> */}
@@ -110,38 +111,48 @@ function Home() {
           />
 
           <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
-            {loading
-              ? Array.from({ length: products?.data?.length || 0 }).map(
-                  (_, index) => (
-                    <div key={index} className="flex flex-col gap-2">
-                      <div className="skeleton h-36 w-full rounded-md" />
-                      <div className="skeleton h-6 w-full rounded-md" />
-                      <div className="skeleton h-[18px] w-full rounded-md" />
-                      <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                      <div className="skeleton h-5 w-full rounded-md" />
-                    </div>
-                  )
+            {loading ? (
+              Array.from({ length: products?.data?.length || 0 }).map(
+                (_, index) => (
+                  <div key={index} className="flex flex-col gap-2">
+                    <div className="skeleton h-36 w-full rounded-md" />
+                    <div className="skeleton h-6 w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                    <div className="skeleton h-5 w-full rounded-md" />
+                  </div>
                 )
-              : products?.data?.map((product) => {
-                  return (
-                    <CardComponent
-                      key={product._id}
-                      name={product.name}
-                      countInStock={product.countInStock}
-                      description={product.description}
-                      image={product.image}
-                      price={product.price}
-                      rating={product.rating}
-                      type={product.type}
-                      sold={product.sold}
-                      discount={product.discount}
-                      id={product._id}
-                    />
-                  );
-                })}
+              )
+            ) : products?.data?.length === 0 ? (
+              <div>khong tim thay gi het</div>
+            ) : (
+              products?.data?.map((product) => {
+                return (
+                  <CardComponent
+                    key={product._id}
+                    name={product.name}
+                    countInStock={product.countInStock}
+                    description={product.description}
+                    image={product.image}
+                    price={product.price}
+                    rating={product.rating}
+                    type={product.type}
+                    sold={product.sold}
+                    discount={product.discount}
+                    id={product._id}
+                  />
+                );
+              })
+            )}
           </div>
 
-          <div className="flex justify-center -mt-[80px]">
+          <div
+            className={
+              products?.data?.length === 0 || products?.totalPage === 1
+                ? "hidden"
+                : "flex justify-center -mt-[80px]"
+            }
+          >
             <WrapperButtonMore
               textButton={isPreviousData ? "Loading..." : "Xem thêm"}
               type="outline"
