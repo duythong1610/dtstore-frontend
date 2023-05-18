@@ -81,24 +81,32 @@ const Comment = ({ idProduct }) => {
   };
 
   const handleReplyClick = (commentId) => {
-    if (commentIdReplying === commentId) {
-      setCommentIdReplying("");
+    if (!user.id) {
+      message.error("Vui lòng đăng nhập để trả lời");
     } else {
-      setCommentIdReplying(commentId);
+      if (commentIdReplying === commentId) {
+        setCommentIdReplying("");
+      } else {
+        setCommentIdReplying(commentId);
+      }
     }
   };
 
   const handleLikeComment = async (commentId) => {
-    const payload = {
-      commentId,
-      userId: user?.id,
-    };
-    const res = await ProductService.likeComment(
-      productDetails._id,
-      payload,
-      user?.access_token
-    );
-    fetchProductDetails();
+    if (!user.id) {
+      message.error("Vui lòng đăng nhập để thực hiện");
+    } else {
+      const payload = {
+        commentId,
+        userId: user?.id,
+      };
+      const res = await ProductService.likeComment(
+        productDetails._id,
+        payload,
+        user?.access_token
+      );
+      fetchProductDetails();
+    }
   };
 
   const handleDeleteComment = async (commentId) => {
@@ -233,7 +241,12 @@ const Comment = ({ idProduct }) => {
                     <img src={likeSvg} alt="" width={18} height={18} />
                   </div>
                 </div>
-                <span className="text-base font-medium">{user.name}</span>
+                <div className="flex gap-2 items-center">
+                  <span className="text-base font-medium">{user.name}</span>
+                  {user.isAdmin && (
+                    <CheckCircleFilled className="text-blue-500" />
+                  )}
+                </div>
               </div>
             );
           })}
@@ -353,42 +366,6 @@ const Comment = ({ idProduct }) => {
                 </div>
 
                 <div className="pl-[50px] md:pl-[74px] ">
-                  {commentIdReplying === comment?._id && (
-                    <div className="w-full md:w-1/2 mb-4 mt-1">
-                      <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-                        <div className="flex items-center gap-4">
-                          <img
-                            src={
-                              user?.avatar ||
-                              "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
-                            }
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                            }}
-                            alt="user-avatar"
-                          />
-                          <textarea
-                            className="mt-3 w-full md:h-20 h-10 border-none outline-none"
-                            placeholder="Viết câu trả lời..."
-                            value={replyText?.text}
-                            type="text"
-                            onChange={onChangeReply}
-                          />
-                          <SendOutlined
-                            onClick={handleReplyComment}
-                            className={
-                              replyText?.text !== ""
-                                ? "text-blue-600"
-                                : "text-zinc-500"
-                            }
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
                   {Array.isArray(comment.reply) &&
                     comment?.reply?.map((reply) => {
                       const isLikedReplyByCurrentUser = reply.likes.some(
@@ -511,6 +488,42 @@ const Comment = ({ idProduct }) => {
                         </div>
                       );
                     })}
+                  {commentIdReplying === comment?._id && (
+                    <div className="w-full md:w-1/2 mb-4 mt-1">
+                      <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={
+                              user?.avatar ||
+                              "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
+                            }
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                            }}
+                            alt="user-avatar"
+                          />
+                          <textarea
+                            className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+                            placeholder="Viết câu trả lời..."
+                            value={replyText?.text}
+                            type="text"
+                            onChange={onChangeReply}
+                          />
+                          <SendOutlined
+                            onClick={handleReplyComment}
+                            className={
+                              replyText?.text !== ""
+                                ? "text-blue-600"
+                                : "text-zinc-500"
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </>
