@@ -42,7 +42,9 @@ function HeaderComponent() {
   const { pathname } = useLocation();
 
   const handleNavigate = () => {
-    navigate("/sign-in");
+    if (!user?.access_token) {
+      navigate("/sign-in");
+    }
   };
 
   const handleLogout = async () => {
@@ -199,7 +201,10 @@ function HeaderComponent() {
                 style={{ padding: "0px" }}
                 className="hidden md:block"
               >
-                <WrapperHeaderAccount className="flex-col md:flex-row gap-1 md:gap-2">
+                <WrapperHeaderAccount
+                  className="flex-col md:flex-row gap-1 md:gap-2"
+                  onClick={handleNavigate}
+                >
                   {userAvatar ? (
                     <img
                       src={userAvatar}
@@ -215,20 +220,7 @@ function HeaderComponent() {
                     <UserOutlined style={{ fontSize: "22px" }} />
                   )}
 
-                  {user?.access_token ? (
-                    <>
-                      {" "}
-                      <span className="text-base cursor-pointer">
-                        Tài khoản
-                      </span>
-                    </>
-                  ) : (
-                    <div onClick={handleNavigate}>
-                      <span className="text-sm md:text-base cursor-pointer">
-                        Tài khoản
-                      </span>
-                    </div>
-                  )}
+                  <span className="text-base cursor-pointer">Tài khoản</span>
                 </WrapperHeaderAccount>
               </Popover>
             </div>
