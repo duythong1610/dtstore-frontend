@@ -12,6 +12,7 @@ import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
 import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import ViewedProductsPage from "../pages/ViewedProductsPage/ViewedProductsPage";
+import VnpayStatusPage from "../pages/VnpayStatusPage/VnpayStatusPage";
 export const routes = [
   {
     path: "/",
@@ -47,6 +48,11 @@ export const routes = [
     isDefaultLayout: true,
   },
 
+  {
+    path: "/vnpay-status",
+    component: VnpayStatusPage,
+    isDefaultLayout: true,
+  },
   {
     path: "/order-success",
     component: OrderSuccess,

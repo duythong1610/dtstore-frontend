@@ -17,8 +17,15 @@ import { updateUser } from "../../redux/slides/userSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlice";
 import { PayPalButton } from "react-paypal-button-v2";
+import vnpayImg from "../../assets/img/vnpay.png";
+import later_moneyImg from "../../assets/img/later_money.png";
 import * as PaymentService from "../../services/PaymentService";
-import { LeftOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  CaretDownOutlined,
+  CaretUpOutlined,
+} from "@ant-design/icons";
+import axios from "axios";
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
@@ -28,6 +35,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [moreInfoOrder, setMoreInfoOrder] = useState(false);
   const [districtsRender, setDistrictsRender] = useState([]);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -142,6 +150,7 @@ const PaymentPage = () => {
 
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
+    console.log(data);
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });
@@ -186,24 +195,30 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
   console.log({ state });
-  const onSuccessPaypal = (details, data) => {
-    mutationAddOrder.mutate({
-      token: user?.access_token,
-      orderItems: order?.orderItemsSelected,
-      fullName: user?.name,
-      address: user?.address,
-      phone: user?.phone,
-      city: user?.city,
-      district: user?.district,
-      paymentMethod: payment,
-      itemsPrice: priceMemo,
-      shippingPrice: 0,
-      totalPrice: state?.totalPrice,
-      user: user?.id,
-      isPaid: true,
-      paidAt: details.update_time,
-      email: user?.email,
-    });
+
+  const handleVnPay = async () => {
+    sessionStorage.setItem("paymentMethod", payment);
+    sessionStorage.setItem("delivery", delivery);
+    const data = {
+      amount: state?.totalPrice,
+      bankCode: "",
+      language: "vn",
+      vnp_OrderInfo: "test thu coi",
+    };
+
+    const res = await axios.post(
+      "http://localhost:8888/order/create_payment_url",
+      data,
+      {
+        headers: {
+          " Access-Control-Allow-Origin": "http://localhost:3000",
+          "Access-Control-Allow-Methods": "*",
+        },
+      }
+    );
+    console.log(res);
+    window.open(res?.data.vnp, "_blank");
+    return res;
   };
 
   const handleUpdateInfoUser = () => {
@@ -292,16 +307,16 @@ const PaymentPage = () => {
                     value={delivery}
                   >
                     <Radio value="fast">
-                      <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                        FAST
-                      </span>{" "}
-                      Giao hàng tiết kiệm
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 font-black">FAST</span>
+                        <span>Giao hàng tiết kiệm</span>
+                      </div>
                     </Radio>
                     <Radio value="now">
-                      <span style={{ color: "#ea8500", fontWeight: "bold" }}>
-                        NOW
-                      </span>{" "}
-                      Giao siêu tốc
+                      <div className="flex items-center gap-2">
+                        <span className="text-red-500 font-black">NOW</span>
+                        <span>Giao siêu tốc</span>
+                      </div>
                     </Radio>
                   </Radio.Group>
                 </div>
@@ -316,11 +331,28 @@ const PaymentPage = () => {
                     onChange={handlePayment}
                     value={payment}
                   >
-                    <Radio value="later_money">
-                      {" "}
-                      Thanh toán tiền mặt khi nhận hàng
-                    </Radio>
-                    <Radio value="paypal"> Thanh toán tiền bằng paypal</Radio>
+                    <span>alo</span>
+                    <div className="flex items-center gap-1">
+                      <Radio value="later_money">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={later_moneyImg}
+                            alt=""
+                            width={32}
+                            height={32}
+                          />
+                          <span>Thanh toán tiền mặt khi nhận được hàng</span>
+                        </div>{" "}
+                      </Radio>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Radio value="vnpay flex items-center">
+                        <div className="flex items-center gap-2">
+                          <img src={vnpayImg} alt="" width={32} height={32} />
+                          <span>Thanh toán qua cổng VNPAY</span>
+                        </div>
+                      </Radio>
+                    </div>
                   </Radio.Group>
                 </div>
               </WrapperInfo>
@@ -376,7 +408,11 @@ const PaymentPage = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-5 border-b-zinc-100 border-b-[1px] bg-white w-full">
+                <div
+                  className={`${
+                    moreInfoOrder ? "block" : "hidden md:block"
+                  } p-5 border-b-zinc-100 border-b-[1px] bg-white w-full`}
+                >
                   <div
                     style={{
                       display: "flex",
@@ -446,8 +482,20 @@ const PaymentPage = () => {
                     </span>
                   </div>
                 </div>
-                <WrapperTotal>
-                  <span>Tổng tiền</span>
+                <div className="py-4 px-5 flex items-center bg-white justify-between">
+                  <div className="flex items-center gap-1 leading-none">
+                    <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
+                      Tổng cộng
+                    </span>
+
+                    <div className="md:hidden">
+                      {moreInfoOrder ? (
+                        <CaretDownOutlined className="text-gray-500" />
+                      ) : (
+                        <CaretUpOutlined className="text-gray-500" />
+                      )}
+                    </div>
+                  </div>
                   <span style={{ display: "flex", flexDirection: "column" }}>
                     <span className="text-xl font-medium md:text-base text-red-500">
                       {convertPrice(state?.totalPrice)}
@@ -456,23 +504,41 @@ const PaymentPage = () => {
                       (Đã bao gồm VAT nếu có)
                     </span>
                   </span>
-                </WrapperTotal>
+                </div>
                 <div className="bg-white px-5 pb-2 md:p-0">
-                  <ButtonComponent
-                    onClick={() => handleAddOrder()}
-                    size={40}
-                    styleButton={{
-                      background: "#422AFB",
-                      height: "48px",
-                      width: "100%",
-                      border: "none",
-                      borderRadius: "4px",
-                      color: "#fff",
-                      fontSize: "15px",
-                      fontWeight: "700",
-                    }}
-                    textButton={`Đặt mua`}
-                  ></ButtonComponent>
+                  {payment === "later_money" ? (
+                    <ButtonComponent
+                      onClick={() => handleAddOrder()}
+                      size={40}
+                      styleButton={{
+                        background: "#422AFB",
+                        height: "48px",
+                        width: "100%",
+                        border: "none",
+                        borderRadius: "4px",
+                        color: "#fff",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                      }}
+                      textButton={`Đặt mua`}
+                    ></ButtonComponent>
+                  ) : (
+                    <ButtonComponent
+                      onClick={() => handleVnPay()}
+                      size={40}
+                      styleButton={{
+                        background: "#422AFB",
+                        height: "48px",
+                        width: "100%",
+                        border: "none",
+                        borderRadius: "4px",
+                        color: "#fff",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                      }}
+                      textButton={`Tiến hành thanh toán`}
+                    ></ButtonComponent>
+                  )}
                 </div>
               </div>
             </div>

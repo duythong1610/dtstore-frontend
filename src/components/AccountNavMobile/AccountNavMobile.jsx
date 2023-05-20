@@ -133,6 +133,19 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                     </div>
                     <hr />
                   </li>
+                  {/* <li
+                    className="cursor-pointer"
+                    onClick={() => handleNavigate("viewed-products")}
+                  >
+                    <div className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
+                      <div className="flex items-center justify-center gap-3">
+                        <EyeFilled className="text-gray-500" />
+                        <span>Yêu cầu xóa tài khoản</span>
+                      </div>
+                      <RightOutlined className="md:hidden text-gray-500" />
+                    </div>
+                    <hr />
+                  </li> */}
                 </ul>
                 <button
                   onClick={handleLogout}

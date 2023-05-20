@@ -216,13 +216,14 @@ const Comment = ({ idProduct }) => {
   };
 
   return (
-    <div className="max-w-7xl rounded-xl m-auto">
+    <div className="max-w-7xl rounded-xl m-auto custom-modal">
       <ModalComponent
         footer={null}
         title="Được thích bởi"
         open={isOpenModal}
         onCancel={handleCancel}
         // onOk={handleUpdateInfoUser}
+        className="custom-modal"
       >
         {Array.isArray(userLikeInfo) &&
           userLikeInfo?.map((user) => {

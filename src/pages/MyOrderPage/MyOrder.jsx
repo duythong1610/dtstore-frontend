@@ -76,54 +76,50 @@ const MyOrderPage = () => {
   }, [isErrorCancle, isSuccessCancel]);
 
   const renderProduct = (data) => {
-    return data?.map((order) => {
-      return (
-        <div className="w-full flex flex-col gap-2">
-          {data?.map((order) => {
-            return (
-              <div>
-                <div className="flex gap-3">
-                  <span className="w-24 h-24 inline-block">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={order?.image}
-                    />
-                  </span>
-                  <div
-                    className="w-[80%]"
-                    onClick={() =>
-                      navigate(`/product-detail/${order?.product}`)
-                    }
-                  >
-                    <h1>{order?.name}</h1>
+    return (
+      <div className="w-full flex flex-col gap-2">
+        {data?.map((order) => {
+          return (
+            <div>
+              <div className="flex gap-3">
+                <span className="w-24 h-24 inline-block">
+                  <img
+                    className="w-full h-full object-cover"
+                    src={order?.image}
+                  />
+                </span>
+                <div
+                  className="w-[80%]"
+                  onClick={() => navigate(`/product-detail/${order?.product}`)}
+                >
+                  <h1>{order?.name}</h1>
+                  <div className="flex gap-3">
+                    <span
+                      className={
+                        order?.priceDiscount
+                          ? "text-zinc-400 line-through"
+                          : "" + "text-red-500 font-medium "
+                      }
+                    >
+                      {convertPrice(order?.price)}
+                    </span>
+                    <p>{"x" + order?.amount}</p>
+                  </div>
+                  {order?.priceDiscount && (
                     <div className="flex gap-3">
-                      <span
-                        className={
-                          order?.priceDiscount
-                            ? "text-zinc-400 line-through"
-                            : "" + "text-red-500 font-medium "
-                        }
-                      >
-                        {convertPrice(order?.price)}
+                      <span className="text-red-500 font-medium">
+                        {convertPrice(order?.priceDiscount)}
                       </span>
                       <p>{"x" + order?.amount}</p>
                     </div>
-                    {order?.priceDiscount && (
-                      <div className="flex gap-3">
-                        <span className="text-red-500 font-medium">
-                          {convertPrice(order?.priceDiscount)}
-                        </span>
-                        <p>{"x" + order?.amount}</p>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
-      );
-    });
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   console.log({ data });

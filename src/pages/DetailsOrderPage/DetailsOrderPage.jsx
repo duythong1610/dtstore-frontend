@@ -60,7 +60,7 @@ const DetailsOrderPage = () => {
               <h1 className="text-xl font-medium m-0">ĐƠN HÀNG</h1>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-3 px-5 py-16 justify-between">
+          <div className="flex flex-col gap-3 px-5 py-16 justify-between">
             <div>
               <div className="bg-white rounded-xl p-3 w-full">
                 <h1 className="text-lg">Mã đơn hàng: {data?.orderCode}</h1>
@@ -188,7 +188,9 @@ const DetailsOrderPage = () => {
                 </div>
                 <div className="flex justify-between">
                   <p>Khuyến mãi vận chuyển</p>
-                  <span className="text-green-500">- {convertPrice(data?.shippingPrice)}</span>
+                  <span className="text-green-500">
+                    - {convertPrice(data?.shippingPrice)}
+                  </span>
                 </div>
                 <div className="flex justify-between font-medium">
                   <p>Thành tiền</p>

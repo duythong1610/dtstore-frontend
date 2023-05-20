@@ -109,7 +109,7 @@ const ProductSimilar = ({ idProduct }) => {
                         />
                       </span>
 
-                      <span className="text-xs md:text-sm">
+                      <span className="text-[11px] md:text-sm">
                         {product?.sold > 0 && `| Đã bán ${product?.sold}`}{" "}
                       </span>
                     </WrapperReportText>

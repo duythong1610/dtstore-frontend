@@ -60,6 +60,10 @@ html {
   white-space: normal;
 }
 
+.ant-radio-wrapper {
+  display: flex;
+  align-items: center;
+}
 .ant-popover-inner {
   padding: 0px !important;
 }

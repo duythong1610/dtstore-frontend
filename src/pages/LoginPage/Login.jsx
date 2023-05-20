@@ -31,6 +31,7 @@ import * as UserService from "../../services/UserService";
 import Loading from "../../components/LoadingComponent/Loading";
 import jwt_decode from "jwt-decode";
 import { updateUser } from "../../redux/slides/userSlice";
+import axios from "axios";
 function Login() {
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -108,6 +109,15 @@ function Login() {
       email,
       password,
     });
+  };
+
+  const handleNavigate = async () => {
+    const data = await axios.get(
+      "http://localhost:8888/order/create_payment_url",
+      { params: { price: 30000 } }
+    );
+    window.location.href = "http://localhost:8888/order/create_payment_url";
+    return data;
   };
 
   return (
@@ -323,7 +333,7 @@ function Login() {
                     Duy trì đăng nhập
                   </FormLabel>
                 </FormControl>
-                <NavLink to="/auth/forgot-password">
+                <NavLink onClick={() => handleNavigate()}>
                   <Text
                     color={textColorBrand}
                     fontSize="sm"

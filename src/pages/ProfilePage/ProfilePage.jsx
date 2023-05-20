@@ -26,6 +26,8 @@ const ProfilePage = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
+  const [district, setDistrict] = useState(user?.district || "");
+  const [city, setCity] = useState(user?.city || "");
   const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
 
@@ -43,6 +45,8 @@ const ProfilePage = () => {
       setEmail(user?.email),
       setPhone(user?.phone),
       setAddress(user?.address),
+      setDistrict(user?.district),
+      setCity(user?.city),
       setAvatar(user?.avatar);
   }, [user]);
 
@@ -74,6 +78,12 @@ const ProfilePage = () => {
   const handleChangeAddress = (e) => {
     setAddress(e.target.value);
   };
+  const handleChangeDistrict = (e) => {
+    setDistrict(e.target.value);
+  };
+  const handleChangeCity = (e) => {
+    setCity(e.target.value);
+  };
 
   const handleChangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
@@ -91,6 +101,8 @@ const ProfilePage = () => {
       name,
       phone,
       address,
+      district,
+      city,
       avatar,
       access_token: user?.access_token,
     });
@@ -225,6 +237,32 @@ const ProfilePage = () => {
                         type="text"
                         value={address}
                         onChange={handleChangeAddress}
+                      />
+                    </div>
+
+                    <div className="form-control mb-5 flex items-center ">
+                      <label className="w-40 font-medium" htmlFor="address">
+                        Quận, huyện:
+                      </label>
+                      <input
+                        className="px-3 py-2 outline-none rounded-lg border border-zinc-300 focus:border-blue-500  w-full"
+                        id="address"
+                        type="text"
+                        value={district}
+                        onChange={handleChangeDistrict}
+                      />
+                    </div>
+
+                    <div className="form-control mb-5 flex items-center ">
+                      <label className="w-40 font-medium" htmlFor="address">
+                        Thành phố:
+                      </label>
+                      <input
+                        className="px-3 py-2 outline-none rounded-lg border border-zinc-300 focus:border-blue-500  w-full"
+                        id="address"
+                        type="text"
+                        value={city}
+                        onChange={handleChangeCity}
                       />
                     </div>
 
