@@ -13,7 +13,7 @@ import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/Message";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlice";
 
 import { PayPalButton } from "react-paypal-button-v2";
@@ -28,8 +28,11 @@ const VnpayStatusPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   // const { state } = useLocation();
-  const [cookieValue, setCookieValue] = useState();
 
+  const params = useParams();
+  const { id } = params;
+  console.log(params);
+  console.log(id);
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -106,17 +109,8 @@ const VnpayStatusPage = () => {
     }
   };
 
-  function getCookie(name) {
-    const cookieValue = document.cookie.match(
-      "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"
-    );
-    return cookieValue ? cookieValue.pop() : "";
-  }
-
   useEffect(() => {
-    setCookieValue(getCookie("code"));
-    if (cookieValue === "0") {
-      console.log("alo");
+    if (id === "0") {
       handleAddOrder();
     }
   }, [user?.id]);
@@ -140,7 +134,7 @@ const VnpayStatusPage = () => {
 
   console.log(dataAdd);
   useEffect(() => {
-    if (cookieValue === "0" && dataAdd?.status === "OK") {
+    if (id === "0" && dataAdd?.status === "OK") {
       const arrayOrdered = [];
       order?.orderItemsSelected?.forEach((element) => {
         arrayOrdered.push(element.product);

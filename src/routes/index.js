@@ -49,7 +49,7 @@ export const routes = [
   },
 
   {
-    path: "/vnpay-status",
+    path: "/vnpay-payment/:id",
     component: VnpayStatusPage,
     isDefaultLayout: true,
   },
