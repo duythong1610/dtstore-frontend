@@ -141,7 +141,6 @@ const VnpayStatusPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt hàng thành công");
-      document.cookie = "code=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       navigate("/order-success");
     } else if (isError) {
       message.error();
