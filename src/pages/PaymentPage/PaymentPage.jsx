@@ -207,11 +207,10 @@ const PaymentPage = () => {
     };
 
     const res = await axios.post(
-      "http://localhost:8888/order/create_payment_url",
+      "https://payment-vnpay.onrender.com/order/create_payment_url",
       data,
       {
         headers: {
-          " Access-Control-Allow-Origin": "http://localhost:3000",
           "Access-Control-Allow-Methods": "*",
         },
       }
@@ -259,25 +258,25 @@ const PaymentPage = () => {
     }
   };
 
-  const addPaypalScript = async () => {
-    const { data } = await PaymentService.getConfig();
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-    script.async = true;
-    script.onload = () => {
-      setSdkReady(true);
-    };
-    document.body.appendChild(script);
-  };
+  // const addPaypalScript = async () => {
+  //   const { data } = await PaymentService.getConfig();
+  //   const script = document.createElement("script");
+  //   script.type = "text/javascript";
+  //   script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+  //   script.async = true;
+  //   script.onload = () => {
+  //     setSdkReady(true);
+  //   };
+  //   document.body.appendChild(script);
+  // };
 
-  useEffect(() => {
-    if (!window.paypal) {
-      addPaypalScript();
-    } else {
-      setSdkReady(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!window.paypal) {
+  //     addPaypalScript();
+  //   } else {
+  //     setSdkReady(true);
+  //   }
+  // }, []);
 
   return (
     <div className="bg-slate-100 w-full h-screen">
