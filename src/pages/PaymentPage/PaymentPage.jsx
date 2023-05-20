@@ -215,7 +215,7 @@ const PaymentPage = () => {
         },
       }
     );
-    window.location.href(res?.data.vnp);
+    window.location.href = res?.data.vnp;
     return res;
   };
 
