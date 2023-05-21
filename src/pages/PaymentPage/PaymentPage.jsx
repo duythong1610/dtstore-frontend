@@ -329,7 +329,6 @@ const PaymentPage = () => {
                     onChange={handlePayment}
                     value={payment}
                   >
-                    <span>alo</span>
                     <div className="flex items-center gap-1">
                       <Radio value="later_money">
                         <div className="flex items-center gap-2">
@@ -344,10 +343,10 @@ const PaymentPage = () => {
                       </Radio>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Radio value="vnpay flex items-center">
+                      <Radio value="vnpay">
                         <div className="flex items-center gap-2">
                           <img src={vnpayImg} alt="" width={32} height={32} />
-                          <span>Thanh toán qua cổng VNPAY</span>
+                          <span>Thanh toán qua cổng giao dịch VNPAY</span>
                         </div>
                       </Radio>
                     </div>
