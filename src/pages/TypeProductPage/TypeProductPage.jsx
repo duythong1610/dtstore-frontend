@@ -8,7 +8,7 @@ import { useState } from "react";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import useDebounce from "../../hooks/useDebounce";
-import { CloseCircleOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined, FilterOutlined } from "@ant-design/icons";
 import { convertPrice } from "../../until";
 
 function TypeProductPage() {
@@ -32,6 +32,7 @@ function TypeProductPage() {
   const fetchProductType = async (type, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductType(type, page, limit);
+    console.log(res);
     if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
@@ -53,9 +54,12 @@ function TypeProductPage() {
   }, [state]);
 
   const onChange = (current, pageSize) => {
-    setPaginate({ ...paginate, page: current - 1, limit: pageSize });
+    console.log(current, pageSize);
+    setPaginate({ ...paginate, page: current, limit: pageSize });
   };
 
+  console.log(paginate);
+  console.log(products);
   const handleSearchPrice = (type) => {
     let result;
     switch (type) {
@@ -263,18 +267,18 @@ function TypeProductPage() {
   console.log({ active }, { activeFilter });
   return (
     <Loading isLoading={loading}>
-      <div>
+      <div className="bg-slate-100">
         <div className="max-w-7xl m-auto">
-          <div
-            style={{
-              flexWrap: "nowrap",
-              paddingTop: "10px",
-              height: "calc(100% - 50px)",
-            }}
-          >
-            <div className="relative md:pb-10">
-              <div className="filter fixed md:absolute top-0 left-0 right-0 bg-white z-10 md:p-0 px-5 py-2">
-                <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+          <div className="relative">
+            <div className="filter fixed md:static top-0 left-0 right-0 bg-white md:bg-transparent z-10 md:py-5 md:px-0 py-2 px-5">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <FilterOutlined className="text-base" />
+                  <span className="font-medium md:block md:text-base">
+                    Bộ lọc:
+                  </span>
+                </div>
+                <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-item">
                   {/* <div className="item inline-block mr-2">
                   <button
                     className="py-1 px-5 border border-gray-300 rounded-md"
@@ -286,20 +290,22 @@ function TypeProductPage() {
                   {renderFilter()}
                 </div>
               </div>
-              <div
-                className={`hidden w-screen h-[45vh] p-5 fixed md:shadow-xl md:absolute md:h-auto md:!w-[30vw] md:rounded-xl top-11 md:top-9 left-0 right-0 z-10 bg-white ${
-                  isToggle && "!block"
-                } `}
-              >
-                <div className="text-right -mt-5">
-                  <CloseCircleOutlined
-                    className="text-zinc-300 w-5 h-5 text-2xl"
-                    onClick={() => setIsToggle("")}
-                  />
-                </div>
-                {renderItem(activeFilter)}
-              </div>
             </div>
+            <div
+              className={`hidden w-screen h-[45vh] p-5 fixed md:shadow-xl md:absolute md:h-auto md:!w-[30vw] md:rounded-xl top-11 md:top-[71px] left-0 right-0 z-10 bg-white ${
+                isToggle && "!block"
+              } `}
+            >
+              <div className="text-right -mt-5">
+                <CloseCircleOutlined
+                  className="text-zinc-300 w-5 h-5 text-2xl"
+                  onClick={() => setIsToggle("")}
+                />
+              </div>
+              {renderItem(activeFilter)}
+            </div>
+          </div>
+          <div className="min-h-[912px] pt-5 md:pt-0">
             <div
               style={{
                 display: "flex",
@@ -307,7 +313,7 @@ function TypeProductPage() {
                 justifyContent: "space-between",
               }}
             >
-              <div className="mt-6 md:mt-0 grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
+              <div className="mt-6 md:mt-0 grid gap-3 p-5 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                 {productsViews.length > 0 &&
                   productsViews
                     ?.filter((pro) => {
@@ -340,13 +346,13 @@ function TypeProductPage() {
                     })}
               </div>
 
-              <Pagination
-                showQuickJumper
-                defaultCurrent={paginate?.page + 1}
+              {/* <Pagination
+                // showQuickJumper
+                defaultCurrent={paginate?.page}
                 total={paginate?.total}
                 onChange={onChange}
-                style={{ textAlign: "center", marginTop: "20px" }}
-              />
+                style={{ textAlign: "center", margin: "20px 0" }}
+              /> */}
             </div>
           </div>
         </div>

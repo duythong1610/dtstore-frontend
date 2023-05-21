@@ -367,8 +367,8 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div className="bg-slate-100 w-full min-h-screen pt-12 md:pt-5">
-      <div className="h-full max-w-7xl px-5 m-auto pt-5 md:pt-0">
+    <div className="bg-slate-100 w-full pt-12 md:py-5">
+      <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0">
         <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
           <div className="flex justify-center items-center">
             <LeftOutlined

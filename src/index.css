@@ -15,6 +15,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  background: #f1f5f9 !important;
+}
+
 ::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: #fff;
@@ -49,6 +53,25 @@ html {
 
 .btn-sign-up:disable {
   background: #ccc;
+}
+
+.swiper {
+  padding: 20px 0 !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  padding: 22px;
+  background: #fff;
+  border-radius: 9999px;
+  color: #422afb !important;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 20px !important;
+  padding: 100%;
 }
 
 .one-line {

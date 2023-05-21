@@ -15,6 +15,7 @@ import likeSvg from "../../assets/img/like.svg";
 import * as message from "../Message/Message";
 import { Dropdown, Tooltip } from "antd";
 import ModalComponent from "../ModalComponent/ModalComponent";
+import default_avatar from "../../assets/img/default_avatar.png";
 import "./customModal.css";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
@@ -264,7 +265,7 @@ const Comment = ({ idProduct }) => {
 
           return (
             <>
-              <div className="mb-3">
+              <div>
                 <div
                   key={comment?._id}
                   className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl relative"
@@ -278,7 +279,11 @@ const Comment = ({ idProduct }) => {
                       <div className="user-img">
                         <img
                           className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
-                          src={comment?.postedBy?.avatar}
+                          src={
+                            comment?.postedBy?.avatar
+                              ? comment?.postedBy?.avatar
+                              : default_avatar
+                          }
                           alt=""
                         />
                       </div>
@@ -391,7 +396,11 @@ const Comment = ({ idProduct }) => {
                                 <div className="user-img">
                                   <img
                                     className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
-                                    src={reply?.postedBy?.avatar}
+                                    src={
+                                      reply?.postedBy?.avatar
+                                        ? reply?.postedBy?.avatar
+                                        : default_avatar
+                                    }
                                     alt=""
                                   />
                                 </div>
@@ -492,12 +501,9 @@ const Comment = ({ idProduct }) => {
                   {commentIdReplying === comment?._id && (
                     <div className="w-full md:w-1/2 mb-4 mt-1">
                       <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-                        <div className="flex items-center gap-4">
+                        <div className="flex gap-4">
                           <img
-                            src={
-                              user?.avatar ||
-                              "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
-                            }
+                            src={user?.avatar || default_avatar}
                             style={{
                               width: "50px",
                               height: "50px",
@@ -507,7 +513,7 @@ const Comment = ({ idProduct }) => {
                             alt="user-avatar"
                           />
                           <textarea
-                            className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+                            className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
                             placeholder="Viết câu trả lời..."
                             value={replyText?.text}
                             type="text"
@@ -532,12 +538,9 @@ const Comment = ({ idProduct }) => {
         })}
         {false && (
           <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white absolute z-20">
-            <div className="flex items-center gap-4">
+            <div className="flex gap-4">
               <img
-                src={
-                  user?.avatar ||
-                  "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
-                }
+                src={user?.avatar || default_avatar}
                 style={{
                   width: "50px",
                   height: "50px",
@@ -547,7 +550,7 @@ const Comment = ({ idProduct }) => {
                 alt="user-avatar"
               />
               <textarea
-                className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+                className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
                 placeholder={"Viết bình luận, hỏi đáp..."}
                 value={commentText?.text}
                 type="text"
@@ -563,14 +566,11 @@ const Comment = ({ idProduct }) => {
           </div>
         )}
       </div>
-      <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:p-0  ">
-        <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-          <div className="flex items-center gap-4">
+      <div className="w-full md:w-1/2 flex flex-col gap-2 p-4">
+        <div className="gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
+          <div className="flex gap-4">
             <img
-              src={
-                user?.avatar ||
-                "https://hacom.vn/media/lib/15-06-2021/che-do-an-danh.jpg"
-              }
+              src={user?.avatar || default_avatar}
               style={{
                 width: "50px",
                 height: "50px",
@@ -580,7 +580,7 @@ const Comment = ({ idProduct }) => {
               alt="user-avatar"
             />
             <textarea
-              className="mt-3 w-full md:h-20 h-10 border-none outline-none"
+              className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
               placeholder={"Viết bình luận, hỏi đáp..."}
               value={commentText?.text}
               type="text"

@@ -98,7 +98,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="min-h-screen h-full w-full bg-slate-100">
+      <div className="h-full w-full bg-slate-100">
         <div
           id="container"
           style={{
@@ -110,65 +110,69 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
 
-          <div className="grid gap-3 p-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-[80px]">
-            {loading ? (
-              Array.from({ length: products?.data?.length || 0 }).map(
-                (_, index) => (
-                  <div key={index} className="flex flex-col gap-2">
-                    <div className="skeleton h-36 w-full rounded-md" />
-                    <div className="skeleton h-6 w-full rounded-md" />
-                    <div className="skeleton h-[18px] w-full rounded-md" />
-                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                    <div className="skeleton h-5 w-full rounded-md" />
-                  </div>
+          <div className="min-h-[930px]">
+            <div className="grid gap-3 py-5 px-5 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+              {loading ? (
+                Array.from({ length: products?.data?.length || 0 }).map(
+                  (_, index) => (
+                    <div key={index} className="flex flex-col gap-2 p-5">
+                      <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                      <div className="skeleton h-6 w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                      <div className="skeleton h-5 w-full rounded-md" />
+                    </div>
+                  )
                 )
-              )
-            ) : products?.data?.length === 0 ? (
-              <div>khong tim thay gi het</div>
-            ) : (
-              products?.data?.map((product) => {
-                return (
-                  <CardComponent
-                    key={product._id}
-                    name={product.name}
-                    countInStock={product.countInStock}
-                    description={product.description}
-                    image={product.image}
-                    price={product.price}
-                    rating={product.rating}
-                    type={product.type}
-                    sold={product.sold}
-                    discount={product.discount}
-                    id={product._id}
-                  />
-                );
-              })
-            )}
-          </div>
+              ) : products?.data?.length === 0 ? (
+                <div>khong tim thay gi het</div>
+              ) : (
+                products?.data?.map((product) => {
+                  return (
+                    <CardComponent
+                      key={product._id}
+                      name={product.name}
+                      countInStock={product.countInStock}
+                      description={product.description}
+                      image={product.image}
+                      price={product.price}
+                      rating={product.rating}
+                      type={product.type}
+                      sold={product.sold}
+                      discount={product.discount}
+                      id={product._id}
+                    />
+                  );
+                })
+              )}
+            </div>
 
-          <div
-            className={
-              products?.data?.length === 0 || products?.totalPage === 1
-                ? "hidden"
-                : "flex justify-center -mt-[80px]"
-            }
-          >
-            <WrapperButtonMore
-              textButton={isPreviousData ? "Loading..." : "Xem thêm"}
-              type="outline"
-              styleButton={{
-                backgroundColor: "#422AFB",
-                marginBottom: "20%",
-                color: "#fff",
-                width: "240px",
-                height: "38px",
-                borderRadius: "20px",
-                fontWeight: 500,
-                display:
-                  products?.total === products?.data.length ? "none" : "block",
-              }}
-              onClick={() => setLimit((prev) => prev + 10)}
-            />
+            <div
+              className={
+                products?.data?.length === 0 || products?.totalPage === 1
+                  ? "hidden"
+                  : "flex justify-center"
+              }
+            >
+              <WrapperButtonMore
+                textButton={isPreviousData ? "Loading..." : "Xem thêm"}
+                type="outline"
+                styleButton={{
+                  backgroundColor: "#422AFB",
+                  marginBottom: "20px",
+                  color: "#fff",
+                  width: "240px",
+                  height: "38px",
+                  borderRadius: "20px",
+                  fontWeight: 500,
+                  display:
+                    products?.total === products?.data.length
+                      ? "none"
+                      : "block",
+                }}
+                onClick={() => setLimit((prev) => prev + 10)}
+              />
+            </div>
           </div>
 
           {/* <NavbarComponent /> */}

@@ -14,7 +14,7 @@ function ProductDetailsPage() {
   };
 
   return (
-    <div style={{ background: "#efefef", height: "100%" }}>
+    <div style={{ height: "100%" }}>
       <div className="hidden md:flex flex-col max-w-7xl rounded-lg m-auto">
         <Breadcrumb
           style={{ padding: "8px 0", fontSize: 16 }}

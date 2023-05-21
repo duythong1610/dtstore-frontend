@@ -19,6 +19,7 @@ import {
   LeftOutlined,
 } from "@ant-design/icons";
 import Loading from "../../components/LoadingComponent/Loading";
+import default_avatar from "../../assets/img/default_avatar.png";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -29,6 +30,8 @@ const ProfilePage = () => {
   const [district, setDistrict] = useState(user?.district || "");
   const [city, setCity] = useState(user?.city || "");
   const [avatar, setAvatar] = useState("");
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([])
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -110,20 +113,22 @@ const ProfilePage = () => {
 
   return (
     <Loading isLoading={isLoading}>
-      <div className="main bg-gray-100 h-auto min-h-screen md:h-screen">
+      <div className="main h-auto">
         <div className="max-w-7xl m-auto">
-          <div className="content pt-16 md:pt-5 px-5 flex flex-col md:flex-row">
-            <div className="content-left md:w-1/4 md:px-5 hidden md:block">
+          <div className="content gap-5 pt-16 md:py-5 px-5 md:px-0 flex flex-col md:flex-row">
+            <div className="content-left md:w-1/4 md:p-5 rounded-xl hidden md:block bg-white">
               <div className="flex gap-2 mb-3">
                 <img
-                  src={user?.avatar}
+                  src={user?.avatar || default_avatar}
                   alt="user-avatar"
                   className="w-10 rounded-full h-10"
                 />
                 <div className="info flex flex-col">
                   <span>Tài khoản của</span>
                   <div className="flex items-center gap-1">
-                    <span className="font-medium">{user?.name}</span>
+                    <span className="font-medium">
+                      {user?.name || "Chưa cập nhật tên"}
+                    </span>
                     {user?.isAdmin && (
                       <CheckCircleFilled className="text-blue-500" />
                     )}
@@ -159,7 +164,7 @@ const ProfilePage = () => {
                 </li>
                 <li>
                   <Link
-                    to=""
+                    to="/my-order"
                     className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
@@ -171,7 +176,7 @@ const ProfilePage = () => {
                 </li>
                 <li>
                   <Link
-                    to=""
+                    to="/viewed-products"
                     className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
@@ -183,7 +188,7 @@ const ProfilePage = () => {
                 </li>
               </ul>
             </div>
-            <div className="content-right mb-[80px] w-full bg-white p-5 rounded-xl">
+            <div className="content-right mb-[80px] md:mb-0 w-full bg-white p-5 rounded-xl">
               <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
                 <div className="flex justify-center items-center">
                   <LeftOutlined
@@ -296,29 +301,17 @@ const ProfilePage = () => {
                       maxCount={1}
                       onChange={handleChangeAvatar}
                     >
-                      {avatar ? (
-                        <img
-                          src={avatar}
-                          style={{
-                            height: "150px",
-                            width: "150px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                          }}
-                          alt="avatar"
-                        />
-                      ) : (
-                        <img
-                          src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
-                          style={{
-                            height: "150px",
-                            width: "150px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                          }}
-                          alt="avatar"
-                        />
-                      )}
+                      <img
+                        src={avatar || default_avatar}
+                        style={{
+                          height: "150px",
+                          width: "150px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                        alt="avatar"
+                      />
+
                       <EditOutlined className="absolute flex items-center justify-center right-2 bottom-2 w-6 h-6 text-white  bg-slate-600 text-sm rounded-full" />
                     </WrapperUploadFile>
                   </div>

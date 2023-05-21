@@ -22,6 +22,7 @@ import Loading from "../LoadingComponent/Loading";
 import { searchProduct } from "../../redux/slides/productSlice";
 import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
 import logo from "../../assets/img/logo.png";
+import default_avatar from "../../assets/img/default_avatar.png";
 import TypeProduct from "../TypeProduct/TypeProduct";
 
 function HeaderComponent() {
@@ -130,207 +131,223 @@ function HeaderComponent() {
     </div>
   );
 
+  console.log(userAvatar);
   return (
-    <div className="h-0 md:h-full md:max-w-7xl md:m-auto md:py-3">
-      <Row
-        className={
-          pathname !== "/" &&
-          pathname !== "/profile-user" &&
-          !pathname.startsWith("/product/")
-            ? "!hidden md:!flex md:items-center"
-            : "md:flex flex-nowrap md:items-center md:w-7xl"
-        }
-      >
-        <Col span={4}>
-          <span className="hidden md:block">
-            <img src={logo} alt="logo" className="w-16 h-16 object-contain" />
-          </span>
-        </Col>
-        <Col
-          span={11}
-          // className="flex-none md:flex-initial m-auto md:m-0"
-        >
-          <ButtonInputSearch
+    <>
+      <div className="bg-white">
+        <div className="h-0 md:h-full md:max-w-7xl md:m-auto md:py-3 bg-white">
+          <Row
             className={
-              pathname === "/profile-user" && pathname === "/"
-                ? "hidden md:block"
-                : "hidden md:block"
-            }
-            border="none"
-            placeholder="Bạn tìm sản phẩm gì... "
-            textButton="Tìm kiếm"
-            enterButton="Search"
-            size="large"
-            onChange={onSearch}
-            onClick={handleSearch}
-          />
-        </Col>
-        <Col
-          className="flex flex-none justify-center md:gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
-          span={7}
-        >
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
-                : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+              pathname !== "/" &&
+              pathname !== "/profile-user" &&
+              !pathname.startsWith("/product/")
+                ? "!hidden md:!flex md:items-center"
+                : "md:flex flex-nowrap md:items-center md:w-7xl"
             }
           >
-            <HomeOutlined style={{ fontSize: "22px" }} />
-
-            <span className="text-sm md:text-base">Trang chủ</span>
-          </NavLink>
-          <NavLink
-            onClick={handleToggleClassContent}
-            className={
-              activeCategory
-                ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
-                : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
-            }
-          >
-            <AppstoreOutlined style={{ fontSize: "22px" }} />
-
-            <span className="text-sm md:text-base">Danh mục</span>
-          </NavLink>
-          <Loading isLoading={loading}>
-            <div className="hidden md:block">
-              <Popover
-                trigger="click"
-                content={content}
-                style={{ padding: "0px" }}
-                className="hidden md:block"
-              >
-                <WrapperHeaderAccount
-                  className="flex-col md:flex-row gap-1 md:gap-2"
-                  onClick={handleNavigate}
-                >
-                  {userAvatar ? (
-                    <img
-                      src={userAvatar}
-                      alt="avatar"
-                      style={{
-                        height: "30px",
-                        width: "30px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    ></img>
-                  ) : (
-                    <UserOutlined style={{ fontSize: "22px" }} />
-                  )}
-
-                  <span className="text-base cursor-pointer">Tài khoản</span>
-                </WrapperHeaderAccount>
-              </Popover>
-            </div>
-            <div className="md:hidden">
-              <WrapperHeaderAccount
-                className="flex-col md:flex-row gap-1 md:gap-2"
-                onClick={handleToggleClass}
-              >
-                {userAvatar ? (
-                  <img
-                    src={userAvatar}
-                    alt="avatar"
-                    style={{
-                      height: "22px",
-                      width: "22px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  ></img>
-                ) : (
-                  <UserOutlined style={{ fontSize: "22px" }} />
-                )}
-
-                {user?.access_token ? (
-                  <>
-                    <span className="text-sm md:text-base md:hidden cursor-pointer">
-                      Tài khoản
-                    </span>
-                  </>
-                ) : (
-                  <div onClick={handleNavigate}>
-                    <span className="text-sm md:text-base cursor-pointer">
-                      Tài khoản
-                    </span>
-                  </div>
-                )}
-              </WrapperHeaderAccount>
-            </div>
-          </Loading>
-          <NavLink
-            to="/order"
-            className={({ isActive }) =>
-              setActive(isActive) ?? active
-                ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
-                : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
-            }
-            //  active
-            //    ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
-            //    : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200")
-          >
-            <Badge count={order?.orderItems?.length} size="small">
-              <ShoppingCartOutlined
+            <Col span={4}>
+              <span className="hidden md:block">
+                <img
+                  onClick={() => navigate("/")}
+                  src={logo}
+                  alt="logo"
+                  className="w-16 h-16 object-contain cursor-pointer"
+                />
+              </span>
+            </Col>
+            <Col
+              span={11}
+              // className="flex-none md:flex-initial m-auto md:m-0"
+            >
+              <ButtonInputSearch
                 className={
-                  active
-                    ? "text-blue-600 font-medium hover:text-blue-600"
-                    : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                  pathname === "/profile-user" && pathname === "/"
+                    ? "hidden md:block"
+                    : "hidden md:block"
                 }
-                style={{ fontSize: "22px" }}
+                border="none"
+                placeholder="Bạn tìm sản phẩm gì... "
+                textButton="Tìm kiếm"
+                enterButton="Search"
+                size="large"
+                onChange={onSearch}
+                onClick={handleSearch}
               />
-            </Badge>
+            </Col>
+            <Col
+              className="flex flex-none justify-center md:gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
+              span={7}
+            >
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                    : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                }
+              >
+                <HomeOutlined style={{ fontSize: "22px" }} />
 
-            <span className="text-sm md:text-base">Giỏ hàng</span>
-          </NavLink>
-        </Col>
-      </Row>
+                <span className="text-sm md:text-base">Trang chủ</span>
+              </NavLink>
+              <NavLink
+                onClick={handleToggleClassContent}
+                className={
+                  activeCategory
+                    ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
+                    : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                }
+              >
+                <AppstoreOutlined style={{ fontSize: "22px" }} />
 
-      <div className={!isToggle ? "nav nav-black" : "nav visible nav-black"}>
-        <div className={!isToggle ? "nav nav-pink" : "nav visible nav-pink"}>
+                <span className="text-sm md:text-base">Danh mục</span>
+              </NavLink>
+              <Loading isLoading={loading}>
+                <div className="hidden md:block">
+                  <Popover
+                    trigger="click"
+                    content={content}
+                    style={{ padding: "0px" }}
+                    className="hidden md:block"
+                  >
+                    <WrapperHeaderAccount
+                      className="flex-col md:flex-row gap-1 md:gap-2"
+                      onClick={handleNavigate}
+                    >
+                      {userAvatar || user.id ? (
+                        <img
+                          src={userAvatar ? userAvatar : default_avatar}
+                          alt="avatar"
+                          style={{
+                            height: "30px",
+                            width: "30px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                          }}
+                        ></img>
+                      ) : (
+                        <UserOutlined style={{ fontSize: "22px" }} />
+                      )}
+
+                      <span className="text-base cursor-pointer">
+                        Tài khoản
+                      </span>
+                    </WrapperHeaderAccount>
+                  </Popover>
+                </div>
+                <div className="md:hidden">
+                  <WrapperHeaderAccount
+                    className="flex-col md:flex-row gap-1 md:gap-2"
+                    onClick={handleToggleClass}
+                  >
+                    {userAvatar ? (
+                      <img
+                        src={userAvatar ? userAvatar : default_avatar}
+                        alt="avatar"
+                        style={{
+                          height: "22px",
+                          width: "22px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      ></img>
+                    ) : (
+                      <UserOutlined style={{ fontSize: "22px" }} />
+                    )}
+
+                    {user?.access_token ? (
+                      <>
+                        <span className="text-sm md:text-base md:hidden cursor-pointer">
+                          Tài khoản
+                        </span>
+                      </>
+                    ) : (
+                      <div onClick={handleNavigate}>
+                        <span className="text-sm md:text-base cursor-pointer">
+                          Tài khoản
+                        </span>
+                      </div>
+                    )}
+                  </WrapperHeaderAccount>
+                </div>
+              </Loading>
+              <NavLink
+                to="/order"
+                className={({ isActive }) =>
+                  setActive(isActive) ?? active
+                    ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                    : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                }
+                //  active
+                //    ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
+                //    : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200")
+              >
+                <Badge count={order?.orderItems?.length} size="small">
+                  <ShoppingCartOutlined
+                    className={
+                      active
+                        ? "text-blue-600 font-medium hover:text-blue-600"
+                        : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
+                    }
+                    style={{ fontSize: "22px" }}
+                  />
+                </Badge>
+
+                <span className="text-sm md:text-base">Giỏ hàng</span>
+              </NavLink>
+            </Col>
+          </Row>
+
+          <div
+            className={!isToggle ? "nav nav-black" : "nav visible nav-black"}
+          >
+            <div
+              className={!isToggle ? "nav nav-pink" : "nav visible nav-pink"}
+            >
+              <div
+                className={
+                  !isToggle ? "nav nav-white relative" : "nav visible nav-white"
+                }
+              >
+                <CloseCircleFilled
+                  className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
+                  onClick={handleToggleClass}
+                />
+                <AccountNavMobile handleToggleClass={handleToggleClass} />
+              </div>
+            </div>
+          </div>
+
           <div
             className={
-              !isToggle ? "nav nav-white relative" : "nav visible nav-white"
+              !isToggleContent
+                ? "content-typepro content-bg"
+                : "content-typepro visible content-bg"
             }
           >
             <CloseCircleFilled
               className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
-              onClick={handleToggleClass}
+              onClick={handleToggleClassContent}
             />
-            <AccountNavMobile handleToggleClass={handleToggleClass} />
+            <div className="p-5">
+              <h1 className="text-xl">Danh mục sản phẩm</h1>
+              <div className="grid grid-cols-2">
+                {typeProduct.map((item, index) => {
+                  return (
+                    <TypeProduct
+                      key={index}
+                      name={item}
+                      // thumbnail={thumb}
+                      handleToggleClassContent={handleToggleClassContent}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div
-        className={
-          !isToggleContent
-            ? "content-typepro content-bg"
-            : "content-typepro visible content-bg"
-        }
-      >
-        <CloseCircleFilled
-          className="z-30 absolute top-2 right-5 text-zinc-300 w-5 h-5 text-2xl"
-          onClick={handleToggleClassContent}
-        />
-        <div className="p-5">
-          <h1 className="text-xl">Danh mục sản phẩm</h1>
-          <div className="grid grid-cols-2">
-            {typeProduct.map((item, index) => {
-              return (
-                <TypeProduct
-                  key={index}
-                  name={item}
-                  // thumbnail={thumb}
-                  handleToggleClassContent={handleToggleClassContent}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 
