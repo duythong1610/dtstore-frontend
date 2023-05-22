@@ -21,6 +21,8 @@ import { convertPrice, priceDiscount } from "../../until";
 import { LeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import SkeletonComponent from "../SkeletonComponent/SkeletonComponent";
 import history from "../../history";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -158,7 +160,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
         ) : (
           <>
             <Col className="max-w-full md:pr-3" span={12}>
-              <img
+              <LazyLoadImage
+                effect="blur"
                 className="h-60 md:h-96 w-full object-contain block rounded-xl"
                 src={productDetails?.image}
                 alt="img product"

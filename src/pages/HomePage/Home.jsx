@@ -8,6 +8,7 @@ import Slider3 from "../../assets/img/slider3.png";
 import Slider4 from "../../assets/img/slider4.png";
 import Slider5 from "../../assets/img/slider5.png";
 import Slider6 from "../../assets/img/slider6.png";
+import Soldout from "../../assets/img/sold_out.png";
 
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { useQuery } from "@tanstack/react-query";
@@ -36,6 +37,8 @@ import { convertPrice } from "../../until";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useMemo } from "react";
+import { useCallback } from "react";
 
 function Home() {
   const navigate = useNavigate();
@@ -49,21 +52,24 @@ function Home() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState();
 
-  const fetchAllProduct = async (context) => {
-    const limit = context?.queryKey && context?.queryKey[1];
-    const search = context?.queryKey && context?.queryKey[2];
-    setLoading(true);
-    const res = await ProductService.getAllProduct(search, limit);
-    setLoading(false);
-    return res;
-  };
+  const fetchAllProduct = useCallback(
+    async (context) => {
+      const limit = context?.queryKey && context?.queryKey[1];
+      const search = context?.queryKey && context?.queryKey[2];
+      setLoading(true);
+      const res = await ProductService.getAllProduct(search, limit);
+      setLoading(false);
+      return res;
+    },
+    [limit]
+  );
 
-  const fetchAllTypeProduct = async () => {
+  const fetchAllTypeProduct = useCallback(async () => {
     const res = await ProductService.getAllTypeProduct();
 
     setTypeProduct(res.data);
     return res;
-  };
+  }, []);
 
   const onSearch = (e) => {
     setSearchText(e.target.value);
@@ -99,6 +105,8 @@ function Home() {
     fetchAllTypeProduct();
     filteredProducts();
   }, []);
+
+  console.log("re-render");
 
   const {
     isLoading,
@@ -158,9 +166,18 @@ function Home() {
           />
 
           <div>
-            <h1 className="text-lg md:text-xl  mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]">
-              Sản phẩm bán chạy
-            </h1>
+            {loading ? (
+              <div className="skeleton h-11 md:w-[30%] w-[70%] mt-5 m-auto rounded-3xl"></div>
+            ) : (
+              <h1
+                className={`${
+                  loading ? "hidden" : "block"
+                } text-lg md:text-xl mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]`}
+              >
+                Sản phẩm bán chạy
+              </h1>
+            )}
+
             <Swiper
               modules={[Navigation, Autoplay]}
               // autoplay={{ delay: 5000, disableOnInteraction: false }}
@@ -198,14 +215,14 @@ function Home() {
                       return (
                         <SwiperSlide
                           // key={film.id}
-                          className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
+                          className="!w-[calc(50%-10px)] md:!w-[calc(20%-20px)]"
                           // onClick={() =>
                           //   navigate(`/${film.media_type || endpoint}/${film.id}`)
                           // }
                         >
                           <WrapperCardStyle
                             key={product?._id}
-                            className="rounded-xl min-h-[290px] md:min-h-[384px]"
+                            className="rounded-xl min-h-[290px] md:min-h-[392px]"
                             hoverable
                             bodyStyle={{ padding: 10 }}
                             onClick={() => handleProductDetails(product?._id)}
@@ -297,9 +314,17 @@ function Home() {
           </div>
 
           <div className="min-h-[930px]">
-            <h1 className="text-lg md:text-xl mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]">
-              Tất cả sản phẩm
-            </h1>
+            {loading ? (
+              <div className="skeleton h-11 md:w-[30%] w-[70%] mt-5 m-auto rounded-3xl"></div>
+            ) : (
+              <h1
+                className={`${
+                  loading ? "hidden" : "block"
+                } text-lg md:text-xl  mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]`}
+              >
+                Tất cả sản phẩm
+              </h1>
+            )}
             <div className="grid gap-5 py-5 px-5 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
               {loading ? (
                 Array.from({ length: products?.data?.length || 0 }).map(

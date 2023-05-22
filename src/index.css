@@ -55,20 +55,28 @@ body {
   background: #ccc;
 }
 
+.lazy-load-image-background.blur.lazy-load-image-loaded {
+  display: block !important;
+}
+
 .swiper {
   padding: 20px 0 !important;
+  min-height: 431px;
 }
 
 @media screen and (max-width: 768px) {
   .swiper {
     padding: 20px 20px !important;
+    min-height: 330px;
   }
 }
 
 .swiper-button-prev,
 .swiper-button-next {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  padding: 22px;
+  width: 30px !important;
+  height: 30px !important;
+  padding: 11px;
   background: #fff;
   border-radius: 9999px;
   color: #422afb !important;
@@ -76,8 +84,21 @@ body {
 
 .swiper-button-prev::after,
 .swiper-button-next::after {
-  font-size: 20px !important;
-  padding: 100%;
+  font-size: 10px !important;
+  font-weight: 600;
+  padding: 50px 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    font-size: 20px !important;
+    padding: 50px 20px;
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    padding: 22px;
+  }
 }
 
 .one-line {

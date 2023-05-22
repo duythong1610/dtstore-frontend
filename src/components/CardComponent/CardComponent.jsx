@@ -114,4 +114,4 @@ const CardComponent = ({
   );
 };
 
-export default CardComponent;
+export default React.memo(CardComponent);

@@ -19,8 +19,8 @@ const FooterComponent = () => {
         <div className="md:w-[30%] md:max-w-[30%]">
           <h1 className="text-base">Giới thiệu về DT STORE</h1>
           <span>
-            DT Store là sản phẩm tâm huyết của tôi về web app ecommerce, web có
-            những tính năng bao gồm
+            DT Store là sản phẩm web app ecommerce, web có những tính năng bao
+            gồm:
           </span>
           <div>
             <h2 className="inline-block mb-0 mr-1">Về sản phẩm:</h2>
@@ -42,21 +42,21 @@ const FooterComponent = () => {
         </div>
         <div className="md:w-[40%] md:max-w-40%]">
           <h1 className="text-base">Thông tin công ty</h1>
-          <div className="flex gap-2">
-            <h2>Trụ sở đặt tại: </h2>
+          <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
+            <h2 className="mb-0">Trụ sở đặt tại: </h2>
             <span>Ấp 3, xã Tân Thành, huyện Tân Thạnh, tỉnh Long An</span>
           </div>
-          <div className="flex gap-2">
-            <h2> Trụ sở văn phòng: </h2>
-            43 Hồ Văn Huê, quận Phú Nhuận, thành phố Hồ Chí Minh
-            <span></span>
+          <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
+            <h2 className="mb-0">Trụ sở văn phòng:</h2>
+
+            <span>43 Hồ Văn Huê, quận Phú Nhuận, thành phố Hồ Chí Minh</span>
           </div>
-          <div className="flex gap-2">
-            <h2>Điện thoại:</h2>
+          <div className="flex flex-col md:flex-row md:gap-2 mb- md:mb-0">
+            <h2 className="mb-0">Điện thoại:</h2>
             <span>0398.052.707</span>
           </div>
-          <div className="flex gap-2">
-            <h2>Email:</h2>
+          <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
+            <h2 className="mb-0">Email:</h2>
             <span>dt.store.development@gmail.com</span>
           </div>
         </div>

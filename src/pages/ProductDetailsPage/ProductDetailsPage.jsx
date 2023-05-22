@@ -6,6 +6,7 @@ import Comment from "../../components/Comment/Comment";
 import ProductSimilar from "../../components/ProductSimilarComponent/ProductSimilar";
 import DescriptionProduct from "../../components/DescriptionProduct/DescriptionProduct";
 
+
 function ProductDetailsPage() {
   const [productDetails, setProductDetails] = useState("");
   const { id } = useParams();

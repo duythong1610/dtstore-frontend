@@ -87,4 +87,4 @@ const TypeProduct = ({ name, handleToggleClassContent }) => {
   );
 };
 
-export default TypeProduct;
+export default React.memo(TypeProduct);

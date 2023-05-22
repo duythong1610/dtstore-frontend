@@ -29,4 +29,4 @@ const SliderComponent = ({ arrImages }) => {
   );
 };
 
-export default SliderComponent;
+export default React.memo(SliderComponent);
