@@ -35,6 +35,7 @@ import { Rate } from "antd";
 import { convertPrice } from "../../until";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 function Home() {
   const navigate = useNavigate();
@@ -211,6 +212,7 @@ function Home() {
                           >
                             <div className="relative">
                               <LazyLoadImage
+                                effect="blur"
                                 src={product?.image}
                                 className="my-2 md:my-4 mx-0 object-contain"
                               />

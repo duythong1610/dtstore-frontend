@@ -1,5 +1,11 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { routes } from "./routes";
 import DefaultLayout from "./components/DefaultLayout/DefaultLayout";
 import { Fragment, useEffect } from "react";
@@ -13,11 +19,15 @@ import theme from "./theme/theme";
 import Loading from "./components/LoadingComponent/Loading";
 import { useState } from "react";
 import history from "./history";
+import NprogressWrapper from "./components/NProgressWrapper/NprogressWrapper";
+import nprogress from "nprogress";
+import "nprogress/nprogress.css";
 
 function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
+
   useEffect(() => {
     setIsLoading(true);
     const { storageData, decoded } = handleDecoded();
@@ -64,14 +74,16 @@ function App() {
   const handleGetDetailUser = async (id, access_token) => {
     let storageRefreshToken = localStorage.getItem("refresh_token");
     const refreshToken = JSON.parse(storageRefreshToken);
-    const res = await UserService.getDetailsUser(id, access_token);
-    dispatch(
-      updateUser({
-        ...res?.data,
-        access_token: access_token,
-        refreshToken: refreshToken,
-      })
-    );
+    if (user?.id) {
+      const res = await UserService.getDetailsUser(id, access_token);
+      dispatch(
+        updateUser({
+          ...res?.data,
+          access_token: access_token,
+          refreshToken: refreshToken,
+        })
+      );
+    }
   };
 
   return (
@@ -80,24 +92,28 @@ function App() {
         {/* <ThemeEditorProvider> */}
         <Loading isLoading={isLoading}>
           <Router history={history}>
-            <Routes>
-              {routes.map((route, index) => {
-                const Page = route.component;
-                const isCheckAuth = route.isPrivate && user.isAdmin;
-                const Layout = route.isDefaultLayout ? DefaultLayout : Fragment;
-                return (
-                  <Route
-                    key={index}
-                    path={isCheckAuth ? route.pathAdmin : route.path}
-                    element={
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    }
-                  />
-                );
-              })}
-            </Routes>
+            <NprogressWrapper>
+              <Routes>
+                {routes.map((route, index) => {
+                  const Page = route.component;
+                  const isCheckAuth = route.isPrivate && user.isAdmin;
+                  const Layout = route.isDefaultLayout
+                    ? DefaultLayout
+                    : Fragment;
+                  return (
+                    <Route
+                      key={index}
+                      path={isCheckAuth ? route.pathAdmin : route.path}
+                      element={
+                        <Layout>
+                          <Page />
+                        </Layout>
+                      }
+                    />
+                  );
+                })}
+              </Routes>
+            </NprogressWrapper>
           </Router>
         </Loading>
         {/* </ThemeEditorProvider> */}

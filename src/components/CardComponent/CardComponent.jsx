@@ -14,6 +14,7 @@ import { Rate } from "antd";
 import * as UserService from "../../services/UserService";
 import { useSelector } from "react-redux";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const CardComponent = ({
   discount,
@@ -53,6 +54,7 @@ const CardComponent = ({
     >
       <div className="relative">
         <LazyLoadImage
+          effect="blur"
           src={image}
           className="my-2 md:my-4 mx-0 object-contain"
         />
