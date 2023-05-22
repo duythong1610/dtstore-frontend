@@ -19,9 +19,7 @@ import theme from "./theme/theme";
 import Loading from "./components/LoadingComponent/Loading";
 import { useState } from "react";
 import history from "./history";
-import NprogressWrapper from "./components/NProgressWrapper/NprogressWrapper";
-import nprogress from "nprogress";
-import "nprogress/nprogress.css";
+import NprogressWrapper from "./components/NprogressWrapper/NprogressWrapper";
 
 function App() {
   const dispatch = useDispatch();
