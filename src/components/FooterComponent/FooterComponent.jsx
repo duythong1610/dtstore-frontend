@@ -5,10 +5,16 @@ import momo from "../../assets/img/momo.png";
 import facebook from "../../assets/img/facebook.png";
 import instagram from "../../assets/img/instagram.png";
 import github from "../../assets/img/github.png";
+import { useLocation } from "react-router-dom";
 
 const FooterComponent = () => {
+  const { pathname } = useLocation();
   return (
-    <div className="pb-[82px] md:pb-0">
+    <div
+      className={`${
+        pathname === "/order" && "hidden md:block"
+      } th pb-[62px] md:pb-0`}
+    >
       <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white  p-5">
         <div className="md:w-[30%] md:max-w-[30%]">
           <h1 className="text-base">Giới thiệu về DT STORE</h1>

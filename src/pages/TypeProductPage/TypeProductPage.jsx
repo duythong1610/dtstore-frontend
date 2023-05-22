@@ -32,7 +32,6 @@ function TypeProductPage() {
   const fetchProductType = async (type, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductType(type, page, limit);
-    console.log(res);
     if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
@@ -44,7 +43,6 @@ function TypeProductPage() {
     } else {
       setLoading(false);
     }
-    console.log(res);
   };
 
   useEffect(() => {
@@ -53,13 +51,10 @@ function TypeProductPage() {
     }
   }, [state]);
 
-  const onChange = (current, pageSize) => {
-    console.log(current, pageSize);
-    setPaginate({ ...paginate, page: current, limit: pageSize });
-  };
+  // const onChange = (current, pageSize) => {
+  //   setPaginate({ ...paginate, page: current, limit: pageSize });
+  // };
 
-  console.log(paginate);
-  console.log(products);
   const handleSearchPrice = (type) => {
     let result;
     switch (type) {
@@ -124,8 +119,6 @@ function TypeProductPage() {
   // };
 
   // const handleActive = (type) => {};
-
-  console.log({ minValue }, { maxValue });
 
   const itemsFilter = [
     {
@@ -264,7 +257,6 @@ function TypeProductPage() {
     }
   };
 
-  console.log({ active }, { activeFilter });
   return (
     <Loading isLoading={loading}>
       <div className="bg-slate-100">

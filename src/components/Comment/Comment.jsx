@@ -17,11 +17,13 @@ import { Dropdown, Tooltip } from "antd";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import default_avatar from "../../assets/img/default_avatar.png";
 import "./customModal.css";
+import Loading from "../LoadingComponent/Loading";
 const Comment = ({ idProduct }) => {
   const user = useSelector((state) => state.user);
   const [commentText, setCommentText] = useState({ text: "", createAt: "" });
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [userLikeInfo, setUserLikeInfo] = useState("");
+  const [loadingLike, setLoadingLike] = useState(false);
 
   const [replyText, setReplyText] = useState({
     text: "",
@@ -101,12 +103,14 @@ const Comment = ({ idProduct }) => {
         commentId,
         userId: user?.id,
       };
+      setLoadingLike(true);
       const res = await ProductService.likeComment(
         productDetails._id,
         payload,
         user?.access_token
       );
       fetchProductDetails();
+      setLoadingLike(false);
     }
   };
 
@@ -257,315 +261,323 @@ const Comment = ({ idProduct }) => {
         {" "}
         Bình luận, hỏi đáp:
       </p>
-      <div className="comment-list px-4 md:px-0 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96 relative">
-        {productDetails?.comments?.map((comment) => {
-          const isLikedByCurrentUser = comment.likes.some(
-            (like) => like._id === user.id
-          );
+      <Loading isLoading={loadingLike}>
+        <div className="comment-list px-4 md:px-0 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96 relative">
+          {productDetails?.comments?.map((comment) => {
+            const isLikedByCurrentUser = comment.likes.some(
+              (like) => like._id === user.id
+            );
 
-          return (
-            <>
-              <div>
-                <div
-                  key={comment?._id}
-                  className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl relative"
-                  onClick={() => setCommentId(comment?._id)}
-                >
-                  <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
-                    <div
-                      className="user-info"
-                      style={{ display: "flex", gap: 10, alignItems: "center" }}
-                    >
-                      <div className="user-img">
-                        <img
-                          className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
-                          src={
-                            comment?.postedBy?.avatar
-                              ? comment?.postedBy?.avatar
-                              : default_avatar
-                          }
-                          alt=""
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 w-full">
-                          <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
-                            {comment?.postedBy?.name}
-                          </h1>
-                          {comment?.postedBy?.isAdmin && (
-                            <CheckCircleFilled className="text-blue-500" />
-                          )}
+            return (
+              <>
+                <div>
+                  <div
+                    key={comment?._id}
+                    className="comment-item w-full md:w-6/12 bg-white md:p-4 p-2 mb-1 rounded-xl relative"
+                    onClick={() => setCommentId(comment?._id)}
+                  >
+                    <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
+                      <div
+                        className="user-info"
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="user-img">
+                          <img
+                            className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
+                            src={
+                              comment?.postedBy?.avatar
+                                ? comment?.postedBy?.avatar
+                                : default_avatar
+                            }
+                            alt=""
+                          />
                         </div>
-                        <h2 className="text-xs md:text-sm font-normal m-0">
-                          {timeJoinRender(
-                            handleTimeJoin(comment.postedBy.createdAt)
-                          )}
-                        </h2>
+                        <div>
+                          <div className="flex items-center gap-2 w-full">
+                            <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
+                              {comment?.postedBy?.name}
+                            </h1>
+                            {comment?.postedBy?.isAdmin && (
+                              <CheckCircleFilled className="text-blue-500" />
+                            )}
+                          </div>
+                          <h2 className="text-xs md:text-sm font-normal m-0">
+                            {timeJoinRender(
+                              handleTimeJoin(comment.postedBy.createdAt)
+                            )}
+                          </h2>
+                        </div>
                       </div>
+
+                      {user?.id === comment?.postedBy._id && (
+                        <div>
+                          <Dropdown.Button menu={menuProps}></Dropdown.Button>
+                        </div>
+                      )}
+                    </div>
+                    <div className="user-bottom">
+                      <p className="text-sm md:text-base md:pl-[58px] pl-[42px] mb-0">
+                        {comment?.text}
+                      </p>
                     </div>
 
-                    {user?.id === comment?.postedBy._id && (
-                      <div>
-                        <Dropdown.Button menu={menuProps}></Dropdown.Button>
-                      </div>
-                    )}
-                  </div>
-                  <div className="user-bottom">
-                    <p className="text-sm md:text-base md:pl-[58px] pl-[42px] mb-0">
-                      {comment?.text}
-                    </p>
-                  </div>
-
-                  <div
-                    className="absolute -right-1 -bottom-1"
-                    onClick={() => handleUserClick(comment?.likes)}
-                  >
-                    {comment.likes.length > 0 && (
-                      <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
-                        <div>
-                          <img src={likeSvg} alt="" width={18} height={18} />
+                    <div
+                      className="absolute -right-1 -bottom-1"
+                      onClick={() => handleUserClick(comment?.likes)}
+                    >
+                      {comment.likes.length > 0 && (
+                        <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
+                          <div>
+                            <img src={likeSvg} alt="" width={18} height={18} />
+                          </div>
+                          {comment.likes.length > 1 && (
+                            <div>{comment.likes.length}</div>
+                          )}
                         </div>
-                        {comment.likes.length > 1 && (
-                          <div>{comment.likes.length}</div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  {/* {comment.likes.length > 1 && (
+                    {/* {comment.likes.length > 1 && (
                     <div className="absolute -right-1 -bottom-1">
                       <img src={likeSvg} alt="" width={18} height={18} />
                     </div>
                   )} */}
-                </div>
-                <div className="md:pl-[74px] pl-[50px] w-full md:w-1/2 flex justify-between items-center">
-                  <div className="flex gap-3">
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => handleReplyClick(comment?._id)}
-                    >
-                      Trả lời
-                    </span>
-
-                    <span
-                      className={
-                        isLikedByCurrentUser
-                          ? "text-blue-500 cursor-pointer"
-                          : "" + "cursor-pointer"
-                      }
-                      onClick={() => handleLikeComment(comment?._id)}
-                    >
-                      {isLikedByCurrentUser ? "Đã thích" : "Thích"}
-                    </span>
                   </div>
-                  <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
-                    <span className="flex items-center text-xs md:text-base">
-                      {comment?.createAt && (
-                        <FieldTimeOutlined style={{ marginRight: "5px" }} />
-                      )}
-                      {timeAgoRender(handleTimeAgo(comment?.createAt))}
-                    </span>
-                    {/* <span className="text-xs md:text-base">
+                  <div className="md:pl-[74px] pl-[50px] w-full md:w-1/2 flex justify-between items-center">
+                    <div className="flex gap-3">
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => handleReplyClick(comment?._id)}
+                      >
+                        Trả lời
+                      </span>
+
+                      <span
+                        className={
+                          isLikedByCurrentUser
+                            ? "text-blue-500 cursor-pointer"
+                            : "" + "cursor-pointer"
+                        }
+                        onClick={() => handleLikeComment(comment?._id)}
+                      >
+                        {isLikedByCurrentUser ? "Đã thích" : "Thích"}
+                      </span>
+                    </div>
+                    <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
+                      <span className="flex items-center text-xs md:text-base">
+                        {comment?.createAt && (
+                          <FieldTimeOutlined style={{ marginRight: "5px" }} />
+                        )}
+                        {timeAgoRender(handleTimeAgo(comment?.createAt))}
+                      </span>
+                      {/* <span className="text-xs md:text-base">
                         {new Date(comment?.createAt).toLocaleDateString()}
                       </span> */}
+                    </div>
                   </div>
-                </div>
 
-                <div className="pl-[50px] md:pl-[74px] ">
-                  {Array.isArray(comment.reply) &&
-                    comment?.reply?.map((reply) => {
-                      const isLikedReplyByCurrentUser = reply.likes.some(
-                        (like) => like._id === user.id
-                      );
-                      return (
-                        <div className="w-full md:w-1/2">
-                          <div
-                            key={reply?._id}
-                            className="comment-item w-full bg-white md:p-4 p-2 mb-1 rounded-xl relative"
-                            onClick={() => setCommentId(reply?._id)}
-                          >
-                            <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
-                              <div
-                                className="user-info"
-                                style={{
-                                  display: "flex",
-                                  gap: 10,
-                                  alignItems: "center",
-                                }}
-                              >
-                                <div className="user-img">
-                                  <img
-                                    className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
-                                    src={
-                                      reply?.postedBy?.avatar
-                                        ? reply?.postedBy?.avatar
-                                        : default_avatar
-                                    }
-                                    alt=""
-                                  />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2 w-full">
-                                    <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
-                                      {reply?.postedBy?.name}
-                                    </h1>
-                                    {reply?.postedBy?.isAdmin && (
-                                      <CheckCircleFilled className="text-blue-500" />
-                                    )}
+                  <div className="pl-[50px] md:pl-[74px] ">
+                    {Array.isArray(comment.reply) &&
+                      comment?.reply?.map((reply) => {
+                        const isLikedReplyByCurrentUser = reply.likes.some(
+                          (like) => like._id === user.id
+                        );
+                        return (
+                          <div className="w-full md:w-1/2">
+                            <div
+                              key={reply?._id}
+                              className="comment-item w-full bg-white md:p-4 p-2 mb-1 rounded-xl relative"
+                              onClick={() => setCommentId(reply?._id)}
+                            >
+                              <div className="user-top gap-5 flex justify-between items-center mb-1 md:mb-2">
+                                <div
+                                  className="user-info"
+                                  style={{
+                                    display: "flex",
+                                    gap: 10,
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <div className="user-img">
+                                    <img
+                                      className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover"
+                                      src={
+                                        reply?.postedBy?.avatar
+                                          ? reply?.postedBy?.avatar
+                                          : default_avatar
+                                      }
+                                      alt=""
+                                    />
                                   </div>
-                                  <h2 className="text-xs md:text-sm font-normal m-0">
-                                    {timeJoinRender(
-                                      handleTimeJoin(reply.postedBy.createdAt)
-                                    )}
-                                  </h2>
-                                </div>
-                              </div>
-                              {user?.id === reply?.postedBy._id && (
-                                <div>
-                                  <Dropdown.Button
-                                    menu={menuProps}
-                                  ></Dropdown.Button>
-                                </div>
-                              )}
-                            </div>
-                            <div className="user-bottom">
-                              <p className="text-sm md:text-base ml-[42px] mb-0">
-                                {reply?.text}
-                              </p>
-                            </div>
-
-                            {reply.likes.length > 0 &&
-                              reply?.likes?.map((like) => {
-                                return (
-                                  <div
-                                    className="absolute -right-1 -bottom-1"
-                                    onClick={() =>
-                                      handleUserClick(reply?.likes)
-                                    }
-                                  >
-                                    <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
-                                      <div>
-                                        <img
-                                          src={likeSvg}
-                                          alt=""
-                                          width={18}
-                                          height={18}
-                                        />
-                                      </div>
-                                      {reply.likes.length > 1 && (
-                                        <div>{reply.likes.length}</div>
+                                  <div>
+                                    <div className="flex items-center gap-2 w-full">
+                                      <h1 className="user-name m-0 text-sm md:text-base one-line max-w-full">
+                                        {reply?.postedBy?.name}
+                                      </h1>
+                                      {reply?.postedBy?.isAdmin && (
+                                        <CheckCircleFilled className="text-blue-500" />
                                       )}
                                     </div>
+                                    <h2 className="text-xs md:text-sm font-normal m-0">
+                                      {timeJoinRender(
+                                        handleTimeJoin(reply.postedBy.createdAt)
+                                      )}
+                                    </h2>
                                   </div>
-                                );
-                              })}
-                          </div>
-                          <div className="pl-[50px] flex justify-between items-center">
-                            <div className="flex gap-3">
-                              <span
-                                className="cursor-pointer"
-                                onClick={() => handleReplyClick(reply?._id)}
-                              >
-                                Trả lời
-                              </span>
-                              <span
-                                className={
-                                  isLikedReplyByCurrentUser
-                                    ? "text-blue-500 cursor-pointer"
-                                    : "" + "cursor-pointer"
-                                }
-                                onClick={() => handleLikeComment(reply?._id)}
-                              >
-                                {isLikedReplyByCurrentUser
-                                  ? "Đã thích"
-                                  : "Thích"}
-                              </span>
-                            </div>
-                            <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
-                              <span className="flex items-center text-xs md:text-base">
-                                {reply?.createAt && (
-                                  <FieldTimeOutlined
-                                    style={{ marginRight: "5px" }}
-                                  />
+                                </div>
+                                {user?.id === reply?.postedBy._id && (
+                                  <div>
+                                    <Dropdown.Button
+                                      menu={menuProps}
+                                    ></Dropdown.Button>
+                                  </div>
                                 )}
-                                {timeAgoRender(handleTimeAgo(reply?.createAt))}
-                              </span>
-                              {/* <span className="text-xs md:text-base">
+                              </div>
+                              <div className="user-bottom">
+                                <p className="text-sm md:text-base ml-[42px] mb-0">
+                                  {reply?.text}
+                                </p>
+                              </div>
+
+                              {reply.likes.length > 0 &&
+                                reply?.likes?.map((like) => {
+                                  return (
+                                    <div
+                                      className="absolute -right-1 -bottom-1"
+                                      onClick={() =>
+                                        handleUserClick(reply?.likes)
+                                      }
+                                    >
+                                      <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
+                                        <div>
+                                          <img
+                                            src={likeSvg}
+                                            alt=""
+                                            width={18}
+                                            height={18}
+                                          />
+                                        </div>
+                                        {reply.likes.length > 1 && (
+                                          <div>{reply.likes.length}</div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                            <div className="pl-[50px] flex justify-between items-center">
+                              <div className="flex gap-3">
+                                <span
+                                  className="cursor-pointer"
+                                  onClick={() => handleReplyClick(reply?._id)}
+                                >
+                                  Trả lời
+                                </span>
+                                <span
+                                  className={
+                                    isLikedReplyByCurrentUser
+                                      ? "text-blue-500 cursor-pointer"
+                                      : "" + "cursor-pointer"
+                                  }
+                                  onClick={() => handleLikeComment(reply?._id)}
+                                >
+                                  {isLikedReplyByCurrentUser
+                                    ? "Đã thích"
+                                    : "Thích"}
+                                </span>
+                              </div>
+                              <div className="user-time flex-auto flex gap-2 md:gap-3 justify-end">
+                                <span className="flex items-center text-xs md:text-base">
+                                  {reply?.createAt && (
+                                    <FieldTimeOutlined
+                                      style={{ marginRight: "5px" }}
+                                    />
+                                  )}
+                                  {timeAgoRender(
+                                    handleTimeAgo(reply?.createAt)
+                                  )}
+                                </span>
+                                {/* <span className="text-xs md:text-base">
                           {new Date(comment?.createAt).toLocaleDateString()}
                         </span> */}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  {commentIdReplying === comment?._id && (
-                    <div className="w-full md:w-1/2 mb-4 mt-1">
-                      <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-                        <div className="flex gap-4">
-                          <img
-                            src={user?.avatar || default_avatar}
-                            style={{
-                              width: "50px",
-                              height: "50px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                            }}
-                            alt="user-avatar"
-                          />
-                          <textarea
-                            className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
-                            placeholder="Viết câu trả lời..."
-                            value={replyText?.text}
-                            type="text"
-                            onChange={onChangeReply}
-                          />
-                          <SendOutlined
-                            onClick={handleReplyComment}
-                            className={
-                              replyText?.text !== ""
-                                ? "text-blue-600"
-                                : "text-zinc-500"
-                            }
-                          />
+                        );
+                      })}
+                    {commentIdReplying === comment?._id && (
+                      <div className="w-full md:w-1/2 mb-4 mt-1">
+                        <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
+                          <div className="flex gap-4">
+                            <img
+                              src={user?.avatar || default_avatar}
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                              }}
+                              alt="user-avatar"
+                            />
+                            <textarea
+                              className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
+                              placeholder="Viết câu trả lời..."
+                              value={replyText?.text}
+                              type="text"
+                              onChange={onChangeReply}
+                            />
+                            <SendOutlined
+                              onClick={handleReplyComment}
+                              className={
+                                replyText?.text !== ""
+                                  ? "text-blue-600"
+                                  : "text-zinc-500"
+                              }
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
+              </>
+            );
+          })}
+          {false && (
+            <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white absolute z-20">
+              <div className="flex gap-4">
+                <img
+                  src={user?.avatar || default_avatar}
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                  alt="user-avatar"
+                />
+                <textarea
+                  className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
+                  placeholder={"Viết bình luận, hỏi đáp..."}
+                  value={commentText?.text}
+                  type="text"
+                  onChange={onChangeComment}
+                />
+                <SendOutlined
+                  onClick={handleComment}
+                  className={
+                    commentText?.text !== "" ? "text-blue-600" : "text-zinc-500"
+                  }
+                />
               </div>
-            </>
-          );
-        })}
-        {false && (
-          <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white absolute z-20">
-            <div className="flex gap-4">
-              <img
-                src={user?.avatar || default_avatar}
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-                alt="user-avatar"
-              />
-              <textarea
-                className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
-                placeholder={"Viết bình luận, hỏi đáp..."}
-                value={commentText?.text}
-                type="text"
-                onChange={onChangeComment}
-              />
-              <SendOutlined
-                onClick={handleComment}
-                className={
-                  commentText?.text !== "" ? "text-blue-600" : "text-zinc-500"
-                }
-              />
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </Loading>
       <div className="w-full md:w-1/2 flex flex-col gap-2 p-4">
         <div className="gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
           <div className="flex gap-4">

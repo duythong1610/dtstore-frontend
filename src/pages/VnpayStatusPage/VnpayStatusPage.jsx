@@ -1,29 +1,16 @@
-import { AutoComplete, Form, Radio } from "antd";
+import { Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { WrapperInfo, WrapperRight, WrapperTotal } from "./style";
 
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { convertPrice, isJsonString } from "../../until";
 import { useMemo } from "react";
-import ModalComponent from "../../components/ModalComponent/ModalComponent";
-import InputComponent from "../../components/InputComponent/InputComponent";
+
 import { useMutationHooks } from "../../hooks/useMutationHooks";
-import * as UserService from "../../services/UserService";
 import * as OrderService from "../../services/OrderService";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/Message";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { removeAllOrderProduct } from "../../redux/slides/orderSlice";
 
-import { PayPalButton } from "react-paypal-button-v2";
-import * as PaymentService from "../../services/PaymentService";
-import {
-  LeftOutlined,
-  CaretDownOutlined,
-  CaretUpOutlined,
-} from "@ant-design/icons";
-import axios from "axios";
 const VnpayStatusPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
@@ -31,13 +18,10 @@ const VnpayStatusPage = () => {
 
   const params = useParams();
   const { id } = params;
-  console.log(params);
-  console.log(id);
+
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  const [moreInfoOrder, setMoreInfoOrder] = useState(false);
-  const [districtsRender, setDistrictsRender] = useState([]);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
     phone: "",
@@ -74,8 +58,6 @@ const VnpayStatusPage = () => {
     }, 0);
     return result;
   }, [order]);
-
-  console.log(order);
 
   const handleAddOrder = () => {
     if (
@@ -115,12 +97,8 @@ const VnpayStatusPage = () => {
     }
   }, [user?.id]);
 
-  console.log(order);
-  console.log(user);
-
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
-    console.log(data);
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });
@@ -132,7 +110,6 @@ const VnpayStatusPage = () => {
     isError,
   } = mutationAddOrder;
 
-  console.log(dataAdd);
   useEffect(() => {
     if (id === "0" && dataAdd?.status === "OK") {
       const arrayOrdered = [];

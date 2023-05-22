@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonMore } from "./index";
 import SliderComponent from "../../components/Slider/SliderComponent";
@@ -17,14 +17,33 @@ import Loading from "../../components/LoadingComponent/Loading";
 import useDebounce from "../../hooks/useDebounce";
 import { SearchOutlined } from "@ant-design/icons";
 import { searchProduct } from "../../redux/slides/productSlice";
-import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
-import { Skeleton } from "antd";
+import * as UserService from "../../services/UserService";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import {
+  StyleNameProduct,
+  WrapperCardStyle,
+  WrapperDiscountText,
+  WrapperPriceText,
+  WrapperReportText,
+} from "../../components/CardComponent/style";
+import { Rate } from "antd";
+import { convertPrice } from "../../until";
+import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Home() {
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
   const searchProductMobile = useSelector((state) => state.product.search);
   const searchDebounce = useDebounce(searchProductMobile, 1000);
   const [typeProduct, setTypeProduct] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [allProducts, setAllProducts] = useState("");
   const [limit, setLimit] = useState(10);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState();
@@ -49,6 +68,22 @@ function Home() {
     setSearchText(e.target.value);
   };
 
+  const handleProductDetails = async (id) => {
+    if (user?.id) {
+      await UserService.viewedProducts(id, user?.id, user?.access_token);
+      navigate(`/product-detail/${id}`);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+    navigate(`/product-detail/${id}`);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const handleSearch = () => {
     dispatch(searchProduct(searchText));
   };
@@ -61,6 +96,7 @@ function Home() {
 
   useEffect(() => {
     fetchAllTypeProduct();
+    filteredProducts();
   }, []);
 
   const {
@@ -73,7 +109,17 @@ function Home() {
     keepPreviousData: true,
   });
 
-  console.log({ products });
+  const filteredProducts = async () => {
+    const res = await ProductService.getAllProduct();
+    if (res) {
+      setAllProducts(res.data);
+    }
+  };
+
+  const topProducts =
+    Array.isArray(allProducts) &&
+    allProducts.sort((a, b) => b.sold - a.sold).slice(0, 10);
+
   return (
     <>
       {/* <Loading isLoading={isLoading}> */}
@@ -110,12 +156,153 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
 
+          <div>
+            <h1 className="text-lg md:text-xl  mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]">
+              Sản phẩm bán chạy
+            </h1>
+            <Swiper
+              modules={[Navigation, Autoplay]}
+              // autoplay={{ delay: 5000, disableOnInteraction: false }}
+              navigation
+              slidesPerView="auto"
+              slidesPerGroupAuto
+              spaceBetween={20}
+              // loop
+              className=""
+            >
+              {loading ? (
+                Array.from({ length: topProducts?.length || 0 }).map(
+                  (_, index) => (
+                    <SwiperSlide
+                      // key={film.id}
+                      className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
+                      // onClick={() =>
+                      //   navigate(`/${film.media_type || endpoint}/${film.id}`)
+                      // }
+                    >
+                      <div className="flex flex-col gap-2 pb-[18px]">
+                        <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                        <div className="skeleton h-6 w-full rounded-md" />
+                        <div className="skeleton h-[18px] w-full rounded-md" />
+                        <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                        <div className="skeleton h-5 w-full rounded-md" />
+                      </div>
+                    </SwiperSlide>
+                  )
+                )
+              ) : (
+                <>
+                  {topProducts?.length > 0 &&
+                    topProducts?.map((product) => {
+                      return (
+                        <SwiperSlide
+                          // key={film.id}
+                          className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
+                          // onClick={() =>
+                          //   navigate(`/${film.media_type || endpoint}/${film.id}`)
+                          // }
+                        >
+                          <WrapperCardStyle
+                            key={product?._id}
+                            className="rounded-xl min-h-[290px] md:min-h-[384px]"
+                            hoverable
+                            bodyStyle={{ padding: 10 }}
+                            onClick={() => handleProductDetails(product?._id)}
+                          >
+                            <div className="relative">
+                              <LazyLoadImage
+                                src={product?.image}
+                                className="my-2 md:my-4 mx-0 object-contain"
+                              />
+                              {product?.countInStock === 0 && (
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    top: "30%",
+                                    left: 0,
+                                    right: 0,
+                                  }}
+                                >
+                                  <img
+                                    src={Soldout}
+                                    alt=""
+                                    className="w-24 md:w-36 m-auto"
+                                  />
+                                </span>
+                              )}
+                            </div>
+
+                            <StyleNameProduct className="text-sm md:text-lg">
+                              {product?.name}
+                            </StyleNameProduct>
+                            <WrapperReportText className="md:text-sm">
+                              <span style={{ marginRight: "4px" }}>
+                                <Rate
+                                  disabled
+                                  value={product?.rating}
+                                  style={{ fontSize: "11px", color: "#e83a45" }}
+                                  className="md:!text-sm"
+                                />
+                              </span>
+
+                              <span className="text-[11px] md:text-sm">
+                                {product?.sold > 0 &&
+                                  `| Đã bán ${product?.sold}`}{" "}
+                              </span>
+                            </WrapperReportText>
+
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: 5,
+                                alignItems: "center",
+                                marginTop: "5px",
+                              }}
+                            >
+                              <div
+                                className={
+                                  product?.discount > 0
+                                    ? "font-normal text-xs text-zinc-400 line-through"
+                                    : "font-medium text-sm md:text-base text-red-500"
+                                }
+                              >
+                                <span>{convertPrice(product?.price)}</span>
+                              </div>
+                              {product?.discount > 0 && (
+                                <WrapperDiscountText>
+                                  {`-${product?.discount}%` || "-5%"}
+                                </WrapperDiscountText>
+                              )}
+                            </div>
+
+                            {product?.discount > 0 && (
+                              <WrapperPriceText className="text-red-500 text-sm md:text-base">
+                                <span style={{ marginRight: "8px" }}>
+                                  {convertPrice(
+                                    product?.price -
+                                      (product?.price * product?.discount) / 100
+                                  )}
+                                </span>
+                              </WrapperPriceText>
+                            )}
+                          </WrapperCardStyle>
+                        </SwiperSlide>
+                      );
+                    })}
+                </>
+              )}
+            </Swiper>
+          </div>
+
           <div className="min-h-[930px]">
-            <div className="grid gap-3 py-5 px-5 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+            <h1 className="text-lg md:text-xl mt-5 text-center bg-[#422AFB] py-2 text-white rounded-3xl m-auto w-[70%] md:w-[30%]">
+              Tất cả sản phẩm
+            </h1>
+            <div className="grid gap-5 py-5 px-5 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
               {loading ? (
                 Array.from({ length: products?.data?.length || 0 }).map(
                   (_, index) => (
-                    <div key={index} className="flex flex-col gap-2 p-5">
+                    <div key={index} className="flex flex-col gap-2">
                       <div className="skeleton h-36 md:h-60 w-full rounded-md" />
                       <div className="skeleton h-6 w-full rounded-md" />
                       <div className="skeleton h-[18px] w-full rounded-md" />

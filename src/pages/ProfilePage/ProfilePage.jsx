@@ -31,7 +31,7 @@ const ProfilePage = () => {
   const [city, setCity] = useState(user?.city || "");
   const [avatar, setAvatar] = useState("");
   const [provinces, setProvinces] = useState([]);
-  const [districts, setDistricts] = useState([])
+  const [districts, setDistricts] = useState([]);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -42,7 +42,6 @@ const ProfilePage = () => {
   });
 
   const { data, isLoading, isSuccess, isError } = mutation;
-  console.log({ data }, { user }, { mutation });
   useEffect(() => {
     setName(user?.name),
       setEmail(user?.email),
@@ -90,7 +89,6 @@ const ProfilePage = () => {
 
   const handleChangeAvatar = async ({ fileList }) => {
     const file = fileList[0];
-    console.log({ file }, { fileList });
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }

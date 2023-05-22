@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Col, Popover, Row } from "antd";
+import { Badge, Col, Popover, Row } from "antd";
 // import Search from "antd/lib/transfer/search";
 import { WrapperContentPopup, WrapperHeaderAccount } from "./style";
 import {
@@ -10,7 +10,7 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as message from "../../components/Message/Message";
 import * as UserService from "../../services/UserService";
@@ -74,7 +74,6 @@ function HeaderComponent() {
     setIsToggleContent((current) => !current);
     setActiveCategory((current) => !current);
   };
-  console.log({ activeCategory });
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
@@ -82,13 +81,11 @@ function HeaderComponent() {
     setTypeProduct(res.data);
     return res;
   };
-  console.log(typeProduct);
 
   useEffect(() => {
     fetchAllTypeProduct();
   }, []);
 
-  console.log({ isToggleContent });
   useEffect(() => {
     setLoading(true);
     setUserName(user?.name);
@@ -131,7 +128,6 @@ function HeaderComponent() {
     </div>
   );
 
-  console.log(userAvatar);
   return (
     <>
       <div className="bg-white">

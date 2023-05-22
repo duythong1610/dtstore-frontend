@@ -446,7 +446,7 @@ const OrderPage = () => {
                   </Tooltip>
                 </div>
               </WrapperStyleHeader>
-              <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto mb-[65%] md:mb-0">
+              <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto">
                 {order?.orderItems?.map((order) => {
                   console.log({ order });
                   return (

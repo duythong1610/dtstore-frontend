@@ -323,7 +323,6 @@ const AdminProduct = () => {
     });
   };
 
-  console.log(typeProduct);
   const dataProduct =
     products?.length &&
     products?.map((product) => {

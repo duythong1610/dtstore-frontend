@@ -1,6 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TypeProductItem } from "./style";
+import { useNavigate } from "react-router-dom";
 import laptopThumbnail from "../../assets/img/laptop.jpg";
 import phoneThumbnail from "../../assets/img/phone.jpg";
 import tabletThumbnail from "../../assets/img/tablet.jpg";

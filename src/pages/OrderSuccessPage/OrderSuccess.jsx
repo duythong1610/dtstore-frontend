@@ -8,7 +8,6 @@ const OrderSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
-  console.log({ state });
   return (
     <div className="bg-slate-100">
       <div className="p-5 max-w-7xl m-auto min-h-screen">

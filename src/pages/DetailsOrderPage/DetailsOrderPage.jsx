@@ -1,19 +1,10 @@
 import React from "react";
-import {
-  WrapperAllPrice,
-  WrapperItem,
-  WrapperItemLabel,
-  WrapperNameProduct,
-  WrapperProduct,
-  WrapperStyleContent,
-} from "./style";
+
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
 import * as OrderService from "../../services/OrderService";
 import { useQuery } from "@tanstack/react-query";
 import { orderConstant } from "../../constants";
 import { convertPrice } from "../../until";
-import { useMemo } from "react";
 import Loading from "../../components/LoadingComponent/Loading";
 import { LeftOutlined } from "@ant-design/icons";
 
@@ -37,14 +28,13 @@ const DetailsOrderPage = () => {
   );
   const { isLoading, data } = queryOrder;
 
-  const priceMemo = useMemo(() => {
-    const result = data?.orderItems?.reduce((total, cur) => {
-      return total + cur.price * cur.amount;
-    }, 0);
-    return result;
-  }, [data]);
+  // const priceMemo = useMemo(() => {
+  //   const result = data?.orderItems?.reduce((total, cur) => {
+  //     return total + cur.price * cur.amount;
+  //   }, 0);
+  //   return result;
+  // }, [data]);
 
-  console.log({ state });
   return (
     <Loading isLoading={isLoading}>
       <div className="min-h-screen h-full w-full bg-slate-100">

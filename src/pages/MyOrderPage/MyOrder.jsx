@@ -37,7 +37,6 @@ const MyOrderPage = () => {
   };
 
   const mutation = useMutationHooks((data) => {
-    console.log(data);
     const { id, token, orderItems, userId } = data;
     const res = OrderService.cancelOrder(id, token, orderItems, userId);
     return res;
@@ -121,8 +120,6 @@ const MyOrderPage = () => {
       </div>
     );
   };
-
-  console.log({ data });
 
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>

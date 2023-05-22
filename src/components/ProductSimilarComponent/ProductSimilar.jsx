@@ -34,8 +34,6 @@ const ProductSimilar = ({ idProduct }) => {
     setLoading(false);
   }, [idProduct]);
 
-  console.log(loading);
-
   const handleProductDetails = (id) => {
     window.scrollTo({
       top: 0,
@@ -43,8 +41,6 @@ const ProductSimilar = ({ idProduct }) => {
     });
     navigate(`/product-detail/${id}`);
   };
-
-  console.log(productSimilar.length);
 
   return (
     <>

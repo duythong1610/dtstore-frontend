@@ -72,8 +72,6 @@ const AdminUser = () => {
     setIsOpenDrawer(true);
   };
 
-  console.log({ stateUserDetails });
-
   const handleDeleteUser = () => {
     mutationDelete.mutate(
       { id: rowSelected, token: user?.access_token },
@@ -223,8 +221,6 @@ const AdminUser = () => {
       [e.target.name]: e.target.value,
     });
   };
-
-  console.log(stateUserDetails?.avatar);
 
   const handleChangeDetails = (e) => {
     setStateUserDetails({

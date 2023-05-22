@@ -1,12 +1,11 @@
-import { Badge, Col, Image, Rate, Row, notification } from "antd";
+import { Badge, Col, Rate, Row, notification } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined, StarFilled, MinusOutlined } from "@ant-design/icons";
+import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import {
   WrapperAddressProduct,
   WrapperBtnQuantityProduct,
   WrapperDescriptionProduct,
   WrapperInputNumber,
-  WrapperPriceTextProduct,
   WrapperQuantityProduct,
   WrapperStyleNameProduct,
   WrapperStyleTextSell,

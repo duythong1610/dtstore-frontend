@@ -59,6 +59,12 @@ body {
   padding: 20px 0 !important;
 }
 
+@media screen and (max-width: 768px) {
+  .swiper {
+    padding: 20px 20px !important;
+  }
+}
+
 .swiper-button-prev,
 .swiper-button-next {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

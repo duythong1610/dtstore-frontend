@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -101,7 +100,6 @@ function SignUpPage() {
       password,
       confirmPassword,
     });
-    console.log("sign-up", email, password, confirmPassword);
   };
   //   return (
   //     <div

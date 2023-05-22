@@ -53,11 +53,9 @@ const PaymentPage = () => {
       city: data,
     });
 
-    console.log(option.code);
     const res = districts.filter((dis) => {
       return dis?.province_code === option?.code;
     });
-    console.log({ res }, { districts });
     setDistrictsRender(res);
   };
 
@@ -146,11 +144,8 @@ const PaymentPage = () => {
     return res;
   });
 
-  console.log({ state });
-
   const mutationAddOrder = useMutationHooks((data) => {
     const { token, ...rests } = data;
-    console.log(data);
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
   });
@@ -194,7 +189,6 @@ const PaymentPage = () => {
     form.resetFields();
     setIsOpenModalUpdateInfo(false);
   };
-  console.log({ state });
 
   const handleVnPay = async () => {
     sessionStorage.setItem("paymentMethod", payment);

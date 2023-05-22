@@ -13,6 +13,7 @@ import Soldout from "../../assets/img/sold_out.png";
 import { Rate } from "antd";
 import * as UserService from "../../services/UserService";
 import { useSelector } from "react-redux";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const CardComponent = ({
   discount,
@@ -51,9 +52,9 @@ const CardComponent = ({
       onClick={() => handleProductDetails()}
     >
       <div className="relative">
-        <img
+        <LazyLoadImage
           src={image}
-          className="my-2 md:my-4 mx-0 h-36 md:h-60 object-contain"
+          className="my-2 md:my-4 mx-0 object-contain"
         />
         {countInStock === 0 && (
           <span style={{ position: "absolute", top: "30%", left: 0, right: 0 }}>

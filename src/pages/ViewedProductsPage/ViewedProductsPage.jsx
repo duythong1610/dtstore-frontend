@@ -22,7 +22,6 @@ const ViewedProductsPage = () => {
       fetchDetailsUser();
     }
   }, [user?.id]);
-  console.log({ viewedProduct });
   return (
     <div>
       <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
