@@ -275,7 +275,7 @@ const PaymentPage = () => {
   // }, []);
 
   return (
-    <div className="bg-slate-100 w-full h-screen">
+    <div className="bg-slate-100 w-full mb-5">
       <Loading isLoading={isLoadingAddOrder}>
         <div className="h-full max-w-7xl m-auto md:pt-5">
           <div className="fixed top-0 left-0 right-0 h-12 bg-white py-3 px-5 flex items-center md:hidden">

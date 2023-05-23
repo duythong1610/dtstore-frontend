@@ -72,7 +72,6 @@ function App() {
   const handleGetDetailUser = async (id, access_token) => {
     let storageRefreshToken = localStorage.getItem("refresh_token");
     const refreshToken = JSON.parse(storageRefreshToken);
-
     const res = await UserService.getDetailsUser(id, access_token);
     dispatch(
       updateUser({
