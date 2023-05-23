@@ -11,14 +11,20 @@ import * as message from "../../components/Message/Message";
 import { LeftOutlined } from "@ant-design/icons";
 
 const MyOrderPage = () => {
+  const user = useSelector((state) => state.user);
   const location = useLocation();
   const { state } = location;
   const navigate = useNavigate();
+  useEffect(() => {
+    if (user?.name) {
+      const pageTitle = `Đơn hàng - ${user?.name}`;
+      document.title = pageTitle;
+    }
+  }, [user?.name]);
   const fetchMyOrder = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token);
     return res.data;
   };
-  const user = useSelector((state) => state.user);
 
   const queryOrder = useQuery(
     { queryKey: ["orders"], queryFn: fetchMyOrder },

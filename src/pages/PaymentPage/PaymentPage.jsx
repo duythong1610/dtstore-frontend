@@ -35,6 +35,7 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [loadingPayment, setLoadingPayment] = useState(false);
   const [moreInfoOrder, setMoreInfoOrder] = useState(false);
   const [districtsRender, setDistrictsRender] = useState([]);
   const [stateUserDetails, setStateUserDetails] = useState({
@@ -199,7 +200,7 @@ const PaymentPage = () => {
       language: "vn",
       vnp_OrderInfo: "test thu coi",
     };
-
+    setLoadingPayment(true);
     const res = await axios.post(
       "https://payment-vnpay.onrender.com/order/create_payment_url",
       data,
@@ -209,7 +210,9 @@ const PaymentPage = () => {
         },
       }
     );
-    window.location.href = res?.data.vnp;
+    setLoadingPayment(false);
+
+    window.open(res?.data.vnp, "_blank");
     return res;
   };
 
@@ -514,21 +517,23 @@ const PaymentPage = () => {
                       textButton={`Đặt mua`}
                     ></ButtonComponent>
                   ) : (
-                    <ButtonComponent
-                      onClick={() => handleVnPay()}
-                      size={40}
-                      styleButton={{
-                        background: "#422AFB",
-                        height: "48px",
-                        width: "100%",
-                        border: "none",
-                        borderRadius: "4px",
-                        color: "#fff",
-                        fontSize: "15px",
-                        fontWeight: "700",
-                      }}
-                      textButton={`Tiến hành thanh toán`}
-                    ></ButtonComponent>
+                    <Loading isLoading={loadingPayment}>
+                      <ButtonComponent
+                        onClick={() => handleVnPay()}
+                        size={40}
+                        styleButton={{
+                          background: "#422AFB",
+                          height: "48px",
+                          width: "100%",
+                          border: "none",
+                          borderRadius: "4px",
+                          color: "#fff",
+                          fontSize: "15px",
+                          fontWeight: "700",
+                        }}
+                        textButton={`Tiến hành thanh toán`}
+                      ></ButtonComponent>
+                    </Loading>
                   )}
                 </div>
               </div>

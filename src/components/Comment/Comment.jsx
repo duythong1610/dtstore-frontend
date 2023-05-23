@@ -257,7 +257,7 @@ const Comment = ({ idProduct }) => {
             );
           })}
       </ModalComponent>
-      <p className="text-base md:text-2xl px-4 md:px-0 mb-2 font-medium">
+      <p className="text-base md:text-2xl px-4 md:px-0 mb-3 font-medium">
         {" "}
         Bình luận, hỏi đáp:
       </p>

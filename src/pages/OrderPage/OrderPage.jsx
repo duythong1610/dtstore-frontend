@@ -29,7 +29,7 @@ import * as UserService from "../../services/UserService";
 import Loading from "../../components/LoadingComponent/Loading";
 import * as message from "../../components/Message/Message";
 import { updateUser } from "../../redux/slides/userSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import StepComponent from "../../components/StepComponent/StepComponent";
 import MySwal from "../../components/SweetAlert/SweetAlert";
 import { priceDiscount } from "../../until";
@@ -40,6 +40,7 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 import EmptyCart from "../../assets/img/empty-cart.jpg";
+import { Helmet } from "react-helmet";
 
 const OrderPage = () => {
   const order = useSelector((state) => state.order);
@@ -153,9 +154,6 @@ const OrderPage = () => {
     form.setFieldsValue(stateUserDetails);
   }, [form, stateUserDetails]);
 
-  console.log({
-    stateUserDetails,
-  });
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
@@ -191,19 +189,6 @@ const OrderPage = () => {
     return result;
   }, [order]);
 
-  // const priceDiscountMemo = useMemo(() => {
-  //   const result = order?.orderItemsSelected?.reduce((total, cur) => {
-  //     console.log({ total }, { cur }, cur?.price);
-  //     const totalDiscount = cur.discount ? cur.discount : 0;
-  //     return (cur?.price * (totalDiscount * cur?.amount)) / 100;
-  //   }, 0);
-  //   if (Number(result)) {
-  //     console.log(result);
-  //     return result;
-  //   }
-  //   return 0;
-  // }, [order]);
-
   const deliveryPriceMemo = useMemo(() => {
     if (priceMemo >= 200000 && priceMemo < 500000) {
       return 10000;
@@ -214,13 +199,8 @@ const OrderPage = () => {
     }
   }, [priceMemo]);
 
-  // console.log({ diliveryPriceMemo }, { priceMemo }, { priceDiscountMemo });
   const totalPriceMemo = useMemo(() => {
-    return (
-      Number(priceMemo) -
-      // Number(priceDiscountMemo) +
-      Number(deliveryPriceMemo)
-    );
+    return Number(priceMemo) - Number(deliveryPriceMemo);
   }, [priceMemo, deliveryPriceMemo]);
 
   const handleRemoveAllOrder = () => {
@@ -367,118 +347,194 @@ const OrderPage = () => {
     },
   ];
   return (
-    <div className="bg-slate-100 w-full pt-12 md:py-5">
-      <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0 pb-[248px] md:pb-0">
-        <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
-          <div className="flex justify-center items-center">
-            <LeftOutlined
-              onClick={() => navigate(-1)}
-              className={"w-8 h-8 text-lg text-blue-500 text-center"}
-            />
+    <>
+      <Helmet>
+        <title>Dtstore - Giỏ hàng</title>
+      </Helmet>
+      <div className="bg-slate-100 w-full pt-12 md:py-5">
+        <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0 pb-[248px] md:pb-0">
+          <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
+            <div className="flex justify-center items-center">
+              <LeftOutlined
+                onClick={() => navigate(-1)}
+                className={"w-8 h-8 text-lg text-blue-500 text-center"}
+              />
+            </div>
+            <div className="text-center w-full mr-8">
+              <h1 className="text-xl font-medium m-0">GIỎ HÀNG</h1>
+            </div>
           </div>
-          <div className="text-center w-full mr-8">
-            <h1 className="text-xl font-medium m-0">GIỎ HÀNG</h1>
-          </div>
-        </div>
-        {order?.orderItems?.length === 0 ? (
-          <div className="text-center">
-            <img
-              src={EmptyCart}
-              alt=""
-              className="inline-block mix-blend-darken md:w-1/3"
-            />
-            <p className="text-base font-medium mb-4 md:mb-3">
-              Bạn chưa có sản phẩm nào trong giỏ hàng!
-            </p>
-            <ButtonComponent
-              className="bg-[#422AFB] h-12 w-full md:w-72 rounded-md text-white text-base font-bold"
-              onClick={() => navigate("/")}
-              size={40}
-              textButton={"Tiếp tục mua sắm"}
-            ></ButtonComponent>
-          </div>
-        ) : (
-          <div className="flex justify-center flex-col md:flex-row">
-            <WrapperLeft>
-              <WrapperStyleHeaderDilivery className="top-5 md:top-0">
-                <StepComponent
-                  items={itemsDelivery}
-                  current={
-                    deliveryPriceMemo === 10000
-                      ? 2
-                      : deliveryPriceMemo === 20000
-                      ? 1
-                      : order.orderItemsSelected.length === 0
-                      ? 0
-                      : 3
-                  }
-                />
-              </WrapperStyleHeaderDilivery>
-              <WrapperStyleHeader className="top-60 md:top-28 justify-between">
-                <span className="md:mr-[110px]">
-                  <Checkbox
-                    onChange={handleOnchangeCheckAll}
-                    checked={listChecked?.length === order?.orderItems?.length}
-                  ></Checkbox>
-                  <span style={{ marginLeft: "15px" }}>
-                    Tất cả ({order?.orderItems?.length} sản phẩm)
+          {order?.orderItems?.length === 0 ? (
+            <div className="text-center">
+              <img
+                src={EmptyCart}
+                alt=""
+                className="inline-block mix-blend-darken md:w-1/3"
+              />
+              <p className="text-base font-medium mb-4 md:mb-3">
+                Bạn chưa có sản phẩm nào trong giỏ hàng!
+              </p>
+              <ButtonComponent
+                className="bg-[#422AFB] h-12 w-full md:w-72 rounded-md text-white text-base font-bold"
+                onClick={() => navigate("/")}
+                size={40}
+                textButton={"Tiếp tục mua sắm"}
+              ></ButtonComponent>
+            </div>
+          ) : (
+            <div className="flex justify-center flex-col md:flex-row">
+              <WrapperLeft>
+                <WrapperStyleHeaderDilivery className="top-5 md:top-0">
+                  <StepComponent
+                    items={itemsDelivery}
+                    current={
+                      deliveryPriceMemo === 10000
+                        ? 2
+                        : deliveryPriceMemo === 20000
+                        ? 1
+                        : order.orderItemsSelected.length === 0
+                        ? 0
+                        : 3
+                    }
+                  />
+                </WrapperStyleHeaderDilivery>
+                <WrapperStyleHeader className="top-60 md:top-28 justify-between">
+                  <span className="md:mr-[110px]">
+                    <Checkbox
+                      onChange={handleOnchangeCheckAll}
+                      checked={
+                        listChecked?.length === order?.orderItems?.length
+                      }
+                    ></Checkbox>
+                    <span style={{ marginLeft: "15px" }}>
+                      Tất cả ({order?.orderItems?.length} sản phẩm)
+                    </span>
                   </span>
-                </span>
-                <div className="md:justify-between md:flex-1 flex items-center">
-                  <span className="hidden md:block md:mr-7">Đơn giá</span>
-                  <span
-                    className="hidden md:block"
-                    style={{ marginRight: "-10px" }}
-                  >
-                    Số lượng
-                  </span>
-                  <span
-                    className="hidden md:block"
-                    style={{ marginRight: "-20px" }}
-                  >
-                    Thành tiền
-                  </span>
-                  <Tooltip placement="bottom" title={"Xóa các mục đã chọn"}>
-                    <DeleteOutlined
-                      style={{ cursor: "pointer" }}
-                      onClick={handleRemoveAllOrder}
-                    />
-                  </Tooltip>
-                </div>
-              </WrapperStyleHeader>
-              <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto">
-                {order?.orderItems?.map((order) => {
-                  console.log({ order });
-                  return (
-                    <WrapperItemOrder
-                      className="flex-col md:flex-row"
-                      key={order?.product}
+                  <div className="md:justify-between md:flex-1 flex items-center">
+                    <span className="hidden md:block md:mr-7">Đơn giá</span>
+                    <span
+                      className="hidden md:block"
+                      style={{ marginRight: "-10px" }}
                     >
-                      <div class="flex items-center gap-3 w-full md:w-64">
-                        <Checkbox
-                          onChange={onChange}
-                          value={order?.product}
-                          checked={listChecked.includes(order?.product)}
-                        ></Checkbox>
-                        <img
-                          src={order?.image}
-                          style={{
-                            width: "77px",
-                            height: "79px",
-                            objectFit: "cover",
-                          }}
-                        />
-                        <div className="flex flex-col">
-                          <span className="md:w-60 w-full font-medium overflow-hidden text-ellipsis whitespace-nowrap">
-                            {order?.name}
-                          </span>
-                          {order?.discount > 0 && (
-                            <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
-                              {convertPrice(order?.price)}
+                      Số lượng
+                    </span>
+                    <span
+                      className="hidden md:block"
+                      style={{ marginRight: "-20px" }}
+                    >
+                      Thành tiền
+                    </span>
+                    <Tooltip placement="bottom" title={"Xóa các mục đã chọn"}>
+                      <DeleteOutlined
+                        style={{ cursor: "pointer" }}
+                        onClick={handleRemoveAllOrder}
+                      />
+                    </Tooltip>
+                  </div>
+                </WrapperStyleHeader>
+                <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto">
+                  {order?.orderItems?.map((order) => {
+                    console.log({ order });
+                    return (
+                      <WrapperItemOrder
+                        className="flex-col md:flex-row"
+                        key={order?.product}
+                      >
+                        <div class="flex items-center gap-3 w-full md:w-64">
+                          <Checkbox
+                            onChange={onChange}
+                            value={order?.product}
+                            checked={listChecked.includes(order?.product)}
+                          ></Checkbox>
+                          <img
+                            src={order?.image}
+                            style={{
+                              width: "77px",
+                              height: "79px",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <div className="flex flex-col">
+                            <span className="md:w-60 w-full font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+                              {order?.name}
                             </span>
-                          )}
+                            {order?.discount > 0 && (
+                              <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
+                                {convertPrice(order?.price)}
+                              </span>
+                            )}
 
-                          <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                            <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                              {order?.discount
+                                ? convertPrice(
+                                    priceDiscount(order?.price, order) *
+                                      order?.amount
+                                  )
+                                : convertPrice(order?.price * order?.amount)}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between w-full mt-2">
+                          <span className="hidden md:block">
+                            <span
+                              style={{ fontSize: "13px", color: "#242424" }}
+                            >
+                              {order?.discount
+                                ? convertPrice(
+                                    priceDiscount(order?.price, order)
+                                  )
+                                : convertPrice(order?.price)}
+                            </span>
+                          </span>
+                          <WrapperCountOrder className="ml-9">
+                            <button
+                              style={{
+                                padding: "0px 8px",
+                                border: "none",
+                                background: "transparent",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                handleChangeCount(
+                                  "decrease",
+                                  order?.product,
+                                  order?.amount === 1
+                                )
+                              }
+                            >
+                              <MinusOutlined
+                                style={{ color: "#000", fontSize: "10px" }}
+                              />
+                            </button>
+                            <WrapperInputNumber
+                              defaultValue={order?.amount}
+                              value={order?.amount}
+                              size="small"
+                              min={1}
+                              max={order?.countInstock}
+                            />
+                            <button
+                              style={{
+                                padding: "0px 8px",
+                                border: "none",
+                                background: "transparent",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                handleChangeCount(
+                                  "increase",
+                                  order?.product,
+                                  order?.amount === order.countInstock,
+                                  order?.amount === 1
+                                )
+                              }
+                            >
+                              <PlusOutlined
+                                style={{ color: "#000", fontSize: "10px" }}
+                              />
+                            </button>
+                          </WrapperCountOrder>
+                          <span className="hidden md:block md:text-red-500 text-sm font-medium">
                             {order?.discount
                               ? convertPrice(
                                   priceDiscount(order?.price, order) *
@@ -486,187 +542,105 @@ const OrderPage = () => {
                                 )
                               : convertPrice(order?.price * order?.amount)}
                           </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between w-full mt-2">
-                        <span className="hidden md:block">
-                          <span style={{ fontSize: "13px", color: "#242424" }}>
-                            {order?.discount
-                              ? convertPrice(priceDiscount(order?.price, order))
-                              : convertPrice(order?.price)}
-                          </span>
-                        </span>
-                        <WrapperCountOrder className="ml-9">
-                          <button
-                            style={{
-                              padding: "0px 8px",
-                              border: "none",
-                              background: "transparent",
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              handleChangeCount(
-                                "decrease",
-                                order?.product,
-                                order?.amount === 1
-                              )
-                            }
-                          >
-                            <MinusOutlined
-                              style={{ color: "#000", fontSize: "10px" }}
-                            />
-                          </button>
-                          <WrapperInputNumber
-                            defaultValue={order?.amount}
-                            value={order?.amount}
-                            size="small"
-                            min={1}
-                            max={order?.countInstock}
+                          <DeleteOutlined
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleDeleteOrder(order?.product)}
                           />
-                          <button
-                            style={{
-                              padding: "0px 8px",
-                              border: "none",
-                              background: "transparent",
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              handleChangeCount(
-                                "increase",
-                                order?.product,
-                                order?.amount === order.countInstock,
-                                order?.amount === 1
-                              )
-                            }
-                          >
-                            <PlusOutlined
-                              style={{ color: "#000", fontSize: "10px" }}
-                            />
-                          </button>
-                        </WrapperCountOrder>
-                        <span className="hidden md:block md:text-red-500 text-sm font-medium">
-                          {order?.discount
-                            ? convertPrice(
-                                priceDiscount(order?.price, order) *
-                                  order?.amount
-                              )
-                            : convertPrice(order?.price * order?.amount)}
-                        </span>
-                        <DeleteOutlined
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleDeleteOrder(order?.product)}
-                        />
-                      </div>
-                    </WrapperItemOrder>
-                  );
-                })}
-              </WrapperListOrder>
-            </WrapperLeft>
+                        </div>
+                      </WrapperItemOrder>
+                    );
+                  })}
+                </WrapperListOrder>
+              </WrapperLeft>
 
-            <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
-              <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
-                <div
-                  className={
-                    moreInfoOrder
-                      ? "px-5 py-3 md:py-5 bg-white"
-                      : "px-5 py-3 md:py-5 bg-white"
-                  }
-                >
-                  <div style={{ display: "flex" }}>
-                    <InputComponent
-                      className="md:w-48 w-full mr-2"
-                      type="text"
-                      placeholder="Nhập mã giảm giá"
-                      onChange={onChangeVoucher}
-                      value={voucherCode}
-                    />
-                    <ButtonComponent
-                      onClick={handleAddVoucher}
-                      textButton="Áp dụng"
-                      style={{ background: "rgb(66, 42, 251)", color: "#fff" }}
-                    ></ButtonComponent>
-                  </div>
-                  <span
-                    style={{
-                      color: "rgb(254, 56, 52)",
-                      display: "block",
-                      marginTop: "5px",
-                      fontSize: "14px",
-                    }}
+              <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
+                <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
+                  <div
+                    className={
+                      moreInfoOrder
+                        ? "px-5 py-3 md:py-5 bg-white"
+                        : "px-5 py-3 md:py-5 bg-white"
+                    }
                   >
-                    {messageVoucher}
-                  </span>
-                </div>
-                <div
-                  className={
-                    moreInfoOrder
-                      ? "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
-                      : "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
-                  }
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span>Giao tới</span>
-                      <div>
-                        <span
-                          onClick={handleChangeAddress}
-                          style={{ color: "blue", cursor: "pointer" }}
-                        >
-                          Thay đổi
-                        </span>
-                      </div>
+                    <div style={{ display: "flex" }}>
+                      <InputComponent
+                        className="md:w-48 w-full mr-2"
+                        type="text"
+                        placeholder="Nhập mã giảm giá"
+                        onChange={onChangeVoucher}
+                        value={voucherCode}
+                      />
+                      <ButtonComponent
+                        onClick={handleAddVoucher}
+                        textButton="Áp dụng"
+                        style={{
+                          background: "rgb(66, 42, 251)",
+                          color: "#fff",
+                        }}
+                      ></ButtonComponent>
                     </div>
-                    {user?.name ? (
-                      <div>
-                        <div className="customer_info flex items-center">
-                          <span className="font-medium">{user?.name}</span>
-                          <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
-                          <span className="font-medium">{user?.phone}</span>
-                        </div>
-
-                        <div>
-                          <span className="font-medium text-zinc-500">
-                            {`${user?.address}${user?.district ? "," : ""} ${
-                              user?.district
-                            }${user?.city ? "," : ""} ${user?.city}`}{" "}
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-red-500 font-medium">
-                        Bạn quên đăng nhập rồi này!
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={
-                    moreInfoOrder
-                      ? "block px-5 py-1 md:py-5 bg-white"
-                      : "md:block px-5 py-1 md:py-5 hidden bg-white border-b-zinc-100 border-b-[1px]"
-                  }
-                >
-                  <div className="flex items-center justify-between">
-                    <span>Tạm tính</span>
                     <span
                       style={{
-                        color: "#000",
+                        color: "rgb(254, 56, 52)",
+                        display: "block",
+                        marginTop: "5px",
                         fontSize: "14px",
-                        fontWeight: "bold",
                       }}
                     >
-                      {convertPrice(priceMemo)}
+                      {messageVoucher}
                     </span>
                   </div>
-                  {isVoucher && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span>Giảm giá</span>
+                  <div
+                    className={
+                      moreInfoOrder
+                        ? "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
+                        : "px-5 py-1 md:py-5 bg-white border-b-zinc-100 border-b-[1px]"
+                    }
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span>Giao tới</span>
+                        <div>
+                          <span
+                            onClick={handleChangeAddress}
+                            style={{ color: "blue", cursor: "pointer" }}
+                          >
+                            Thay đổi
+                          </span>
+                        </div>
+                      </div>
+                      {user?.name ? (
+                        <div>
+                          <div className="customer_info flex items-center">
+                            <span className="font-medium">{user?.name}</span>
+                            <i className="w-[2px] h-5 mx-2 bg-slate-400"></i>
+                            <span className="font-medium">{user?.phone}</span>
+                          </div>
+
+                          <div>
+                            <span className="font-medium text-zinc-500">
+                              {`${user?.address}${user?.district ? "," : ""} ${
+                                user?.district
+                              }${user?.city ? "," : ""} ${user?.city}`}{" "}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-red-500 font-medium">
+                          Bạn quên đăng nhập rồi này!
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    className={
+                      moreInfoOrder
+                        ? "block px-5 py-1 md:py-5 bg-white"
+                        : "md:block px-5 py-1 md:py-5 hidden bg-white border-b-zinc-100 border-b-[1px]"
+                    }
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>Tạm tính</span>
                       <span
                         style={{
                           color: "#000",
@@ -674,220 +648,246 @@ const OrderPage = () => {
                           fontWeight: "bold",
                         }}
                       >
-                        {convertPrice(priceVoucher)}
+                        {convertPrice(priceMemo)}
                       </span>
                     </div>
-                  )}
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span>Phí giao hàng</span>
-                    <span
-                      style={{
-                        color: "#000",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {convertPrice(deliveryPriceMemo)}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
-                  <div className="flex items-center gap-1 leading-none">
-                    <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
-                      Tổng cộng
-                    </span>
-                    {listChecked?.length > 0 && (
-                      <div className="md:hidden">
-                        {moreInfoOrder ? (
-                          <CaretDownOutlined className="text-gray-500" />
-                        ) : (
-                          <CaretUpOutlined className="text-gray-500" />
-                        )}
+                    {isVoucher && (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span>Giảm giá</span>
+                        <span
+                          style={{
+                            color: "#000",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {convertPrice(priceVoucher)}
+                        </span>
                       </div>
                     )}
-                  </div>
 
-                  <span style={{ display: "flex", flexDirection: "column" }}>
-                    <span
-                      className={
-                        listChecked?.length === 0
-                          ? "text-sm font-medium md:text-base text-red-500"
-                          : "text-xl font-medium md:text-base text-red-500"
-                      }
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      {listChecked?.length === 0
-                        ? "Vui lòng chọn sản phẩm"
-                        : `${
-                            isVoucher
-                              ? `${priceAddVoucher(totalPriceMemo)
-                                  .toLocaleString()
-                                  .replaceAll(",", ".")} VNĐ`
-                              : convertPrice(
-                                  deliveryPriceMemo
-                                    ? priceMemo -
-                                        deliveryPriceMemo -
-                                        priceVoucher
-                                    : priceMemo
-                                )
-                          }`}
+                      <span>Phí giao hàng</span>
+                      <span
+                        style={{
+                          color: "#000",
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {convertPrice(deliveryPriceMemo)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
+                    <div className="flex items-center gap-1 leading-none">
+                      <span onClick={() => setMoreInfoOrder(!moreInfoOrder)}>
+                        Tổng cộng
+                      </span>
+                      {listChecked?.length > 0 && (
+                        <div className="md:hidden">
+                          {moreInfoOrder ? (
+                            <CaretDownOutlined className="text-gray-500" />
+                          ) : (
+                            <CaretUpOutlined className="text-gray-500" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <span style={{ display: "flex", flexDirection: "column" }}>
+                      <span
+                        className={
+                          listChecked?.length === 0
+                            ? "text-sm font-medium md:text-base text-red-500"
+                            : "text-xl font-medium md:text-base text-red-500"
+                        }
+                      >
+                        {listChecked?.length === 0
+                          ? "Vui lòng chọn sản phẩm"
+                          : `${
+                              isVoucher
+                                ? `${priceAddVoucher(totalPriceMemo)
+                                    .toLocaleString()
+                                    .replaceAll(",", ".")} VNĐ`
+                                : convertPrice(
+                                    deliveryPriceMemo
+                                      ? priceMemo -
+                                          deliveryPriceMemo -
+                                          priceVoucher
+                                      : priceMemo
+                                  )
+                            }`}
+                      </span>
+                      <span
+                        className={
+                          listChecked?.length === 0 ? "hidden" : "block"
+                        }
+                        style={{ color: "#000", fontSize: "11px" }}
+                      >
+                        (Đã bao gồm VAT nếu có)
+                      </span>
                     </span>
-                    <span
-                      className={listChecked?.length === 0 ? "hidden" : "block"}
-                      style={{ color: "#000", fontSize: "11px" }}
-                    >
-                      (Đã bao gồm VAT nếu có)
-                    </span>
-                  </span>
-                </div>
-                <div className="px-5 pb-2 md:p-0  bg-white">
-                  <ButtonComponent
-                    className="w-full m-0 md:w-80 md:mt-2"
-                    onClick={() => handleAddCard()}
-                    size={40}
-                    styleButton={{
-                      background: "#422AFB",
-                      height: "48px",
-                      border: "none",
-                      width: "100%",
-                      borderRadius: "4px",
-                      color: "#fff",
-                      fontSize: "15px",
-                      fontWeight: "700",
-                    }}
-                    textButton={`Mua hàng (${listChecked?.length})`}
-                  ></ButtonComponent>
+                  </div>
+                  <div className="px-5 pb-2 md:p-0  bg-white">
+                    <ButtonComponent
+                      className="w-full m-0 md:w-80 md:mt-2"
+                      onClick={() => handleAddCard()}
+                      size={40}
+                      styleButton={{
+                        background: "#422AFB",
+                        height: "48px",
+                        border: "none",
+                        width: "100%",
+                        borderRadius: "4px",
+                        color: "#fff",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                      }}
+                      textButton={`Mua hàng (${listChecked?.length})`}
+                    ></ButtonComponent>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-      <ModalComponent
-        footer={null}
-        title="Cập nhật thông tin giao hàng"
-        open={isOpenModalUpdateInfo}
-        onCancel={handleCancelUpdate}
-        // onOk={handleUpdateInfoUser}
-      >
-        <Loading isLoading={isLoading}>
-          <Form
-            name="basic"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
-            onFinish={handleUpdateInfoUser}
-            autoComplete="on"
-            form={form}
-          >
-            <Form.Item
-              className="font-medium p-0"
-              label="Họ và tên"
-              name="name"
-              rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+          )}
+        </div>
+        <ModalComponent
+          footer={null}
+          title="Cập nhật thông tin giao hàng"
+          open={isOpenModalUpdateInfo}
+          onCancel={handleCancelUpdate}
+          // onOk={handleUpdateInfoUser}
+        >
+          <Loading isLoading={isLoading}>
+            <Form
+              name="basic"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              onFinish={handleUpdateInfoUser}
+              autoComplete="on"
+              form={form}
             >
-              <InputComponent
-                value={stateUserDetails["name"]}
-                onChange={handleOnchangeDetails}
+              <Form.Item
+                className="font-medium p-0"
+                label="Họ và tên"
                 name="name"
-              />
-            </Form.Item>
-            <Form.Item
-              className="font-medium p-0"
-              label="Số điện thoại"
-              name="phone"
-              rules={[
-                { required: true, message: "Vui lòng nhập số điện thoại!" },
-              ]}
-            >
-              <InputComponent
-                value={stateUserDetails.phone}
-                onChange={handleOnchangeDetails}
-                name="phone"
-              />
-            </Form.Item>
-            <Form.Item
-              className="font-medium p-0"
-              label="Tỉnh, thành phố"
-              name="city"
-              rules={[{ required: true, message: "Vui lòng chọn Thành phố!" }]}
-            >
-              {/* <InputComponent
-                value={stateUserDetails["city"]}
-                onChange={handleOnchangeDetails}
-                name="city"
-              /> */}
-
-              <AutoComplete
-                options={province}
-                placeholder="Chọn tỉnh, thành phố"
-                filterOption={(inputValue, option) =>
-                  option.value
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1
-                }
-                onChange={handleOnChangeProvince}
-                value={stateUserDetails["city"]}
-                name="city"
-              />
-            </Form.Item>
-            <Form.Item
-              className="font-medium p-0"
-              label="Quận, huyện"
-              name="district"
-              rules={[
-                { required: true, message: "Vui lòng chọn Quận, Huyện!" },
-              ]}
-            >
-              {/* <InputComponent
-                value={stateUserDetails["city"]}
-                onChange={handleOnchangeDetails}
-                name="city"
-              /> */}
-
-              <AutoComplete
-                options={district}
-                placeholder="Chọn quận, huyện"
-                filterOption={(inputValue, option) =>
-                  option.value
-                    .toUpperCase()
-                    .indexOf(inputValue.toUpperCase()) !== -1
-                }
-                onChange={handleOnChangeDistrict}
-                value={stateUserDetails["district"]}
-                name="district"
-              />
-            </Form.Item>
-
-            <Form.Item
-              className="font-medium p-0"
-              label="Địa chỉ"
-              name="address"
-              rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-            >
-              <InputComponent
-                value={stateUserDetails.address}
-                onChange={handleOnchangeDetails}
-                name="address"
-              />
-            </Form.Item>
-            <div className=" md:text-right">
-              <button
-                type="submit"
-                className="w-full m-0 md:w-40 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+                rules={[
+                  { required: true, message: "Vui lòng nhập họ và tên!" },
+                ]}
               >
-                Xác nhận
-              </button>
-            </div>
-          </Form>
-        </Loading>
-      </ModalComponent>
-    </div>
+                <InputComponent
+                  value={stateUserDetails["name"]}
+                  onChange={handleOnchangeDetails}
+                  name="name"
+                />
+              </Form.Item>
+              <Form.Item
+                className="font-medium p-0"
+                label="Số điện thoại"
+                name="phone"
+                rules={[
+                  { required: true, message: "Vui lòng nhập số điện thoại!" },
+                ]}
+              >
+                <InputComponent
+                  value={stateUserDetails.phone}
+                  onChange={handleOnchangeDetails}
+                  name="phone"
+                />
+              </Form.Item>
+              <Form.Item
+                className="font-medium p-0"
+                label="Tỉnh, thành phố"
+                name="city"
+                rules={[
+                  { required: true, message: "Vui lòng chọn Thành phố!" },
+                ]}
+              >
+                {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+                <AutoComplete
+                  options={province}
+                  placeholder="Chọn tỉnh, thành phố"
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={handleOnChangeProvince}
+                  value={stateUserDetails["city"]}
+                  name="city"
+                />
+              </Form.Item>
+              <Form.Item
+                className="font-medium p-0"
+                label="Quận, huyện"
+                name="district"
+                rules={[
+                  { required: true, message: "Vui lòng chọn Quận, Huyện!" },
+                ]}
+              >
+                {/* <InputComponent
+                value={stateUserDetails["city"]}
+                onChange={handleOnchangeDetails}
+                name="city"
+              /> */}
+
+                <AutoComplete
+                  options={district}
+                  placeholder="Chọn quận, huyện"
+                  filterOption={(inputValue, option) =>
+                    option.value
+                      .toUpperCase()
+                      .indexOf(inputValue.toUpperCase()) !== -1
+                  }
+                  onChange={handleOnChangeDistrict}
+                  value={stateUserDetails["district"]}
+                  name="district"
+                />
+              </Form.Item>
+
+              <Form.Item
+                className="font-medium p-0"
+                label="Địa chỉ"
+                name="address"
+                rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+              >
+                <InputComponent
+                  value={stateUserDetails.address}
+                  onChange={handleOnchangeDetails}
+                  name="address"
+                />
+              </Form.Item>
+              <div className=" md:text-right">
+                <button
+                  type="submit"
+                  className="w-full m-0 md:w-40 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+                >
+                  Xác nhận
+                </button>
+              </div>
+            </Form>
+          </Loading>
+        </ModalComponent>
+      </div>
+    </>
   );
 };
 

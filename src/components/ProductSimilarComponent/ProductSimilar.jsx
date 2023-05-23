@@ -44,137 +44,147 @@ const ProductSimilar = ({ idProduct }) => {
 
   return (
     <>
-      <div className="p-4 md:p-0 max-w-7xl m-auto">
-        <p className="text-base font-medium mb-0 md:text-2xl">
+      <div className="md:p-0 max-w-7xl m-auto">
+        <p className="text-base font-medium -mb-2 mt-5 md:text-2xl pl-4 md:pl-0">
           Sản phẩm tương tự
         </p>
-        {/* <div className="overflow-y-hidden scrollbar-item md:overflow-y-auto flex w-full gap-3 py-2"> */}
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          // autoplay={{ delay: 5000, disableOnInteraction: false }}
-          navigation
-          slidesPerView="auto"
-          slidesPerGroupAuto
-          spaceBetween={20}
-          // loop
-          className=""
-        >
-          {loading ? (
-            Array.from({ length: productSimilar?.length || 0 }).map(
-              (_, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col gap-2 md:min-w-[20%] min-w-[40vw] overflow-y-hidden "
-                >
-                  <div className="skeleton h-36 w-full rounded-md" />
-                  <div className="skeleton h-6 w-full rounded-md" />
-                  <div className="skeleton h-[18px] w-full rounded-md" />
-                  <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                  <div className="skeleton h-5 w-full rounded-md" />
-                </div>
-              )
-            )
-          ) : (
-            <>
-              {productSimilar?.length > 0 &&
-                productSimilar?.map((product) => {
-                  return (
-                    <SwiperSlide
-                      // key={film.id}
-                      className="!w-[calc(50%-10px)] md:!w-[calc(20%-15px)]"
-                      // onClick={() =>
-                      //   navigate(`/${film.media_type || endpoint}/${film.id}`)
-                      // }
-                    >
-                      <WrapperCardStyle
-                        key={product?._id}
-                        className="rounded-xl"
-                        hoverable
-                        bodyStyle={{ padding: 10 }}
-                        onClick={() => handleProductDetails(product?._id)}
-                      >
-                        <div className="relative">
-                          <img
-                            src={product?.image}
-                            className="my-2 md:my-4 mx-0 object-contain"
-                          />
-                          {product?.countInStock === 0 && (
-                            <span
-                              style={{
-                                position: "absolute",
-                                top: "30%",
-                                left: 0,
-                                right: 0,
-                              }}
-                            >
-                              <img
-                                src={Soldout}
-                                alt=""
-                                className="w-24 md:w-36 m-auto"
-                              />
-                            </span>
-                          )}
-                        </div>
 
-                        <StyleNameProduct className="text-sm md:text-lg">
-                          {product?.name}
-                        </StyleNameProduct>
-                        <WrapperReportText className="md:text-sm">
-                          <span style={{ marginRight: "4px" }}>
-                            <Rate
-                              disabled
-                              value={product?.rating}
-                              style={{ fontSize: "11px", color: "#e83a45" }}
-                              className="md:!text-sm"
+        {loading ? (
+          <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
+            {Array.from({ length: topProducts?.length || 0 }).map(
+              (_, index) => {
+                const isHidden = index >= 5;
+                const isHiddenMobile = index >= 2; // Xác định các phần tử vượt qua vị trí thứ 5
+                const itemClasses = `flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px] ${
+                  isHidden ? "md:hidden" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
+                } ${
+                  isHiddenMobile ? "hidden md:flex" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
+                }`;
+
+                return (
+                  <div className={itemClasses}>
+                    <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                    <div className="skeleton h-6 w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                    <div className="skeleton h-5 w-full rounded-md" />
+                  </div>
+                );
+              }
+            )}
+          </div>
+        ) : (
+          <Swiper
+            modules={[Navigation, Autoplay]}
+            // autoplay={{ delay: 5000, disableOnInteraction: false }}
+            navigation
+            slidesPerView="auto"
+            slidesPerGroupAuto
+            spaceBetween={20}
+            // loop
+            className=""
+          >
+            {productSimilar?.length > 0 &&
+              productSimilar?.map((product) => {
+                return (
+                  <SwiperSlide
+                    // key={film.id}
+                    className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
+                    // onClick={() =>
+                    //   navigate(`/${film.media_type || endpoint}/${film.id}`)
+                    // }
+                  >
+                    <WrapperCardStyle
+                      key={product?._id}
+                      className="rounded-xl min-h-[290px] md:min-h-[392px] border-none"
+                      hoverable
+                      bodyStyle={{ padding: 10 }}
+                      onClick={() => handleProductDetails(product?._id)}
+                    >
+                      <div className="relative">
+                        <img
+                          src={product?.image}
+                          className="my-2 md:my-4 mx-0 object-contain"
+                        />
+                        {product?.countInStock === 0 && (
+                          <span
+                            style={{
+                              position: "absolute",
+                              top: "30%",
+                              left: 0,
+                              right: 0,
+                            }}
+                          >
+                            <img
+                              src={Soldout}
+                              alt=""
+                              className="w-24 md:w-36 m-auto"
                             />
                           </span>
-
-                          <span className="text-[11px] md:text-sm">
-                            {product?.sold > 0 && `| Đã bán ${product?.sold}`}{" "}
-                          </span>
-                        </WrapperReportText>
-
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: 5,
-                            alignItems: "center",
-                            marginTop: "5px",
-                          }}
-                        >
-                          <div
-                            className={
-                              product?.discount > 0
-                                ? "font-normal text-xs text-zinc-400 line-through"
-                                : "font-medium text-sm md:text-base text-red-500"
-                            }
-                          >
-                            <span>{convertPrice(product?.price)}</span>
-                          </div>
-                          {product?.discount > 0 && (
-                            <WrapperDiscountText>
-                              {`-${product?.discount}%` || "-5%"}
-                            </WrapperDiscountText>
-                          )}
-                        </div>
-
-                        {product?.discount > 0 && (
-                          <WrapperPriceText className="text-red-500 text-sm md:text-base">
-                            <span style={{ marginRight: "8px" }}>
-                              {convertPrice(
-                                product?.price -
-                                  (product?.price * product?.discount) / 100
-                              )}
-                            </span>
-                          </WrapperPriceText>
                         )}
-                      </WrapperCardStyle>
-                    </SwiperSlide>
-                  );
-                })}
-            </>
-          )}
-        </Swiper>
+                      </div>
+
+                      <StyleNameProduct className="text-sm md:text-lg">
+                        {product?.name}
+                      </StyleNameProduct>
+                      <WrapperReportText className="md:text-sm">
+                        <span style={{ marginRight: "4px" }}>
+                          <Rate
+                            disabled
+                            value={product?.rating}
+                            style={{ fontSize: "11px", color: "#e83a45" }}
+                            className="md:!text-sm"
+                          />
+                        </span>
+
+                        <span className="text-[11px] md:text-sm">
+                          {product?.sold > 0 && `| Đã bán ${product?.sold}`}{" "}
+                        </span>
+                      </WrapperReportText>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 5,
+                          alignItems: "center",
+                          marginTop: "5px",
+                        }}
+                      >
+                        <div
+                          className={
+                            product?.discount > 0
+                              ? "font-normal text-xs text-zinc-400 line-through"
+                              : "font-medium text-sm md:text-base text-red-500"
+                          }
+                        >
+                          <span>{convertPrice(product?.price)}</span>
+                        </div>
+                        {product?.discount > 0 && (
+                          <WrapperDiscountText>
+                            {`-${product?.discount}%` || "-5%"}
+                          </WrapperDiscountText>
+                        )}
+                      </div>
+
+                      {product?.discount > 0 && (
+                        <WrapperPriceText className="text-red-500 text-sm md:text-base">
+                          <span style={{ marginRight: "8px" }}>
+                            {convertPrice(
+                              product?.price -
+                                (product?.price * product?.discount) / 100
+                            )}
+                          </span>
+                        </WrapperPriceText>
+                      )}
+                    </WrapperCardStyle>
+                  </SwiperSlide>
+                );
+              })}
+          </Swiper>
+        )}
+
+        {/* <div className="overflow-y-hidden scrollbar-item md:overflow-y-auto flex w-full gap-3 py-2"> */}
+
         {/* </div> */}
       </div>
     </>

@@ -36,6 +36,13 @@ const ProfilePage = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (user?.name) {
+      const pageTitle = `Tài khoản - ${user?.name}`;
+      document.title = pageTitle;
+    }
+  }, [user?.name]);
+
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     return UserService.updateUser(id, rests, access_token);

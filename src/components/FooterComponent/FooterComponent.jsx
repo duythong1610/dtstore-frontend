@@ -15,22 +15,27 @@ const FooterComponent = () => {
         pathname === "/order" && "hidden md:block"
       } th pb-[62px] md:pb-0`}
     >
-      <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white  p-5">
+      <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white p-4">
         <div className="md:w-[30%] md:max-w-[30%]">
           <h1 className="text-base">Giới thiệu về DT STORE</h1>
           <span>
-            DT Store là sản phẩm web app ecommerce, web có những tính năng bao
-            gồm:
+            DT Store là một project web app ecommerce được phát triển bởi Duy
+            Thông trong quá trình học tập nhằm áp dụng những kiến thức cũ và tìm
+            hiểu những kiến thức mới để tạo ra một project để đưa vào CV, vì đây
+            là project "chỉnh chu" đầu tiên hi vọng nhận được ý kiến và đóng góp
+            của mọi người để tui/em/anh có thể hoàn thiện hơn. Thanks for
+            reading! Chúc mọi người 1 ngày tốt lành!
           </span>
           <div>
-            <h2 className="inline-block mb-0 mr-1">Về sản phẩm:</h2>
+            <h2 className="inline-block mb-0 mr-1">Lưu ý:</h2>
             <span>
-              Hiển thị tất cả sản phẩm(giới hạn là 10), hiện thị danh mục sản
-              phẩm, lọc theo danh mục sản phẩm, lọc theo giá(1 số giá đề xuất,
-              hoặc có thể tùy chỉnh bằng thanh trượt), chi tiết sản phẩm, sản
-              phẩm tương tự sản phẩm đang được xem chi tiết,...
+              Vì đây là project chỉ mang tính chất demo nên không có chức năng
+              thay thế website ecommerce, đọc kĩ hướng dẫn sử dụng trước khi
+              dùng.
             </span>
           </div>
+
+          {/*
           <div>
             <h2 className="inline-block mb-0 mr-1">Về tài khoản:</h2>
             <span>
@@ -38,7 +43,7 @@ const FooterComponent = () => {
               toán(tiền mặt khi nhận hàng & thanh toán qua cổng vnpay), lịch sử
               mua hàng, lịch sử các sản phẩm đã xem,...
             </span>
-          </div>
+          </div> */}
         </div>
         <div className="md:w-[40%] md:max-w-40%]">
           <h1 className="text-base">Thông tin công ty</h1>

@@ -294,6 +294,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                 }
               >
                 <ButtonComponent
+                className="hover:opacity-80"
                   size={40}
                   style={{
                     color: "#fff",
