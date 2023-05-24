@@ -16,7 +16,7 @@ import * as ProductService from "../../services/ProductService";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/LoadingComponent/Loading";
 import useDebounce from "../../hooks/useDebounce";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import { searchProduct } from "../../redux/slides/productSlice";
 import * as UserService from "../../services/UserService";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -52,15 +52,15 @@ function Home() {
   const [suggestions, setSuggestions] = useState([]);
   const [limit, setLimit] = useState(10);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
 
+  console.log("re-render");
   const fetchAllProduct = useCallback(
     async (context) => {
       const limit = context?.queryKey && context?.queryKey[1];
       const search = context?.queryKey && context?.queryKey[2];
-      setLoading(true);
+
       const res = await ProductService.getAllProduct(search, limit);
-      setLoading(false);
       return res;
     },
     [limit]
@@ -99,6 +99,10 @@ function Home() {
     });
   };
 
+  const handleClearSearchText = () => {
+    setSearchText("");
+  };
+
   const handleSearch = () => {
     dispatch(searchProduct(searchText));
   };
@@ -129,8 +133,10 @@ function Home() {
   console.log(products);
 
   const filteredProducts = async () => {
+    setLoading(true);
     const res = await ProductService.getAllProduct();
     if (res) {
+      setLoading(false);
       setAllProducts(res.data);
     }
   };
@@ -139,7 +145,9 @@ function Home() {
     Array.isArray(allProducts) &&
     allProducts.sort((a, b) => b.sold - a.sold).slice(0, 10);
 
-  console.log(typeProduct);
+  const isMobile = window.innerWidth <= 768;
+
+  const itemLength = isMobile ? 2 : 5;
   return (
     <>
       <Helmet>
@@ -152,13 +160,21 @@ function Home() {
       <div className="relative">
         <div className="px-5 py-3 fixed top-0 left-0 right-0 z-50 bg-white md:hidden">
           <div className="flex justify-between border border-zinc-300 w-full rounded-lg overflow-hidden">
-            <input
-              type="text"
-              placeholder="Bạn tìm gì..."
-              className="outline-none px-3 py-2 h-10 w-full"
-              onChange={onSearch}
-              onKeyDown={handleSearchEnter}
-            />
+            <div className="flex items-center flex-1">
+              <input
+                type="text"
+                placeholder="Bạn tìm gì..."
+                className="outline-none px-3 py-2 h-10 w-full"
+                onChange={onSearch}
+                onKeyDown={handleSearchEnter}
+              />
+              {searchText && (
+                <CloseOutlined
+                  className="p-2"
+                  onClick={handleClearSearchText}
+                />
+              )}
+            </div>
             <div>
               <button className="outline-none w-10 h-10" onClick={handleSearch}>
                 <SearchOutlined className="text-xl text-zinc-400" />
@@ -168,7 +184,10 @@ function Home() {
         </div>
 
         {searchText && (
-          <ul className="absolute bg-white top-[65px] z-50 p-4 w-full shadow-lg max-h-[50vh]  overflow-auto">
+          <ul className="absolute bg-white top-[65px] z-50 p-4 w-full shadow-lg max-h-[50vh] overflow-auto">
+            {suggestions.length > 0 && (
+              <h1>Hiển thị {suggestions.length} kết quả tìm kiếm</h1>
+            )}
             {searchText &&
               (suggestions.length > 0 ? (
                 suggestions.map((product) => (
@@ -230,30 +249,19 @@ function Home() {
                 </p>
               </Divider>
             )}
-
             {loading ? (
               <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
-                {Array.from({ length: topProducts?.length || 0 }).map(
-                  (_, index) => {
-                    const isHidden = index >= 5;
-                    const isHiddenMobile = index >= 2; // Xác định các phần tử vượt qua vị trí thứ 5
-                    const itemClasses = `flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px] ${
-                      isHidden ? "md:hidden" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
-                    } ${
-                      isHiddenMobile ? "hidden md:flex" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
-                    }`;
-
-                    return (
-                      <div className={itemClasses}>
-                        <div className="skeleton h-36 md:h-60 w-full rounded-md" />
-                        <div className="skeleton h-6 w-full rounded-md" />
-                        <div className="skeleton h-[18px] w-full rounded-md" />
-                        <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                        <div className="skeleton h-5 w-full rounded-md" />
-                      </div>
-                    );
-                  }
-                )}
+                {Array.from({ length: itemLength }).map((_) => {
+                  return (
+                    <div className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]">
+                      <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                      <div className="skeleton h-6 w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-full rounded-md" />
+                      <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                      <div className="skeleton h-5 w-full rounded-md" />
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <Swiper
@@ -368,21 +376,24 @@ function Home() {
           </div>
 
           <div className="min-h-[930px]">
-            {loading ? (
+            {isLoading ? (
               <div className="skeleton h-7 md:w-[30%] w-[60%] mt-5 m-auto rounded-3xl"></div>
             ) : (
-              <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
+              <Divider className={`${isLoading ? "hidden" : "block"} !mb-0`}>
                 <p className="font-bold text-xl md:text-[26px] mb-0">
                   {" "}
                   Tất cả sản phẩm
                 </p>
               </Divider>
             )}
-            <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-              {loading ? (
-                Array.from({ length: products?.data?.length || 0 }).map(
+            {isLoading ? (
+              <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                {Array.from({ length: products?.data?.length || 0 }).map(
                   (_, index) => (
-                    <div key={index} className="flex flex-col gap-2">
+                    <div
+                      key={index}
+                      className="flex flex-col gap-2 min-h-[351px]"
+                    >
                       <div className="skeleton h-36 md:h-60 w-full rounded-md" />
                       <div className="skeleton h-6 w-full rounded-md" />
                       <div className="skeleton h-[18px] w-full rounded-md" />
@@ -390,11 +401,11 @@ function Home() {
                       <div className="skeleton h-5 w-full rounded-md" />
                     </div>
                   )
-                )
-              ) : products?.data?.length === 0 ? (
-                <div>khong tim thay gi het</div>
-              ) : (
-                products?.data?.map((product) => {
+                )}
+              </div>
+            ) : (
+              <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                {products?.data?.map((product) => {
                   return (
                     <CardComponent
                       key={product._id}
@@ -410,9 +421,9 @@ function Home() {
                       id={product._id}
                     />
                   );
-                })
-              )}
-            </div>
+                })}
+              </div>
+            )}
 
             <div
               className={
@@ -450,4 +461,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default React.memo(Home);

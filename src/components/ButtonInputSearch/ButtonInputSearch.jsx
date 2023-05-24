@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import InputComponent from "../InputComponent/InputComponent";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 function ButtonInputSearch(props) {
@@ -9,6 +9,8 @@ function ButtonInputSearch(props) {
     textButton,
     border,
     backgroundColorInput,
+    onClearSearchText,
+    searchText,
     // backgroundColorButton = "rgb(13,92,182)",
     colorButton = "rgb(128, 128, 137)",
   } = props;
@@ -31,17 +33,27 @@ function ButtonInputSearch(props) {
         border: "2px solid rgb(221, 221, 227)",
       }}
     >
-      <InputComponent
-        size={size}
-        placeholder={placeholder}
-        style={{
-          backgroundColor: backgroundColorInput,
-          border: border,
-          borderRadius: 0,
-          padding: "8px 16px",
-        }}
-        {...props}
-      />
+      <div className="flex items-center flex-1">
+        <InputComponent
+          className="focus:!shadow-none"
+          size={size}
+          placeholder={placeholder}
+          style={{
+            backgroundColor: backgroundColorInput,
+            border: border,
+            borderRadius: 0,
+            padding: "8px 16px",
+            boxShadow: "none",
+          }}
+          {...props}
+        />
+        {searchText && (
+          <CloseOutlined
+            className="p-2 cursor-pointer outline-none text-zinc-400"
+            onClick={onClearSearchText}
+          />
+        )}
+      </div>
       <ButtonComponent
         size={size}
         icon={<SearchOutlined />}
@@ -52,7 +64,10 @@ function ButtonInputSearch(props) {
           border: border,
           borderRadius: 0,
           fontSize: "16px",
+          padding: "8px 16px",
           fontWeight: 400,
+          display: "flex",
+          alignItems: "center",
           height: "100%",
           borderLeft: "2px solid rgb(221, 221, 227)",
         }}

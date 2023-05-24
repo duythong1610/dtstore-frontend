@@ -23,15 +23,15 @@ const ProductSimilar = ({ idProduct }) => {
   const [loading, setLoading] = useState();
   const navigate = useNavigate();
   const fetchProductSimilar = async () => {
+    setLoading(true);
     const res = await ProductService.getAllProductSimilar(idProduct);
+    setLoading(false);
     setProductSimilar(res.data);
     return res.data;
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchProductSimilar();
-    setLoading(false);
   }, [idProduct]);
 
   const handleProductDetails = (id) => {
@@ -42,6 +42,10 @@ const ProductSimilar = ({ idProduct }) => {
     navigate(`/product-detail/${id}`);
   };
 
+  const isMobile = window.innerWidth <= 768;
+
+  const itemLength = isMobile ? 2 : 5;
+
   return (
     <>
       <div className="md:p-0 max-w-7xl m-auto">
@@ -51,27 +55,17 @@ const ProductSimilar = ({ idProduct }) => {
 
         {loading ? (
           <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
-            {Array.from({ length: topProducts?.length || 0 }).map(
-              (_, index) => {
-                const isHidden = index >= 5;
-                const isHiddenMobile = index >= 2; // Xác định các phần tử vượt qua vị trí thứ 5
-                const itemClasses = `flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px] ${
-                  isHidden ? "md:hidden" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
-                } ${
-                  isHiddenMobile ? "hidden md:flex" : "" // Áp dụng lớp CSS 'hidden' nếu phần tử bị đẩy xuống hàng
-                }`;
-
-                return (
-                  <div className={itemClasses}>
-                    <div className="skeleton h-36 md:h-60 w-full rounded-md" />
-                    <div className="skeleton h-6 w-full rounded-md" />
-                    <div className="skeleton h-[18px] w-full rounded-md" />
-                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                    <div className="skeleton h-5 w-full rounded-md" />
-                  </div>
-                );
-              }
-            )}
+            {Array.from({ length: itemLength }).map((_) => {
+              return (
+                <div className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]">
+                  <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                  <div className="skeleton h-6 w-full rounded-md" />
+                  <div className="skeleton h-[18px] w-full rounded-md" />
+                  <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                  <div className="skeleton h-5 w-full rounded-md" />
+                </div>
+              );
+            })}
           </div>
         ) : (
           <Swiper

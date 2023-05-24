@@ -86,6 +86,10 @@ function HeaderComponent() {
     setActiveCategory((current) => !current);
   };
 
+  const handleClearSearchText = () => {
+    setSearchText("");
+  };
+
   const fetchAllProduct = useCallback(async () => {
     setLoading(true);
     const res = await ProductService.getAllProduct();
@@ -178,6 +182,8 @@ function HeaderComponent() {
                     ? "hidden md:block"
                     : "hidden md:block"
                 }
+                onClearSearchText={handleClearSearchText}
+                searchText={searchText}
                 border="none"
                 placeholder="Bạn tìm sản phẩm gì... "
                 textButton="Tìm kiếm"
@@ -189,12 +195,17 @@ function HeaderComponent() {
               />
               {searchText && (
                 <ul className="absolute bg-white z-50 p-4 w-full shadow-lg rounded-md max-h-[50vh] overflow-auto">
+                  {suggestions.length > 0 && (
+                    <h1 className="pl-2">
+                      Hiển thị {suggestions.length} kết quả tìm kiếm
+                    </h1>
+                  )}
                   {searchText &&
                     (suggestions.length > 0 ? (
                       suggestions.map((product) => (
                         <li
                           key={product._id}
-                          className="cursor-pointer p-2 hover:bg-slate-200 rounded-md"
+                          className="cursor-pointer p-2 hover:bg-slate-100 rounded-md"
                           onClick={() => {
                             navigate(`/product-detail/${product?._id}`);
                             setSearchText("");
