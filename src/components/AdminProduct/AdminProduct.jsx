@@ -37,7 +37,11 @@ const AdminProduct = () => {
     price: "",
     countInStock: "",
     rating: "",
-    type: "",
+    type: {
+      name: "",
+      thumbnail: "",
+    },
+
     image: "",
     description: "",
     discount: "",
@@ -49,11 +53,17 @@ const AdminProduct = () => {
     price: "",
     countInStock: "",
     rating: "",
-    type: "",
+    type: {
+      name: "",
+      thumbnail: "",
+    },
     image: "",
     description: "",
     discount: "",
+    newType: "",
   });
+
+  console.log(stateProductDetails);
 
   const [form] = Form.useForm();
 
@@ -66,7 +76,10 @@ const AdminProduct = () => {
         countInStock: res?.data.countInStock,
         rating: res?.data.rating,
         discount: res?.data.discount,
-        type: res?.data.type,
+        type: {
+          name: res?.data?.type.name,
+          thumbnail: res?.data?.type.thumbnail,
+        },
         image: res?.data.image,
         description: res?.data.description,
       });
@@ -113,6 +126,8 @@ const AdminProduct = () => {
       }
     );
   };
+
+  
 
   const renderAction = () => {
     return (
@@ -185,7 +200,10 @@ const AdminProduct = () => {
     queryFn: fetchAllTypeProduct,
   });
 
+  console.log(typeProduct.data);
+
   const { data: products, isLoading: isLoadingProduct } = queryProduct;
+  console.log(products);
 
   const { data, isLoading, isSuccess, isError } = mutation;
   const {
@@ -257,10 +275,13 @@ const AdminProduct = () => {
       countInStock: stateProduct?.countInStock,
       discount: stateProduct?.discount,
       rating: stateProduct?.rating,
-      type:
-        stateProduct?.type === "add_type"
-          ? stateProduct?.newType
-          : stateProduct?.type,
+      type: {
+        name:
+          stateProduct?.type.name === "add_type"
+            ? stateProduct?.newType
+            : stateProduct?.type.name,
+        thumbnail: stateProduct?.type.thumbnail,
+      },
       image: stateProduct?.image,
       description: stateProduct?.description,
     };
@@ -277,7 +298,7 @@ const AdminProduct = () => {
       price: "",
       countInStock: "",
       rating: "",
-      type: "",
+      type: { name: "", thumbnail: "" },
       image: "",
       description: "",
     });
@@ -295,7 +316,7 @@ const AdminProduct = () => {
       price: "",
       countInStock: "",
       rating: "",
-      type: "",
+      type: { name: "", thumbnail: "" },
       image: "",
       description: "",
     });
@@ -317,12 +338,28 @@ const AdminProduct = () => {
   };
 
   const handleChangeSelect = (value) => {
+    console.log(value);
     setStateProduct({
       ...stateProduct,
-      type: value,
+      type: { name: value },
     });
   };
 
+  const handleChangeSelectDetail = (value) => {
+    // setStateProductDetails({
+    //   ...stateProductDetails,
+    //   type: { name: value },
+    // });
+    setStateProductDetails((prevState) => ({
+      ...prevState,
+      type: {
+        ...prevState.type,
+        name: value,
+      },
+    }));
+  };
+
+  console.log(stateProductDetails.type.name);
   const dataProduct =
     products?.length &&
     products?.map((product) => {
@@ -331,6 +368,8 @@ const AdminProduct = () => {
         key: product._id,
       };
     });
+
+  console.log(dataProduct);
 
   const handleChangeImageProduct = async ({ fileList }) => {
     const file = fileList[0];
@@ -343,6 +382,38 @@ const AdminProduct = () => {
     });
     // handleUpdate();
   };
+
+  const handleChangeThumbnail = async ({ fileList }) => {
+    const file = fileList[0];
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setStateProduct((prevState) => ({
+      ...prevState,
+      type: {
+        ...prevState.type,
+        thumbnail: file.preview,
+      },
+    }));
+    // handleUpdate();
+  };
+
+  const handleChangeThumbnailDetail = async ({ fileList }) => {
+    const file = fileList[0];
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setStateProductDetails((prevState) => ({
+      ...prevState,
+      type: {
+        ...prevState.type,
+        thumbnail: file.preview,
+      },
+    }));
+    // handleUpdate();
+  };
+
+  console.log(stateProduct, stateProductDetails);
 
   const handleChangeImageProductDetails = async ({ fileList }) => {
     const file = fileList[0];
@@ -447,7 +518,7 @@ const AdminProduct = () => {
     },
     {
       title: "Loại sản phẩm",
-      dataIndex: "type",
+      dataIndex: ["type", "name"],
     },
     {
       title: "Giá sản phẩm",
@@ -580,12 +651,54 @@ const AdminProduct = () => {
             >
               <Select
                 name="type"
-                value={stateProduct.type}
+                value={stateProduct?.type?.name}
                 options={renderOptions(typeProduct?.data?.data)}
                 onChange={handleChangeSelect}
               ></Select>
             </Form.Item>
-            {stateProduct.type === "add_type" && (
+            <Form.Item
+              label="Thumbnail Type"
+              name="thumbnail"
+              rules={[{ required: true, message: "Please input your image!" }]}
+            >
+              <WrapperUploadFile maxCount={1} onChange={handleChangeThumbnail}>
+                <Button icon={<UploadOutlined />} />
+                {stateProduct.type.thumbnail && (
+                  <img
+                    src={stateProduct.type.thumbnail}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                    alt="thumbnail"
+                  />
+                )}
+              </WrapperUploadFile>
+            </Form.Item>
+            {/* <Form.Item
+              label="Thumbnail Type"
+              name="thumbnail"
+              rules={[{ required: true, message: "Please input your image!" }]}
+            >
+              <WrapperUploadFile maxCount={1} onChange={handleChangeThumbnail}>
+                <Button icon={<UploadOutlined />} />
+                {stateProduct?.type?.thumbnail && (
+                  <img
+                    src={stateProduct.type?.thumbnail}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                    alt="thumbnail"
+                  />
+                )}
+              </WrapperUploadFile>
+            </Form.Item> */}
+            {stateProduct.type.name === "add_type" && (
               <Form.Item
                 label="Type New"
                 name="newType"
@@ -729,16 +842,57 @@ const AdminProduct = () => {
 
             <Form.Item
               label="Type"
-              name="type"
+              name={["type", "name"]}
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              <Select
+                name={["type", "name"]}
+                value={stateProductDetails?.type?.name}
+                options={renderOptions(typeProduct?.data?.data)}
+                onChange={handleChangeSelectDetail}
+              ></Select>
+            </Form.Item>
+            {/* <Form.Item
+              label="Type Product"
+              name={["type", "name"]}
               rules={[
                 { required: true, message: "Please input your password!" },
               ]}
             >
               <InputComponent
-                value={stateProductDetails.type}
-                onChange={handleChangeDetails}
+                value={
+                  stateProductDetails.type.name && stateProductDetails.type.name
+                }
+                onChange={handleChangeSelectDetail}
                 name="type"
               />
+            </Form.Item> */}
+
+            <Form.Item
+              label="Thumbnail type"
+              name="thumbnail"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <WrapperUploadFile
+                maxCount={1}
+                onChange={handleChangeThumbnailDetail}
+              >
+                <Button icon={<UploadOutlined />} />
+                {stateProductDetails.type.thumbnail && (
+                  <img
+                    src={stateProductDetails.type.thumbnail}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                    alt="avatar"
+                  />
+                )}
+              </WrapperUploadFile>
             </Form.Item>
 
             <Form.Item

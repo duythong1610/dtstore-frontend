@@ -1,90 +1,37 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import laptopThumbnail from "../../assets/img/laptop.jpg";
-import phoneThumbnail from "../../assets/img/phone.jpg";
-import tabletThumbnail from "../../assets/img/tablet.jpg";
-import watchThumbnail from "../../assets/img/watch.jpg";
 
-const TypeProduct = ({ name, handleToggleClassContent }) => {
+const TypeProduct = ({ items, handleToggleClassContent }) => {
+  console.log(items);
   const navigate = useNavigate();
-  const handleNavigateType = (type) => {
-    navigate(
-      `/product/${type
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/ /g, "-")}`,
-      { replace: true, state: type }
-    );
+  const handleNavigateType = (typeCode) => {
+    navigate(`/product/${typeCode}`, { state: typeCode });
     handleToggleClassContent();
   };
 
-  function renderTypeProduct(name) {
-    if (name === "Điện thoại") {
+  function renderTypeProduct() {
+    return items?.map((item) => {
+      console.log(item.name);
       return (
-        <div>
-          <div className="md:hidden">
+        <div
+          onClick={() => handleNavigateType(item?.code)}
+          className="m-auto md:m-0 px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-lg"
+        >
+          <div className="flex flex-col md:flex-row items-center gap-2">
             <img
-              src={phoneThumbnail}
-              alt=""
-              className="w-20 h-20 object-contain"
+              src={item?.thumbnail}
+              alt="thumbnail"
+              className="w-20 h-20 md:w-8 md:h-8 object-contain mix-blend-multiply"
             />
+
+            <h1 className="text-base text-center mt-2 md:m-0">{item?.name}</h1>
           </div>
-          <h1 className="text-base text-center mt-2 md:m-0">{name}</h1>
         </div>
       );
-    }
-    if (name === "Laptop") {
-      return (
-        <div>
-          <div className="md:hidden">
-            <img
-              src={laptopThumbnail}
-              alt=""
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <h1 className="text-base text-center mt-2 md:m-0">{name}</h1>
-        </div>
-      );
-    }
-    if (name === "Đồng hồ") {
-      return (
-        <div>
-          <div className="md:hidden">
-            <img
-              src={watchThumbnail}
-              alt=""
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <h1 className="text-base text-center mt-2 md:m-0">{name}</h1>
-        </div>
-      );
-    }
-    if (name === "Tablet") {
-      return (
-        <div>
-          <div className="md:hidden">
-            <img
-              src={tabletThumbnail}
-              alt=""
-              className="w-20 h-20 object-contain"
-            />
-          </div>
-          <h1 className="text-base text-center mt-2 md:m-0">{name}</h1>
-        </div>
-      );
-    }
+    });
   }
 
-  return (
-    <div
-      onClick={() => handleNavigateType(name)}
-      className="m-auto md:m-0 px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-lg"
-    >
-      {renderTypeProduct(name)}
-    </div>
-  );
+  return <>{renderTypeProduct()}</>;
 };
 
 export default React.memo(TypeProduct);

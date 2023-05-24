@@ -578,7 +578,7 @@ const Comment = ({ idProduct }) => {
           )}
         </div>
       </Loading>
-      <div className="w-full md:w-1/2 flex flex-col gap-2 p-4">
+      <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:pb-4 md:px-0">
         <div className="gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
           <div className="flex gap-4">
             <img

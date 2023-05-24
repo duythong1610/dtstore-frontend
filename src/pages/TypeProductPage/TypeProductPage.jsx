@@ -29,9 +29,10 @@ function TypeProductPage() {
     total: 1,
   });
 
-  const fetchProductType = async (type, page, limit) => {
+  const fetchProductType = async (type) => {
     setLoading(true);
-    const res = await ProductService.getProductType(type, page, limit);
+    const res = await ProductService.getProductByType(type);
+    console.log(res);
     if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
@@ -47,7 +48,7 @@ function TypeProductPage() {
 
   useEffect(() => {
     if (state) {
-      fetchProductType(state, paginate.page, paginate.limit);
+      fetchProductType(state);
     }
   }, [state]);
 
@@ -297,7 +298,7 @@ function TypeProductPage() {
               {renderItem(activeFilter)}
             </div>
           </div>
-          <div className="min-h-[912px] pt-5 md:pt-0">
+          <div className="py-5 md:pt-0">
             <div
               style={{
                 display: "flex",

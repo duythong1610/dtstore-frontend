@@ -4,6 +4,7 @@ import { UserOutlined, SettingOutlined } from "@ant-design/icons";
 import { getItem } from "../../until";
 import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
+import AdminTypeProduct from "../../components/AdminTypeProduct/AdminTypeProduct";
 
 const rootSubmenuKeys = ["user", "product"];
 const AdminPage = () => {
@@ -16,6 +17,8 @@ const AdminPage = () => {
         return <AdminUser />;
       case "product":
         return <AdminProduct />;
+      case "type":
+        return <AdminTypeProduct />;
       default:
         return;
     }
@@ -36,6 +39,7 @@ const AdminPage = () => {
   const items = [
     getItem("Quản lý người dùng", "user", <UserOutlined />),
     getItem("Quản lý sản phẩm", "product", <SettingOutlined />),
+    getItem("Quản lý loại sản phẩm", "type", <SettingOutlined />),
   ];
   return (
     <div

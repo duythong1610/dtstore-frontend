@@ -19,10 +19,10 @@ export const getAllProduct = async (search, limit) => {
   return res.data;
 };
 
-export const getProductType = async (type, page, limit) => {
+export const getProductByType = async (type) => {
   if (type) {
     const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-all?filter=type&filter=${type}&limit=${limit}&page=${page}`
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}`
     );
     return res.data;
   }
@@ -42,6 +42,13 @@ export const getDetailsProduct = async (id) => {
   return res.data;
 };
 
+export const getDetailsTypeProduct = async (id) => {
+  const res = await axios.get(
+    `https://dtstore-backend.onrender.com/api/product/get-details-type/${id}`
+  );
+  return res.data;
+};
+
 export const getAllProductSimilar = async (id) => {
   const res = await axios.get(
     `https://dtstore-backend.onrender.com/api/product/get-product-similar/${id}`
@@ -52,6 +59,14 @@ export const getAllProductSimilar = async (id) => {
 export const createProduct = async (data) => {
   const res = await axios.post(
     "https://dtstore-backend.onrender.com/api/product/create-product",
+    data
+  );
+  return res.data;
+};
+
+export const createTypeProduct = async (data) => {
+  const res = await axios.post(
+    "https://dtstore-backend.onrender.com/api/product/create-type-product",
     data
   );
   return res.data;
@@ -113,6 +128,19 @@ export const likeComment = async (id, data, access_token) => {
 export const updateProduct = async (id, access_token, data) => {
   const res = await axiosJWT.put(
     `https://dtstore-backend.onrender.com/api/product/update-product/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const updateTypeProduct = async (id, access_token, data) => {
+  const res = await axiosJWT.put(
+    `https://dtstore-backend.onrender.com/api/product/update-type-product/${id}`,
     data,
     {
       headers: {

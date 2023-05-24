@@ -23,6 +23,8 @@ import SkeletonComponent from "../SkeletonComponent/SkeletonComponent";
 import history from "../../history";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useCallback } from "react";
+import { useRef } from "react";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -34,10 +36,12 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const order = useSelector((state) => state.order);
   // const [isNavigatedBack, setIsNavigatedBack] = useState(false);
   const [numProduct, setNumProduct] = useState(1);
-  const handleScroll = () => {
-    const position = window.pageYOffset;
+  const [isFetched, setIsFetched] = useState(false);
+
+  const handleScroll = useCallback(() => {
+    const position = window.scrollY;
     setScrollPosition(position);
-  };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -56,6 +60,13 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     }
   };
 
+  useEffect(() => {
+    if (idProduct) {
+      fetchProductDetails();
+      setIsFetched(true);
+    }
+  }, [idProduct]);
+
   const { isLoading, data: productDetails } = useQuery(
     ["product-details", idProduct],
     fetchProductDetails,
@@ -64,6 +75,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     }
   );
 
+  console.log(productDetails);
   const sendData = () => {
     cbProductDetails(productDetails);
   };
@@ -160,9 +172,9 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
         ) : (
           <>
             <Col className="max-w-full md:pr-3" span={12}>
-              <LazyLoadImage
-                effect="blur"
-                className="h-60 md:h-96 w-full object-contain block rounded-xl"
+              <img
+                // effect="blur"
+                className={`h-60 md:h-96 w-full object-contain block rounded-xl`}
                 src={productDetails?.image}
                 alt="img product"
                 preview={false}
@@ -294,7 +306,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                 }
               >
                 <ButtonComponent
-                className="hover:opacity-80"
+                  className="hover:opacity-80"
                   size={40}
                   style={{
                     color: "#fff",

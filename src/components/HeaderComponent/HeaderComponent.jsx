@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Badge, Col, Popover, Row } from "antd";
 // import Search from "antd/lib/transfer/search";
 import { WrapperContentPopup, WrapperHeaderAccount } from "./style";
@@ -24,11 +24,14 @@ import AccountNavMobile from "../AccountNavMobile/AccountNavMobile";
 import logo from "../../assets/img/logo.png";
 import default_avatar from "../../assets/img/default_avatar.png";
 import TypeProduct from "../TypeProduct/TypeProduct";
+import { convertPrice } from "../../until";
 
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
   const [isToggle, setIsToggle] = useState(false);
   const [isToggleContent, setIsToggleContent] = useState(false);
+  const [allProducts, setAllProducts] = useState();
+  const [suggestions, setSuggestions] = useState([]);
 
   const [active, setActive] = useState(false);
   const [activeCategory, setActiveCategory] = useState(false);
@@ -48,6 +51,7 @@ function HeaderComponent() {
     }
   };
 
+  console.log(allProducts);
   const handleLogout = async () => {
     setLoading(true);
     await UserService.logoutUser();
@@ -59,11 +63,18 @@ function HeaderComponent() {
   };
 
   const onSearch = (e) => {
-    setSearchText(e.target.value);
+    const value = e.target.value;
+    setSearchText(value);
+    const filteredProducts = allProducts.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(filteredProducts);
   };
 
+  console.log(suggestions);
   const handleSearch = () => {
     dispatch(searchProduct(searchText));
+    setSearchText("");
   };
 
   const handleToggleClass = () => {
@@ -75,6 +86,14 @@ function HeaderComponent() {
     setActiveCategory((current) => !current);
   };
 
+  const fetchAllProduct = useCallback(async () => {
+    setLoading(true);
+    const res = await ProductService.getAllProduct();
+    setLoading(false);
+    setAllProducts(res.data);
+    return res;
+  }, []);
+
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
 
@@ -84,6 +103,7 @@ function HeaderComponent() {
 
   useEffect(() => {
     fetchAllTypeProduct();
+    fetchAllProduct();
   }, []);
 
   useEffect(() => {
@@ -151,10 +171,7 @@ function HeaderComponent() {
                 />
               </span>
             </Col>
-            <Col
-              span={11}
-              // className="flex-none md:flex-initial m-auto md:m-0"
-            >
+            <Col span={11} className="relative">
               <ButtonInputSearch
                 className={
                   pathname === "/profile-user" && pathname === "/"
@@ -166,9 +183,49 @@ function HeaderComponent() {
                 textButton="Tìm kiếm"
                 enterButton="Search"
                 size="large"
+                value={searchText}
                 onChange={onSearch}
                 onClick={handleSearch}
               />
+              {searchText && (
+                <ul className="absolute bg-white z-50 p-4 w-full shadow-lg rounded-md max-h-[50vh] overflow-auto">
+                  {searchText &&
+                    (suggestions.length > 0 ? (
+                      suggestions.map((product) => (
+                        <li
+                          key={product._id}
+                          className="cursor-pointer p-2 hover:bg-slate-200 rounded-md"
+                          onClick={() => {
+                            navigate(`/product-detail/${product?._id}`);
+                            setSearchText("");
+                          }}
+                        >
+                          <div className="flex gap-2 items-center">
+                            <div>
+                              <img
+                                src={product.image}
+                                alt=""
+                                width={32}
+                                height={32}
+                                className="object-contain mix-blend-multiply"
+                              />
+                            </div>
+                            <div>
+                              <h1 className="mb-0">{product.name}</h1>
+                              <p className="text-red-500 mb-0">
+                                {convertPrice(product.price)}
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                      ))
+                    ) : (
+                      <h1 className="text-center">
+                        Không tìm thấy kết quả tương ứng
+                      </h1>
+                    ))}
+                </ul>
+              )}
             </Col>
             <Col
               className="flex flex-none justify-center md:gap-3 md:justify-end max-w-none md:flex-auto fixed md:static bottom-0 left-0 right-0 bg-white z-10"
@@ -328,16 +385,11 @@ function HeaderComponent() {
             <div className="p-5">
               <h1 className="text-xl">Danh mục sản phẩm</h1>
               <div className="grid grid-cols-2">
-                {typeProduct.map((item, index) => {
-                  return (
-                    <TypeProduct
-                      key={index}
-                      name={item}
-                      // thumbnail={thumb}
-                      handleToggleClassContent={handleToggleClassContent}
-                    />
-                  );
-                })}
+                <TypeProduct
+                  items={typeProduct}
+                  // thumbnail={thumb}
+                  handleToggleClassContent={handleToggleClassContent}
+                />
               </div>
             </div>
           </div>
