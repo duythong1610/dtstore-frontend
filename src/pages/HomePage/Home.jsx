@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonMore } from "./index";
 import SliderComponent from "../../components/Slider/SliderComponent";
@@ -37,8 +37,6 @@ import { convertPrice } from "../../until";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { useMemo } from "react";
-import { useCallback } from "react";
 import { Helmet } from "react-helmet";
 
 function Home() {
@@ -49,11 +47,13 @@ function Home() {
   const searchDebounce = useDebounce(searchProductMobile, 1000);
   const [typeProduct, setTypeProduct] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [topProducts, setTopProducts] = useState("");
+  // const [topProducts, setTopProducts] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [limit, setLimit] = useState(10);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [loadingLimit, setLoadingLimit] = useState(false);
+  const productsRef = useRef(null);
 
   const handleGetUserDetails = async () => {
     const res = await UserService.getDetailsUser(user?.id, user?.access_token);
@@ -64,16 +64,59 @@ function Home() {
     handleGetUserDetails();
   }, []);
 
-  const fetchAllProduct = useCallback(
-    async (context) => {
-      const limit = context?.queryKey && context?.queryKey[1];
-      const search = context?.queryKey && context?.queryKey[2];
+  console.log(suggestions);
+  console.log(productsRef.current);
 
-      const res = await ProductService.getAllProduct(search, limit);
-      return res;
-    },
-    [limit]
+  const fetchAllProduct = async (context) => {
+    const limit = context?.queryKey && context?.queryKey[1];
+    const search = context?.queryKey && context?.queryKey[2];
+    setLoadingLimit(true);
+    const res = await ProductService.getAllProduct(search, limit);
+    setLoadingLimit(false);
+    return res;
+  };
+
+  const { data: products, isPreviousData } = useQuery(
+    ["products", limit, searchDebounce],
+    fetchAllProduct,
+    {
+      retry: 3,
+      retryDelay: 1000,
+      keepPreviousData: true,
+    }
   );
+
+  const filteredProducts = async () => {
+    const res = await ProductService.getAllProduct();
+    console.log(res);
+    if (res) {
+      // setAllProducts(res.data);
+    }
+    return res.data;
+  };
+
+  const { data: allProducts } = useQuery(["allProducts"], filteredProducts, {
+    retry: 3,
+    retryDelay: 1000,
+    keepPreviousData: true,
+  });
+
+  useEffect(() => {
+    productsRef.current = allProducts;
+  }, [allProducts.data]);
+
+  const fetchTopProducts = async () => {
+    setLoading(true);
+    const res = await ProductService.getTopProducts();
+    setLoading(false);
+    return res.data;
+  };
+
+  const { data: topProducts } = useQuery(["topProducts"], fetchTopProducts, {
+    retry: 3,
+    retryDelay: 1000,
+    keepPreviousData: true,
+  });
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
@@ -83,14 +126,10 @@ function Home() {
     return res;
   };
 
-  const onSearch = (e) => {
-    const value = e.target.value;
-    setSearchText(value);
-    const filteredProducts = allProducts?.data.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setSuggestions(filteredProducts);
-  };
+  useEffect(() => {
+    fetchAllTypeProduct();
+    fetchTopProducts();
+  }, []);
 
   const handleProductDetails = async (id) => {
     const isExisted = userInfo?.viewedProducts?.includes(id);
@@ -123,53 +162,21 @@ function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchAllTypeProduct();
-    filteredProducts();
-  }, []);
-
   console.log("re-render");
-
-  const {
-    isLoading,
-    data: products,
-    isPreviousData,
-  } = useQuery(["products", limit, searchDebounce], fetchAllProduct, {
-    retry: 3,
-    retryDelay: 1000,
-    keepPreviousData: true,
-  });
 
   console.log(suggestions);
 
-  const filteredProducts = useCallback(async () => {
-    setLoading(true);
-    const res = await ProductService.getAllProduct();
-    console.log(res);
-    if (res) {
-      setLoading(false);
-      // setAllProducts(res.data);
-    }
-    return res.data;
-  }, []);
-
-  const { data: allProducts } = useQuery(
-    ["products", limit, searchDebounce],
-    filteredProducts
-  );
+  const onSearch = (e) => {
+    const value = e.target.value;
+    setSearchText(value);
+    const filteredProducts = productsRef.current?.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(filteredProducts);
+  };
 
   console.log(allProducts);
-  useEffect(() => {
-    if (Array.isArray(allProducts?.data)) {
-      const sortedProducts = allProducts.data
-        .sort((a, b) => b.sold - a.sold)
-        .slice(0, 10);
-      setTopProducts(sortedProducts);
-    }
-  }, [allProducts?.data]);
-
-  console.log(topProducts);
-  console.log(typeProduct);
+  console.log(loadingLimit);
 
   const isMobile = window.innerWidth <= 768;
 
@@ -212,11 +219,11 @@ function Home() {
 
         {searchText && (
           <ul className="absolute bg-white top-[65px] z-50 p-4 w-full shadow-lg max-h-[50vh] overflow-auto">
-            {suggestions.length > 0 && (
-              <h1>Hiển thị {suggestions.length} kết quả tìm kiếm</h1>
+            {suggestions?.length > 0 && (
+              <h1>Hiển thị {suggestions?.length} kết quả tìm kiếm</h1>
             )}
             {searchText &&
-              (suggestions.length > 0 ? (
+              (suggestions?.length > 0 ? (
                 suggestions.map((product) => (
                   <li
                     key={product._id}
@@ -266,17 +273,17 @@ function Home() {
           />
 
           <div>
-            {true ? (
+            {loading ? (
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
-              <Divider className={`${true ? "hidden" : "block"} !mb-0`}>
+              <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
                 <p className="font-bold text-xl md:text-[26px] mb-0">
                   {" "}
                   Sản phẩm bán chạy
                 </p>
               </Divider>
             )}
-            {true ? (
+            {loading ? (
               <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
                 {Array.from({ length: itemLength }).map((_) => {
                   return (
@@ -403,32 +410,30 @@ function Home() {
           </div>
 
           <div className="min-h-[930px]">
-            {isLoading ? (
+            {loadingLimit ? (
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
-              <Divider className={`${isLoading ? "hidden" : "block"} !mb-0`}>
+              <Divider className={`${loadingLimit ? "hidden" : "block"} !mb-0`}>
                 <p className="font-bold text-xl md:text-[26px] mb-0">
                   {" "}
                   Tất cả sản phẩm
                 </p>
               </Divider>
             )}
-            {isLoading ? (
-              <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-                {Array.from({ length: products?.data?.length || 0 }).map(
-                  (_, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col gap-2 min-h-[351px]"
-                    >
-                      <div className="skeleton h-36 md:h-60 w-full rounded-md" />
-                      <div className="skeleton h-6 w-full rounded-md" />
-                      <div className="skeleton h-[18px] w-full rounded-md" />
-                      <div className="skeleton h-[18px] w-2/3 rounded-md" />
-                      <div className="skeleton h-5 w-full rounded-md" />
-                    </div>
-                  )
-                )}
+            {loadingLimit ? (
+              <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 min-h-[821px] md:grid-cols-4 lg:grid-cols-5">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col gap-2 min-h-[351px]"
+                  >
+                    <div className="skeleton h-36 md:h-60 w-full rounded-md" />
+                    <div className="skeleton h-6 w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-full rounded-md" />
+                    <div className="skeleton h-[18px] w-2/3 rounded-md" />
+                    <div className="skeleton h-5 w-full rounded-md" />
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="grid gap-5 py-4 px-4 md:px-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
@@ -460,24 +465,28 @@ function Home() {
                   : "flex justify-center"
               }
             >
-              <WrapperButtonMore
-                textButton={isPreviousData ? "Loading..." : "Xem thêm"}
-                type="outline"
-                styleButton={{
-                  backgroundColor: "#422AFB",
-                  marginBottom: "20px",
-                  color: "#fff",
-                  width: "240px",
-                  height: "38px",
-                  borderRadius: "20px",
-                  fontWeight: 500,
-                  display:
-                    products?.total === products?.data.length
-                      ? "none"
-                      : "block",
-                }}
-                onClick={() => setLimit((prev) => prev + 10)}
-              />
+              {loadingLimit ? (
+                <div className="skeleton h-7 w-[240px] rounded-[20px]" />
+              ) : (
+                <WrapperButtonMore
+                  textButton={isPreviousData ? "Loading..." : "Xem thêm"}
+                  type="outline"
+                  styleButton={{
+                    backgroundColor: "#422AFB",
+                    marginBottom: "20px",
+                    color: "#fff",
+                    width: "240px",
+                    height: "38px",
+                    borderRadius: "20px",
+                    fontWeight: 500,
+                    display:
+                      products?.total === products?.data.length
+                        ? "none"
+                        : "block",
+                  }}
+                  onClick={() => setLimit((prev) => prev + 10)}
+                />
+              )}
             </div>
           </div>
 

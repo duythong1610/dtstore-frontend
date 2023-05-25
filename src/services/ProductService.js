@@ -19,6 +19,13 @@ export const getAllProduct = async (search, limit) => {
   return res.data;
 };
 
+export const getTopProducts = async () => {
+  const res = await axios.get(
+    "https://dtstore-backend.onrender.com/api/product/get-top-products"
+  );
+  return res.data;
+};
+
 export const getProductByType = async (type) => {
   if (type) {
     const res = await axios.get(
