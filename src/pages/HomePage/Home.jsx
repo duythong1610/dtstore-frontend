@@ -53,7 +53,6 @@ function Home() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [loadingLimit, setLoadingLimit] = useState(false);
-  const productsRef = useRef(null);
 
   const handleGetUserDetails = async () => {
     const res = await UserService.getDetailsUser(user?.id, user?.access_token);
@@ -63,9 +62,6 @@ function Home() {
   useEffect(() => {
     handleGetUserDetails();
   }, []);
-
-  console.log(suggestions);
-  console.log(productsRef.current);
 
   const fetchAllProduct = async (context) => {
     const limit = context?.queryKey && context?.queryKey[1];
@@ -101,16 +97,13 @@ function Home() {
     keepPreviousData: true,
   });
 
-  useEffect(() => {
-    productsRef.current = allProducts;
-  }, [allProducts.data]);
-
   const fetchTopProducts = async () => {
     setLoading(true);
     const res = await ProductService.getTopProducts();
     setLoading(false);
     return res.data;
   };
+  console.log(allProducts);
 
   const { data: topProducts } = useQuery(["topProducts"], fetchTopProducts, {
     retry: 3,
@@ -169,7 +162,7 @@ function Home() {
   const onSearch = (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filteredProducts = productsRef.current?.filter((product) =>
+    const filteredProducts = allProducts?.filter((product) =>
       product.name.toLowerCase().includes(value.toLowerCase())
     );
     setSuggestions(filteredProducts);
