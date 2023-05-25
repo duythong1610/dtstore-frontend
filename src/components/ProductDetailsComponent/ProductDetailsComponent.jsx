@@ -60,12 +60,12 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     }
   };
 
-  useEffect(() => {
-    if (idProduct) {
-      fetchProductDetails();
-      setIsFetched(true);
-    }
-  }, [idProduct]);
+  // useEffect(() => {
+  //   if (idProduct) {
+  //     fetchProductDetails();
+  //     setIsFetched(true);
+  //   }
+  // }, [idProduct]);
 
   const { isLoading, data: productDetails } = useQuery(
     ["product-details", idProduct],
@@ -344,4 +344,4 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   );
 }
 
-export default ProductDetailsComponent;
+export default React.memo(ProductDetailsComponent);

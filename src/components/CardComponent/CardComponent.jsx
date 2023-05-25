@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleNameProduct,
   WrapperCardStyle,
@@ -27,11 +27,14 @@ const CardComponent = ({
   type,
   name,
   id,
+  userInfo,
 }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+
   const handleProductDetails = async () => {
-    if (user?.id) {
+    const isExisted = userInfo?.viewedProducts.includes(id);
+    if (user?.id && !isExisted) {
       await UserService.viewedProducts(id, user?.id, user?.access_token);
       navigate(`/product-detail/${id}`);
       window.scrollTo({

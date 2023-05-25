@@ -628,4 +628,4 @@ const Comment = ({ idProduct }) => {
   );
 };
 
-export default Comment;
+export default React.memo(Comment);

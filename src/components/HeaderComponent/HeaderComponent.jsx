@@ -51,7 +51,6 @@ function HeaderComponent() {
     }
   };
 
-  console.log(allProducts);
   const handleLogout = async () => {
     setLoading(true);
     await UserService.logoutUser();
@@ -71,7 +70,6 @@ function HeaderComponent() {
     setSuggestions(filteredProducts);
   };
 
-  console.log(suggestions);
   const handleSearch = () => {
     dispatch(searchProduct(searchText));
     setSearchText("");
@@ -81,10 +79,10 @@ function HeaderComponent() {
     setIsToggle((current) => !current);
   };
 
-  const handleToggleClassContent = () => {
+  const handleToggleClassContent = useCallback(() => {
     setIsToggleContent((current) => !current);
     setActiveCategory((current) => !current);
-  };
+  }, []);
 
   const handleClearSearchText = () => {
     setSearchText("");
@@ -100,7 +98,6 @@ function HeaderComponent() {
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
-
     setTypeProduct(res.data);
     return res;
   };
@@ -410,4 +407,4 @@ function HeaderComponent() {
   );
 }
 
-export default HeaderComponent;
+export default React.memo(HeaderComponent);

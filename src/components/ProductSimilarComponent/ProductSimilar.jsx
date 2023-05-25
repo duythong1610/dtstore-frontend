@@ -185,4 +185,4 @@ const ProductSimilar = ({ idProduct }) => {
   );
 };
 
-export default ProductSimilar;
+export default React.memo(ProductSimilar);

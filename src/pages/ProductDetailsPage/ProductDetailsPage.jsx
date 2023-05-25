@@ -5,13 +5,14 @@ import { Breadcrumb } from "antd";
 import Comment from "../../components/Comment/Comment";
 import ProductSimilar from "../../components/ProductSimilarComponent/ProductSimilar";
 import DescriptionProduct from "../../components/DescriptionProduct/DescriptionProduct";
+import { useCallback } from "react";
 
 function ProductDetailsPage() {
   const [productDetails, setProductDetails] = useState("");
   const { id } = useParams();
-  const cbProductDetailsData = (productDetails) => {
+  const cbProductDetailsData = useCallback((productDetails) => {
     setProductDetails(productDetails);
-  };
+  }, []);
 
   useEffect(() => {
     if (productDetails?.name) {
@@ -19,6 +20,8 @@ function ProductDetailsPage() {
       document.title = pageTitle;
     }
   }, [productDetails?.name]);
+
+  console.log(productDetails)
 
   return (
     <>
@@ -31,7 +34,9 @@ function ProductDetailsPage() {
                 title: <Link to="/">Trang chủ</Link>,
               },
               {
-                title: ` ${productDetails?.type ? productDetails?.type : ""}`,
+                title: ` ${
+                  productDetails?.type?.name ? productDetails?.type : ""
+                }`,
               },
               {
                 title: `${productDetails?.name ? productDetails?.name : ""}`,
@@ -53,4 +58,4 @@ function ProductDetailsPage() {
   );
 }
 
-export default ProductDetailsPage;
+export default React.memo(ProductDetailsPage);

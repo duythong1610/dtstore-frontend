@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const TypeProduct = ({ items, handleToggleClassContent }) => {
-  console.log(items);
+  console.log("re-render");
   const navigate = useNavigate();
   const handleNavigateType = (typeCode) => {
     navigate(`/product/${typeCode}`, { state: typeCode });

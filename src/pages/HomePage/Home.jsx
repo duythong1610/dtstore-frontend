@@ -44,17 +44,26 @@ import { Helmet } from "react-helmet";
 function Home() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const [userInfo, setUserInfo] = useState();
   const searchProductMobile = useSelector((state) => state.product.search);
   const searchDebounce = useDebounce(searchProductMobile, 1000);
   const [typeProduct, setTypeProduct] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [allProducts, setAllProducts] = useState("");
+  const [topProducts, setTopProducts] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [limit, setLimit] = useState(10);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  console.log("re-render");
+  const handleGetUserDetails = async () => {
+    const res = await UserService.getDetailsUser(user?.id, user?.access_token);
+    setUserInfo(res.data);
+  };
+  console.log(userInfo);
+  useEffect(() => {
+    handleGetUserDetails();
+  }, []);
+
   const fetchAllProduct = useCallback(
     async (context) => {
       const limit = context?.queryKey && context?.queryKey[1];
@@ -77,14 +86,15 @@ function Home() {
   const onSearch = (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filteredProducts = allProducts.filter((product) =>
+    const filteredProducts = allProducts?.data.filter((product) =>
       product.name.toLowerCase().includes(value.toLowerCase())
     );
     setSuggestions(filteredProducts);
   };
 
   const handleProductDetails = async (id) => {
-    if (user?.id) {
+    const isExisted = userInfo?.viewedProducts?.includes(id);
+    if (user?.id && !isExisted) {
       await UserService.viewedProducts(id, user?.id, user?.access_token);
       navigate(`/product-detail/${id}`);
       window.scrollTo({
@@ -132,18 +142,31 @@ function Home() {
 
   console.log(products);
 
-  const filteredProducts = async () => {
+  const filteredProducts = useCallback(async () => {
     setLoading(true);
     const res = await ProductService.getAllProduct();
     if (res) {
       setLoading(false);
-      setAllProducts(res.data);
+      // setAllProducts(res.data);
     }
-  };
+  }, []);
 
-  const topProducts =
-    Array.isArray(allProducts) &&
-    allProducts.sort((a, b) => b.sold - a.sold).slice(0, 10);
+  const { isLoadingAllProducts, data: allProducts } = useQuery(
+    ["products", limit, searchDebounce],
+    filteredProducts
+  );
+
+  useEffect(() => {
+    if (Array.isArray(allProducts?.data)) {
+      const sortedProducts = allProducts.data
+        .sort((a, b) => b.sold - a.sold)
+        .slice(0, 10);
+      setTopProducts(sortedProducts);
+    }
+  }, [allProducts?.data]);
+
+  console.log(topProducts);
+  console.log(typeProduct);
 
   const isMobile = window.innerWidth <= 768;
 
@@ -158,7 +181,7 @@ function Home() {
         <TypeProduct items={typeProduct} />
       </div>
       <div className="relative">
-        <div className="px-5 py-3 fixed top-0 left-0 right-0 z-50 bg-white md:hidden">
+        <div className="px-5 py-3 fixed top-0 left-0 right-0 z-[11] bg-white md:hidden">
           <div className="flex justify-between border border-zinc-300 w-full rounded-lg overflow-hidden">
             <div className="flex items-center flex-1">
               <input
@@ -167,6 +190,7 @@ function Home() {
                 className="outline-none px-3 py-2 h-10 w-full"
                 onChange={onSearch}
                 onKeyDown={handleSearchEnter}
+                value={searchText}
               />
               {searchText && (
                 <CloseOutlined
@@ -239,17 +263,19 @@ function Home() {
           />
 
           <div>
-            {loading ? (
+            {isLoadingAllProducts ? (
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
-              <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
+              <Divider
+                className={`${isLoadingAllProducts ? "hidden" : "block"} !mb-0`}
+              >
                 <p className="font-bold text-xl md:text-[26px] mb-0">
                   {" "}
                   Sản phẩm bán chạy
                 </p>
               </Divider>
             )}
-            {loading ? (
+            {isLoadingAllProducts ? (
               <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
                 {Array.from({ length: itemLength }).map((_) => {
                   return (
@@ -377,7 +403,7 @@ function Home() {
 
           <div className="min-h-[930px]">
             {isLoading ? (
-              <div className="skeleton h-7 md:w-[30%] w-[60%] mt-5 m-auto rounded-3xl"></div>
+              <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
               <Divider className={`${isLoading ? "hidden" : "block"} !mb-0`}>
                 <p className="font-bold text-xl md:text-[26px] mb-0">
@@ -419,6 +445,7 @@ function Home() {
                       sold={product.sold}
                       discount={product.discount}
                       id={product._id}
+                      userInfo={userInfo}
                     />
                   );
                 })}
