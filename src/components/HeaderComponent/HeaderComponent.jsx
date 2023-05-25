@@ -91,6 +91,7 @@ function HeaderComponent() {
   const fetchAllProduct = useCallback(async () => {
     setLoading(true);
     const res = await ProductService.getAllProduct();
+    console.log(res);
     setLoading(false);
     setAllProducts(res.data);
     return res;

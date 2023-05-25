@@ -226,7 +226,7 @@ const OrderPage = () => {
           state: {
             priceVoucher: priceVoucher,
             totalPrice: isVoucher
-              ? `${priceAddVoucher(totalPriceMemo)}`
+              ? +`${priceAddVoucher(totalPriceMemo)}`
               : deliveryPriceMemo
               ? totalPriceMemo - deliveryPriceMemo - priceVoucher
               : totalPriceMemo,
@@ -554,7 +554,7 @@ const OrderPage = () => {
               </WrapperLeft>
 
               <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
-                <div className="w-full fixed md:sticky bottom-0 left-0 right-0 md:top-5">
+                <div className="w-full fixed md:sticky z-10 bottom-0 left-0 right-0 md:top-5">
                   <div
                     className={
                       moreInfoOrder

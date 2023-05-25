@@ -140,22 +140,25 @@ function Home() {
     keepPreviousData: true,
   });
 
-  console.log(products);
+  console.log(suggestions);
 
   const filteredProducts = useCallback(async () => {
     setLoading(true);
     const res = await ProductService.getAllProduct();
+    console.log(res);
     if (res) {
       setLoading(false);
       // setAllProducts(res.data);
     }
+    return res.data;
   }, []);
 
-  const { isLoadingAllProducts, data: allProducts } = useQuery(
+  const { data: allProducts } = useQuery(
     ["products", limit, searchDebounce],
     filteredProducts
   );
 
+  console.log(allProducts);
   useEffect(() => {
     if (Array.isArray(allProducts?.data)) {
       const sortedProducts = allProducts.data
@@ -263,19 +266,17 @@ function Home() {
           />
 
           <div>
-            {isLoadingAllProducts ? (
+            {true ? (
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
-              <Divider
-                className={`${isLoadingAllProducts ? "hidden" : "block"} !mb-0`}
-              >
+              <Divider className={`${true ? "hidden" : "block"} !mb-0`}>
                 <p className="font-bold text-xl md:text-[26px] mb-0">
                   {" "}
                   Sản phẩm bán chạy
                 </p>
               </Divider>
             )}
-            {isLoadingAllProducts ? (
+            {true ? (
               <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
                 {Array.from({ length: itemLength }).map((_) => {
                   return (
