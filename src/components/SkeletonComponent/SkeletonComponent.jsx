@@ -20,8 +20,8 @@ const SkeletonComponent = () => {
         <div className="skeleton h-9 w-1/3 rounded-md" />
 
         <div className="md:flex gap-4 hidden">
-          <div className="skeleton h-12 w-[220px] " />
-          <div className="skeleton h-12 w-[220px]" />
+          <div className="skeleton h-12 w-[220px] rounded-md" />
+          <div className="skeleton h-12 w-[220px] rounded-md" />
         </div>
       </Col>
     </Row>

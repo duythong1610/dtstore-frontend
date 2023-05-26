@@ -12,8 +12,12 @@ const FooterComponent = () => {
   return (
     <div
       className={`${
-        (pathname === "/order" || pathname === "/payment") && "hidden md:block"
-      } th pb-[62px] md:pb-0`}
+        (pathname === "/order" ||
+          pathname === "/payment" ||
+          pathname === "/my-order" ||
+          pathname === "/profile-user") &&
+        "hidden md:block"
+      } pb-[62px] md:pb-0`}
     >
       <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white p-4">
         <div className="md:w-[30%] md:max-w-[30%]">

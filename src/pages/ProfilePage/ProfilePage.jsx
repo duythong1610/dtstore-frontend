@@ -319,6 +319,13 @@ const ProfilePage = () => {
 
                       <EditOutlined className="absolute flex items-center justify-center right-2 bottom-2 w-6 h-6 text-white  bg-slate-600 text-sm rounded-full" />
                     </WrapperUploadFile>
+                    <div className="hidden md:block">
+                      <h1>Dung lượng file tối đa 1 MB</h1>
+                      <div>
+                        <span className="font-medium">Định dạng: </span>{" "}
+                        <span>.JPEG, .PNG</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

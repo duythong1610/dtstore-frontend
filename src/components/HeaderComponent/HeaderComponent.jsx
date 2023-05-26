@@ -393,7 +393,7 @@ function HeaderComponent() {
             />
             <div className="p-5">
               <h1 className="text-xl">Danh mục sản phẩm</h1>
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-2 max-h-[80vh] overflow-auto scrollbar-item">
                 <TypeProduct
                   items={typeProduct}
                   // thumbnail={thumb}

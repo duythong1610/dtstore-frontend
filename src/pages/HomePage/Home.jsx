@@ -180,9 +180,7 @@ function Home() {
         <title>Dtstore - Trang chủ</title>
       </Helmet>
       {/* <Loading isLoading={isLoading}> */}
-      <div className="hidden md:flex my-2 text-base font-normal m-auto text-zinc-400 max-w-7xl ">
-        <TypeProduct items={typeProduct} />
-      </div>
+
       <div className="relative">
         <div className="px-5 py-3 fixed top-0 left-0 right-0 z-[11] bg-white md:hidden">
           <div className="flex justify-between border border-zinc-300 w-full rounded-lg overflow-hidden">
@@ -265,6 +263,15 @@ function Home() {
             arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
           />
 
+          <div className="hidden md:block">
+            <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
+              <p className="font-bold text-xl md:text-[26px] mb-0"> Danh mục</p>
+            </Divider>
+            <div className="hidden md:flex mt-4 mb-8 text-base md:gap-10 justify-center font-normal m-auto text-zinc-400 max-w-7xl ">
+              <TypeProduct items={typeProduct} />
+            </div>
+          </div>
+
           <div>
             {loading ? (
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
@@ -322,7 +329,7 @@ function Home() {
                             <LazyLoadImage
                               effect="blur"
                               src={product?.image}
-                              className="my-2 md:my-4 mx-0 object-contain"
+                              className="my-2 md:my-4 mx-0 object-contain md:min-h-[218px] aspect-square"
                             />
                             {product?.countInStock === 0 && (
                               <span

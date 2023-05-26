@@ -15,16 +15,16 @@ const TypeProduct = ({ items, handleToggleClassContent }) => {
       return (
         <div
           onClick={() => handleNavigateType(item?.code)}
-          className="m-auto md:m-0 px-4 py-2 cursor-pointer hover:bg-zinc-200 rounded-lg"
+          className="m-auto md:m-0 px-4 py-2 md:p-2 cursor-pointer rounded-xl bg-white shadow-sm"
         >
-          <div className="flex flex-col md:flex-row items-center gap-2">
+          <div className="flex flex-col items-center gap-2">
             <img
               src={item?.thumbnail}
               alt="thumbnail"
-              className="w-20 h-20 md:w-8 md:h-8 object-contain mix-blend-multiply"
+              className="w-20 h-20 md:w-14 md:h-14 object-contain mix-blend-multiply"
             />
 
-            <h1 className="text-base text-center mt-2 md:m-0">{item?.name}</h1>
+            <h1 className="text-base text-center md:hidden">{item?.name}</h1>
           </div>
         </div>
       );
