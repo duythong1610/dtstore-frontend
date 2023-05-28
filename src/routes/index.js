@@ -21,29 +21,29 @@ export const routes = [
   },
 
   {
-    path: "/order",
+    path: "/gio-hang",
     component: OrderPage,
     isDefaultLayout: true,
   },
 
   {
-    path: "/my-order",
+    path: "/don-hang-cua-toi",
     component: MyOrder,
     isDefaultLayout: true,
   },
   {
-    path: "/viewed-products",
+    path: "/san-pham-da-xem",
     component: ViewedProductsPage,
     isDefaultLayout: true,
   },
 
   {
-    path: "/details-order/:id",
+    path: "/chi-tiet-don-hang/:id",
     component: DetailsOrderPage,
     isDefaultLayout: true,
   },
   {
-    path: "/payment",
+    path: "/thanh-toan",
     component: PaymentPage,
     isDefaultLayout: true,
   },
@@ -59,7 +59,7 @@ export const routes = [
     isDefaultLayout: true,
   },
   {
-    path: "product/:type",
+    path: "san-pham/:type/:id",
     component: TypeProductPage,
     isDefaultLayout: true,
   },
@@ -75,7 +75,7 @@ export const routes = [
     isDefaultLayout: false,
   },
   {
-    path: "/product-detail/:id",
+    path: "/chi-tiet-san-pham/:id",
     component: ProductDetailsPage,
     isDefaultLayout: true,
   },
@@ -85,7 +85,7 @@ export const routes = [
     isDefaultLayout: false,
   },
   {
-    path: "/profile-user",
+    path: "/thong-tin-tai-khoan",
     component: ProfilePage,
     isDefaultLayout: true,
   },

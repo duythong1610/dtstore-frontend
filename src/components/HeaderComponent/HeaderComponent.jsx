@@ -119,7 +119,7 @@ function HeaderComponent() {
     <div className="hidden md:block">
       <WrapperContentPopup
         onClick={() => {
-          navigate("/profile-user");
+          navigate("/thong-tin-tai-khoan");
         }}
       >
         Thông tin tài khoản
@@ -127,7 +127,7 @@ function HeaderComponent() {
 
       <WrapperContentPopup
         onClick={() => {
-          navigate("/my-order", {
+          navigate("/don-hang-cua-toi", {
             state: { id: user?.id, token: user?.access_token },
           });
         }}
@@ -157,8 +157,8 @@ function HeaderComponent() {
           <Row
             className={
               pathname !== "/" &&
-              pathname !== "/profile-user" &&
-              !pathname.startsWith("/product/")
+              pathname !== "/thong-tin-tai-khoan" &&
+              !pathname.startsWith("/san-pham/")
                 ? "!hidden md:!flex md:items-center"
                 : "md:flex flex-nowrap md:items-center md:w-7xl"
             }
@@ -176,7 +176,7 @@ function HeaderComponent() {
             <Col span={11} className="relative">
               <ButtonInputSearch
                 className={
-                  pathname === "/profile-user" && pathname === "/"
+                  pathname === "/thong-tin-tai-khoan" && pathname === "/"
                     ? "hidden md:block"
                     : "hidden md:block"
                 }
@@ -205,7 +205,7 @@ function HeaderComponent() {
                           key={product._id}
                           className="cursor-pointer p-2 hover:bg-slate-100 rounded-md"
                           onClick={() => {
-                            navigate(`/product-detail/${product?._id}`);
+                            navigate(`/chi-tiet-san-pham/${product?._id}`);
                             setSearchText("");
                           }}
                         >
@@ -334,7 +334,7 @@ function HeaderComponent() {
                 </div>
               </Loading>
               <NavLink
-                to="/order"
+                to="/gio-hang"
                 className={({ isActive }) =>
                   setActive(isActive) ?? active
                     ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"

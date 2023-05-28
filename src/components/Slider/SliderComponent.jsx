@@ -1,6 +1,12 @@
 import React from "react";
 import { Image } from "antd";
 import { WrapperSliderStyle } from "./style";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 const SliderComponent = ({ arrImages }) => {
   const settings = {
@@ -12,20 +18,34 @@ const SliderComponent = ({ arrImages }) => {
     autoplay: true,
   };
   return (
-    <WrapperSliderStyle className="mt-16 md:!rounded-xl md:mt-0" {...settings}>
+    <Swiper
+      // spaceBetween={50}
+      modules={[Navigation, Autoplay]}
+      loop={true}
+      autoplay={{
+        delay: 3000,
+        disableOnInteraction: false,
+      }}
+      navigation
+      slidesPerGroupAuto
+      slidesPerView={"auto"}
+      className="!min-h-[0] mt-[85px] md:mt-5 md:!mx-0 !mx-4 rounded-xl"
+    >
       {arrImages.map((img, index) => {
         return (
-          <Image
-            className="!h-36 md:!h-auto md:!rounded-xl"
-            key={index}
-            src={img}
-            alt="slider"
-            preview={false}
-            width={"100%"}
-          ></Image>
+          <SwiperSlide>
+            <Image
+              className="rounded-xl !h-[150px] md:!h-[500px] !object-cover"
+              key={index}
+              src={img}
+              alt="slider"
+              preview={false}
+              width={"100%"}
+            ></Image>
+          </SwiperSlide>
         );
       })}
-    </WrapperSliderStyle>
+    </Swiper>
   );
 };
 

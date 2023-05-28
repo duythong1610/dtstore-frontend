@@ -12,10 +12,10 @@ const FooterComponent = () => {
   return (
     <div
       className={`${
-        (pathname === "/order" ||
-          pathname === "/payment" ||
-          pathname === "/my-order" ||
-          pathname === "/profile-user") &&
+        (pathname === "/gio-hang" ||
+          pathname === "/thanh-toan" ||
+          pathname === "/don-hang-cua-toi" ||
+          pathname === "/thong-tin-tai-khoan") &&
         "hidden md:block"
       } pb-[62px] md:pb-0`}
     >

@@ -26,10 +26,26 @@ export const getTopProducts = async () => {
   return res.data;
 };
 
+export const getBrandByType = async (query) => {
+  const res = await axios.get(
+    `https://dtstore-backend.onrender.com/api/product/get-brand-by-type?typeId=${query}`
+  );
+  return res.data;
+};
+
 export const getProductByType = async (type) => {
   if (type) {
     const res = await axios.get(
       `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}`
+    );
+    return res.data;
+  }
+};
+
+export const getProductByBrandAndType = async (filter, typeCode) => {
+  if (filter && typeCode) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-brand-and-type?filter=${filter}&typeCode=${typeCode}`
     );
     return res.data;
   }
@@ -45,6 +61,20 @@ export const getAllTypeProduct = async () => {
 export const getDetailsProduct = async (id) => {
   const res = await axios.get(
     `https://dtstore-backend.onrender.com/api/product/get-details/${id}`
+  );
+  return res.data;
+};
+
+export const uploadImgToStorage = async () => {
+  const res = await axios.post(
+    `https://storage.googleapis.com/upload/storage/v1/b/my-image-product/o?uploadType=media&name=abc.png`,
+    {
+      headers: {
+        "Content-type": "image/*",
+        Authorization:
+          "Bearer ya29.a0AWY7CknXHzH7RZFd2piC1w-b9TUUZXGHYQhLsE5S34uUd6PEJiAd-2erznM_FhA1ldhA1de36PqnMPnE8WqmLVshfEAzRdBp87te7v0CKWcQaX8oFz9V3wpGDW9YnRx0un7f8NzOOO5k0GyVNo8fU4Hk_RfnaCgYKATQSARESFQG1tDrp3pBGI3Ua71tASAYFn2I3EQ0163",
+      },
+    }
   );
   return res.data;
 };

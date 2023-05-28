@@ -39,7 +39,7 @@ const ProductSimilar = ({ idProduct }) => {
       top: 0,
       behavior: "smooth",
     });
-    navigate(`/product-detail/${id}`);
+    navigate(`/chi-tiet-san-pham/${id}`);
   };
 
   const isMobile = window.innerWidth <= 768;
@@ -76,7 +76,7 @@ const ProductSimilar = ({ idProduct }) => {
             slidesPerGroupAuto
             spaceBetween={20}
             // loop
-            className=""
+            className="!p-4 !min-h-[330px] !md:py-4 !md:px-0 !md:min-h-[431px]"
           >
             {productSimilar?.length > 0 &&
               productSimilar?.map((product) => {

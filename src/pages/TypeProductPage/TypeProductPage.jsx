@@ -1,7 +1,7 @@
 import React from "react";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { Pagination, Slider } from "antd";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import * as ProductService from "../../services/ProductService";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -14,8 +14,11 @@ import { convertPrice } from "../../until";
 function TypeProductPage() {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
+  const { type, id } = useParams();
+
   const { state } = useLocation();
   const [products, setProducts] = useState("");
+  const [brandsOfType, setBrandsOfType] = useState("");
   const [productsViews, setProductsView] = useState("");
   const [minValue, setMinValue] = useState(300000);
   const [maxValue, setMaxValue] = useState(50000000);
@@ -29,6 +32,7 @@ function TypeProductPage() {
     total: 1,
   });
 
+  console.log(type, id);
   const fetchProductType = async (type) => {
     setLoading(true);
     const res = await ProductService.getProductByType(type);
@@ -46,11 +50,19 @@ function TypeProductPage() {
     }
   };
 
+  const fetchBrandByType = async () => {
+    setLoading(true);
+    const res = await ProductService.getBrandByType(id);
+    console.log(res);
+    setBrandsOfType(res.data);
+  };
+
   useEffect(() => {
-    if (state) {
-      fetchProductType(state);
+    if (type) {
+      fetchProductType(type);
+      fetchBrandByType();
     }
-  }, [state]);
+  }, [type]);
 
   // const onChange = (current, pageSize) => {
   //   setPaginate({ ...paginate, page: current, limit: pageSize });
@@ -102,6 +114,11 @@ function TypeProductPage() {
     }
   };
 
+  const handleFilterByBrand = async (brand) => {
+    const res = await ProductService.getProductByBrandAndType(brand, type);
+    setProductsView(res.data);
+    return res;
+  };
   const handleOnChangeSliderPrice = (value) => {
     setProductsView(products);
     setMinValue(value[0]);
@@ -127,8 +144,8 @@ function TypeProductPage() {
       type: "price",
     },
     {
-      label: "Tên",
-      type: "name",
+      label: "Hãng",
+      type: "brand",
     },
     {
       label: "Đánh giá",
@@ -234,8 +251,28 @@ function TypeProductPage() {
         </div>
       );
     }
-    if (type === "name") {
-      return <div>Hello Quý Dị</div>;
+    if (type === "brand") {
+      return (
+        <div>
+          {brandsOfType.map((item) => {
+            return (
+              <div
+                className={`item inline-block mr-2 mb-2 ${
+                  active === item._id && "border border-blue-500 rounded-md"
+                }`}
+                onClick={() => setActive(item._id)}
+              >
+                <button
+                  className="py-1 px-2 border border-gray-300 rounded-md"
+                  onClick={() => handleFilterByBrand(item?.name)}
+                >
+                  {item?.name}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      );
     }
 
     if (type === "rating") {
@@ -244,15 +281,7 @@ function TypeProductPage() {
   }
 
   const handleButton = (type) => {
-    if (type === "price") {
-      setIsToggle(type);
-      setActiveFilter(type);
-    }
-    if (type === "name") {
-      setIsToggle(type);
-      setActiveFilter(type);
-    }
-    if (type === "rating") {
+    if (type) {
       setIsToggle(type);
       setActiveFilter(type);
     }
@@ -298,7 +327,7 @@ function TypeProductPage() {
               {renderItem(activeFilter)}
             </div>
           </div>
-          <div className="py-5 md:pt-0">
+          <div className="py-5 md:pt-0 min-h-screen">
             <div
               style={{
                 display: "flex",
@@ -307,7 +336,7 @@ function TypeProductPage() {
               }}
             >
               <div className="mt-6 md:mt-0 grid gap-3 p-5 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-                {productsViews.length > 0 &&
+                {productsViews?.length > 0 &&
                   productsViews
                     ?.filter((pro) => {
                       if (searchDebounce === "") {

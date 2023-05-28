@@ -32,7 +32,7 @@ const OrderSuccess = () => {
 
           <div className="flex gap-3 w-full max-w-xs">
             <ButtonComponent
-              onClick={() => navigate("/my-order")}
+              onClick={() => navigate("/don-hang-cua-toi")}
               size={40}
               styleButton={{
                 flex: "1 1 0%",

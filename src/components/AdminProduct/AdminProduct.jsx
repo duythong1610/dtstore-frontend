@@ -10,7 +10,7 @@ import {
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import { UploadOutlined } from "@ant-design/icons";
-import { getBase64, renderOptions } from "../../until";
+import { getBase64 } from "../../until";
 import * as ProductService from "../../services/ProductService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import DrawerComponent from "../DrawerComponent/DrawerComponent";
 import { useSelector } from "react-redux";
 import ModalComponent from "../ModalComponent/ModalComponent";
+import axios from "axios";
 
 const AdminProduct = () => {
   const user = useSelector((state) => state.user);
@@ -29,6 +30,8 @@ const AdminProduct = () => {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [rowSelected, setRowSelected] = useState("");
   const [typeSelect, setTypeSelect] = useState("");
+  const [brandProduct, setBrandProduct] = useState("");
+  const [imageInfo, setImageInfo] = useState("");
   // const [searchText, setSearchText] = useState("");
   // const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -37,11 +40,8 @@ const AdminProduct = () => {
     price: "",
     countInStock: "",
     rating: "",
-    type: {
-      name: "",
-      thumbnail: "",
-    },
-
+    type: "",
+    brand: "",
     image: "",
     description: "",
     discount: "",
@@ -53,10 +53,7 @@ const AdminProduct = () => {
     price: "",
     countInStock: "",
     rating: "",
-    type: {
-      name: "",
-      thumbnail: "",
-    },
+    type: "",
     image: "",
     description: "",
     discount: "",
@@ -76,10 +73,8 @@ const AdminProduct = () => {
         countInStock: res?.data.countInStock,
         rating: res?.data.rating,
         discount: res?.data.discount,
-        type: {
-          name: res?.data?.type.name,
-          thumbnail: res?.data?.type.thumbnail,
-        },
+        type: res?.data.type,
+        brand: res?.data.brand,
         image: res?.data.image,
         description: res?.data.description,
       });
@@ -127,8 +122,6 @@ const AdminProduct = () => {
     );
   };
 
-  
-
   const renderAction = () => {
     return (
       <div>
@@ -151,16 +144,19 @@ const AdminProduct = () => {
       countInStock,
       rating,
       type,
+      brand,
       image,
       description,
       discount,
     } = data;
+
     return ProductService.createProduct({
       name,
       price,
       countInStock,
       rating,
       type,
+      brand,
       image,
       description,
       discount,
@@ -275,13 +271,8 @@ const AdminProduct = () => {
       countInStock: stateProduct?.countInStock,
       discount: stateProduct?.discount,
       rating: stateProduct?.rating,
-      type: {
-        name:
-          stateProduct?.type.name === "add_type"
-            ? stateProduct?.newType
-            : stateProduct?.type.name,
-        thumbnail: stateProduct?.type.thumbnail,
-      },
+      type: stateProduct?.type,
+      brand: stateProduct?.brand,
       image: stateProduct?.image,
       description: stateProduct?.description,
     };
@@ -298,7 +289,8 @@ const AdminProduct = () => {
       price: "",
       countInStock: "",
       rating: "",
-      type: { name: "", thumbnail: "" },
+      type: "",
+      brand: "",
       image: "",
       description: "",
     });
@@ -316,7 +308,8 @@ const AdminProduct = () => {
       price: "",
       countInStock: "",
       rating: "",
-      type: { name: "", thumbnail: "" },
+      type: "",
+      brand: "",
       image: "",
       description: "",
     });
@@ -339,11 +332,34 @@ const AdminProduct = () => {
 
   const handleChangeSelect = (value) => {
     console.log(value);
+    if (value) {
+      setTypeSelect(value);
+    }
     setStateProduct({
       ...stateProduct,
-      type: { name: value },
+      type: value,
     });
   };
+
+  const handleChangeSelectBrand = (value) => {
+    setStateProduct({
+      ...stateProduct,
+      brand: value,
+    });
+  };
+
+  const fetchBrandByType = async (type) => {
+    const res = await ProductService.getBrandByType(type);
+    setBrandProduct(res);
+    return res;
+  };
+
+  console.log(stateProduct);
+  console.log(brandProduct);
+
+  useEffect(() => {
+    fetchBrandByType(typeSelect);
+  }, [typeSelect]);
 
   const handleChangeSelectDetail = (value) => {
     // setStateProductDetails({
@@ -373,12 +389,15 @@ const AdminProduct = () => {
 
   const handleChangeImageProduct = async ({ fileList }) => {
     const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
+    console.log(file);
+    const urlCreateImg = `https://storage.googleapis.com/my-image-products/${file.name}`;
+    setImageInfo({
+      name: file.name,
+      type: file.type,
+    });
     setStateProduct({
       ...stateProduct,
-      image: file.preview,
+      image: urlCreateImg,
     });
     // handleUpdate();
   };
@@ -580,6 +599,34 @@ const AdminProduct = () => {
     setSearchText("");
   };
 
+  const renderOptionsType = (arr) => {
+    let result = [];
+    console.log(arr);
+    if (arr) {
+      result = arr?.map((option) => {
+        return {
+          value: option._id,
+          label: option.name,
+        };
+      });
+    }
+    return result;
+  };
+
+  const renderOptionsBrand = (arr) => {
+    let result = [];
+    console.log(arr);
+    if (arr) {
+      result = arr?.map((option) => {
+        return {
+          value: option._id,
+          label: option.name,
+        };
+      });
+    }
+    return result;
+  };
+
   return (
     <div>
       <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
@@ -652,31 +699,24 @@ const AdminProduct = () => {
               <Select
                 name="type"
                 value={stateProduct?.type?.name}
-                options={renderOptions(typeProduct?.data?.data)}
+                options={renderOptionsType(typeProduct?.data?.data)}
                 onChange={handleChangeSelect}
               ></Select>
             </Form.Item>
+
             <Form.Item
-              label="Thumbnail Type"
-              name="thumbnail"
-              rules={[{ required: true, message: "Please input your image!" }]}
+              label="Brand"
+              name="brand"
+              rules={[{ required: true, message: "Please input your type!" }]}
             >
-              <WrapperUploadFile maxCount={1} onChange={handleChangeThumbnail}>
-                <Button icon={<UploadOutlined />} />
-                {stateProduct.type.thumbnail && (
-                  <img
-                    src={stateProduct.type.thumbnail}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                    alt="thumbnail"
-                  />
-                )}
-              </WrapperUploadFile>
+              <Select
+                name="brand"
+                value={stateProduct?.brand?.name}
+                options={renderOptionsBrand(brandProduct?.data)}
+                onChange={handleChangeSelectBrand}
+              ></Select>
             </Form.Item>
+
             {/* <Form.Item
               label="Thumbnail Type"
               name="thumbnail"
@@ -848,10 +888,11 @@ const AdminProduct = () => {
               <Select
                 name={["type", "name"]}
                 value={stateProductDetails?.type?.name}
-                options={renderOptions(typeProduct?.data?.data)}
+                options={renderOptionsType(typeProduct?.data?.data)}
                 onChange={handleChangeSelectDetail}
               ></Select>
             </Form.Item>
+
             {/* <Form.Item
               label="Type Product"
               name={["type", "name"]}

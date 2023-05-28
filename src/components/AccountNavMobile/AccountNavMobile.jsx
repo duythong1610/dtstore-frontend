@@ -41,8 +41,8 @@ const AccountNavMobile = ({ handleToggleClass }) => {
     //   navigate("/system-admin");
     //   handleToggleClass();
     // }
-    if (type === "my-order") {
-      navigate("/my-order", {
+    if (type === "don-hang-cua-toi") {
+      navigate("/don-hang-cua-toi", {
         state: { id: user?.id, token: user?.access_token },
       });
       handleToggleClass();
@@ -95,7 +95,7 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                     </li>
                   )}
                   <li
-                    onClick={() => handleNavigate("/profile-user")}
+                    onClick={() => handleNavigate("/thong-tin-tai-khoan")}
                     className="cursor-pointer"
                   >
                     <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">

@@ -27,18 +27,15 @@ export function getItem(label, key, icon, children, type) {
 
 export const renderOptions = (arr) => {
   let result = [];
+  console.log(arr);
   if (arr) {
     result = arr?.map((option) => {
       return {
-        value: option,
-        label: option,
+        value: option._id,
+        label: option.name,
       };
     });
   }
-  result.push({
-    label: "Thêm loại sản phẩm",
-    value: "add_type",
-  });
   return result;
 };
 

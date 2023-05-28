@@ -8,6 +8,7 @@ import Slider3 from "../../assets/img/slider3.png";
 import Slider4 from "../../assets/img/slider4.png";
 import Slider5 from "../../assets/img/slider5.png";
 import Slider6 from "../../assets/img/slider6.png";
+import Slider7 from "../../assets/img/slider7.png";
 import Soldout from "../../assets/img/sold_out.png";
 
 import CardComponent from "../../components/CardComponent/CardComponent";
@@ -128,13 +129,13 @@ function Home() {
     const isExisted = userInfo?.viewedProducts?.includes(id);
     if (user?.id && !isExisted) {
       await UserService.viewedProducts(id, user?.id, user?.access_token);
-      navigate(`/product-detail/${id}`);
+      navigate(`/chi-tiet-san-pham/${id}`);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
     }
-    navigate(`/product-detail/${id}`);
+    navigate(`/chi-tiet-san-pham/${id}`);
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -220,7 +221,7 @@ function Home() {
                     key={product._id}
                     className="mb-2 cursor-pointer"
                     onClick={() => {
-                      navigate(`/product-detail/${product?._id}`);
+                      navigate(`/chi-tiet-san-pham/${product?._id}`);
                       setSearchText("");
                     }}
                   >
@@ -260,14 +261,22 @@ function Home() {
           }}
         >
           <SliderComponent
-            arrImages={[Slider1, Slider2, Slider3, Slider4, Slider5, Slider6]}
+            arrImages={[
+              Slider1,
+              Slider2,
+              Slider3,
+              Slider4,
+              Slider5,
+              Slider6,
+              Slider7,
+            ]}
           />
 
           <div className="hidden md:block">
             <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
               <p className="font-bold text-xl md:text-[26px] mb-0"> Danh mục</p>
             </Divider>
-            <div className="hidden md:flex mt-4 mb-8 text-base md:gap-10 justify-center font-normal m-auto text-zinc-400 max-w-7xl ">
+            <div className="hidden md:flex mt-4 mb-8 text-base justify-between font-normal m-auto text-zinc-400 max-w-7xl ">
               <TypeProduct items={typeProduct} />
             </div>
           </div>
@@ -306,7 +315,7 @@ function Home() {
                 slidesPerGroupAuto
                 spaceBetween={20}
                 // loop
-                className=""
+                className="!p-4 !min-h-[330px] !md:py-4 !md:px-0 !md:min-h-[431px]"
               >
                 {topProducts?.length > 0 &&
                   topProducts?.map((product) => {

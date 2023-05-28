@@ -222,7 +222,7 @@ const OrderPage = () => {
       } else if (!user?.phone || !user.address || !user.name || !user.city) {
         setIsOpenModalUpdateInfo(true);
       } else {
-        navigate("/payment", {
+        navigate("/thanh-toan", {
           state: {
             priceVoucher: priceVoucher,
             totalPrice: isVoucher

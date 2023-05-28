@@ -149,7 +149,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             />
           </div>
           <div>
-            <NavLink to={"/order"}>
+            <NavLink to={"/gio-hang"}>
               <Badge
                 className="top-1"
                 count={order?.orderItems?.length}

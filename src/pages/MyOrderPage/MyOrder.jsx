@@ -35,7 +35,7 @@ const MyOrderPage = () => {
   const { isLoading, data } = queryOrder;
 
   const handleDetailsOrder = (id) => {
-    navigate(`/details-order/${id}`, {
+    navigate(`/chi-tiet-don-hang/${id}`, {
       state: {
         token: state?.token,
       },
@@ -95,7 +95,9 @@ const MyOrderPage = () => {
                 </span>
                 <div
                   className="w-[80%]"
-                  onClick={() => navigate(`/product-detail/${order?.product}`)}
+                  onClick={() =>
+                    navigate(`/chi-tiet-san-pham/${order?.product}`)
+                  }
                 >
                   <h1>{order?.name}</h1>
                   <div className="flex gap-3">

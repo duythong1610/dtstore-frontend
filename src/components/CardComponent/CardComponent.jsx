@@ -36,13 +36,13 @@ const CardComponent = ({
     const isExisted = userInfo?.viewedProducts.includes(id);
     if (user?.id && !isExisted) {
       await UserService.viewedProducts(id, user?.id, user?.access_token);
-      navigate(`/product-detail/${id}`);
+      navigate(`/chi-tiet-san-pham/${id}`);
       window.scrollTo({
         top: 0,
         behavior: "smooth",
       });
     }
-    navigate(`/product-detail/${id}`);
+    navigate(`/chi-tiet-san-pham/${id}`);
     window.scrollTo({
       top: 0,
       behavior: "smooth",

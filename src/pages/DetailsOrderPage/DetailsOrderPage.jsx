@@ -135,7 +135,7 @@ const DetailsOrderPage = () => {
                         <div
                           className="w-[80%]"
                           onClick={() =>
-                            navigate(`/product-detail/${order?.product}`)
+                            navigate(`/chi-tiet-san-pham/${order?.product}`)
                           }
                         >
                           <h1>{order?.name}</h1>

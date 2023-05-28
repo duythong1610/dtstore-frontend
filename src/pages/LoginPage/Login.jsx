@@ -33,6 +33,7 @@ import jwt_decode from "jwt-decode";
 import { updateUser } from "../../redux/slides/userSlice";
 import axios from "axios";
 import { Helmet } from "react-helmet";
+import logo from "../../assets/img/logo.png";
 function Login() {
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -117,7 +118,7 @@ function Login() {
       <Helmet>
         <title>Dtstore - Đăng nhập</title>
       </Helmet>
-      <Flex position="relative" h="max-content">
+      <Flex position="relative" h="max-content" className="!bg-white !h-screen">
         <Flex
           h={{
             sm: "initial",
@@ -391,9 +392,7 @@ function Login() {
             right="0px"
           >
             <Flex
-              bg={
-                "url(https://cdn.sforum.vn/sforum/wp-content/uploads/2022/05/yasuo-dtcl-mua-7.jpg)"
-              }
+              bg={`url("https://static.vecteezy.com/system/resources/previews/005/879/539/original/cloud-computing-modern-flat-concept-for-web-banner-design-man-enters-password-and-login-to-access-cloud-storage-for-uploading-and-processing-files-illustration-with-isolated-people-scene-free-vector.jpg")`}
               justify="center"
               align="end"
               w="100%"

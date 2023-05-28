@@ -169,7 +169,7 @@ const ProfilePage = () => {
                 </li>
                 <li>
                   <Link
-                    to="/my-order"
+                    to="/don-hang-cua-toi"
                     className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
@@ -181,7 +181,7 @@ const ProfilePage = () => {
                 </li>
                 <li>
                   <Link
-                    to="/viewed-products"
+                    to="/san-pham-da-xem"
                     className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                   >
                     <div className="flex items-center justify-center gap-3">
