@@ -312,34 +312,36 @@ function TypeProductPage() {
                     <div>Mặc định</div>
                     <div>Bộ lọc</div>
                   </div>
-                  <div className="w-full mt-3">
-                    <ul>
-                      {itemsFilter.map((item) => {
-                        return (
-                          <li
-                            className="py-2 border-b-[1px] w-full flex items-center justify-between"
-                            onClick={() => handleButton(item.type)}
-                          >
-                            <span>{item.label}</span>
-                            {activeFilter === item.type && (
-                              <CheckOutlined className="text-blue-500" />
-                            )}
-                          </li>
-                          // <div className="item inline-block mr-2">
-                          //   <button
-                          //     className={`py-1 px-5 border border-gray-300 rounded-md hover:bg-zinc-200 ${
-                          //       activeFilter === item.type &&
-                          //       "!bg-purple-600 rounded-md text-white"
-                          //     }`}
-                          //     onClick={() => handleButton(item.type)}
-                          //   >
-                          //     {item.label}
-                          //   </button>
-                          // </div>
-                        );
-                      })}
-                    </ul>
-                  </div>
+                  {false && (
+                    <div className="w-full mt-3">
+                      <ul>
+                        {itemsFilter.map((item) => {
+                          return (
+                            <li
+                              className="py-2 border-b-[1px] w-full flex items-center justify-between"
+                              onClick={() => handleButton(item.type)}
+                            >
+                              <span>{item.label}</span>
+                              {activeFilter === item.type && (
+                                <CheckOutlined className="text-blue-500" />
+                              )}
+                            </li>
+                            // <div className="item inline-block mr-2">
+                            //   <button
+                            //     className={`py-1 px-5 border border-gray-300 rounded-md hover:bg-zinc-200 ${
+                            //       activeFilter === item.type &&
+                            //       "!bg-purple-600 rounded-md text-white"
+                            //     }`}
+                            //     onClick={() => handleButton(item.type)}
+                            //   >
+                            //     {item.label}
+                            //   </button>
+                            // </div>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
                 </div>
                 <div className="hidden md:flex items-center gap-2">
                   <div className="flex items-center gap-1">

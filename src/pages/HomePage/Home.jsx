@@ -163,7 +163,7 @@ function Home() {
       {/* <Loading isLoading={isLoading}> */}
 
       <div className="relative">
-        <div className="px-5 py-3 fixed top-0 left-0 right-0 z-[11] bg-white md:hidden">
+        <div className="px-5 py-3 fixed top-0 left-0 right-0 z-[5] bg-white md:hidden">
           <div className="flex justify-between border border-zinc-300 w-full rounded-lg overflow-hidden">
             <div className="flex items-center flex-1">
               <input

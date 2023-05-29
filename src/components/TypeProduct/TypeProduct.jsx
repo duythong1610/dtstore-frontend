@@ -15,7 +15,7 @@ const TypeProduct = ({ items, handleToggleClassContent }) => {
       return (
         <div
           onClick={() => handleNavigateType(item?.code, item?._id)}
-          className="m-auto md:m-0 px-4 py-2 md:p-2 cursor-pointer rounded-xl bg-white shadow-sm"
+          className="m-auto md:m-0 px-4 py-2 md:p-2 cursor-pointer rounded-xl bg-white  shadow-sm"
         >
           <div className="flex flex-col items-center gap-2">
             <img
