@@ -111,7 +111,7 @@ const ProductSimilar = ({ idProduct }) => {
                           >
                             <img
                               src={Soldout}
-                              alt=""
+                              alt="soldout-img"
                               className="w-24 md:w-36 m-auto"
                             />
                           </span>

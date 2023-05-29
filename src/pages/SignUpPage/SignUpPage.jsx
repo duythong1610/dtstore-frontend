@@ -106,9 +106,13 @@ function SignUpPage() {
   return (
     <>
       <Helmet>
-        <title>Dtstore - Đăng ký</title>
+        <title>Đăng ký - October16th</title>
       </Helmet>
-      <Flex position="relative" h="max-content" className="!bg-white !h-[110vh]">
+      <Flex
+        position="relative"
+        h="max-content"
+        className="!bg-white !h-[110vh]"
+      >
         <Flex
           h={{
             sm: "initial",
@@ -361,7 +365,7 @@ function SignUpPage() {
                         "45px 76px 113px 7px rgba(112, 144, 176, 0.08);",
                       padding: "0 16px",
                       borderRadius: "16px",
-                      background: "#422AFB",
+                      background: "#9333EA",
                     }}
                     textButton={"Đăng ký"}
                   />
@@ -377,12 +381,7 @@ function SignUpPage() {
                 <Text color={textColorDetails} fontWeight="400" fontSize="14px">
                   Đã có tài khoản?
                   <NavLink to="/sign-in">
-                    <Text
-                      color={textColorBrand}
-                      as="span"
-                      ms="5px"
-                      fontWeight="500"
-                    >
+                    <Text color="#9333EA" as="span" ms="5px" fontWeight="500">
                       Đăng nhập
                     </Text>
                   </NavLink>

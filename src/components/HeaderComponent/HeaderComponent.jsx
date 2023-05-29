@@ -61,13 +61,11 @@ function HeaderComponent() {
     setLoading(false);
   };
 
-  const onSearch = (e) => {
+  const onSearch = async (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filteredProducts = allProducts.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setSuggestions(filteredProducts);
+    const res = await ProductService.getAllProduct(value, 5);
+    setSuggestions(res.data);
   };
 
   const handleSearch = () => {
@@ -88,15 +86,6 @@ function HeaderComponent() {
     setSearchText("");
   };
 
-  const fetchAllProduct = useCallback(async () => {
-    setLoading(true);
-    const res = await ProductService.getAllProduct();
-    console.log(res);
-    setLoading(false);
-    setAllProducts(res.data);
-    return res;
-  }, []);
-
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     setTypeProduct(res.data);
@@ -105,7 +94,6 @@ function HeaderComponent() {
 
   useEffect(() => {
     fetchAllTypeProduct();
-    fetchAllProduct();
   }, []);
 
   useEffect(() => {
@@ -152,7 +140,7 @@ function HeaderComponent() {
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-white sticky top-0 right-0 left-0 z-10 shadow-sm">
         <div className="h-0 md:h-full md:max-w-7xl md:m-auto md:py-3 bg-white">
           <Row
             className={
@@ -163,17 +151,27 @@ function HeaderComponent() {
                 : "md:flex flex-nowrap md:items-center md:w-7xl"
             }
           >
-            <Col span={4}>
-              <span className="hidden md:block">
-                <img
-                  onClick={() => navigate("/")}
-                  src={logo}
-                  alt="logo"
-                  className="w-16 h-16 object-contain cursor-pointer"
-                />
-              </span>
+            <Col span={5} className="hidden md:block">
+              <div className="flex items-center">
+                <span className="hidden md:block">
+                  <img
+                    onClick={() => navigate("/")}
+                    src={logo}
+                    alt="logo"
+                    className="w-12 h-12 object-contain cursor-pointer"
+                  />
+                </span>
+                <div className="text-center">
+                  <span className="text-2xl !mb-0 text-purple-600 font-sigmar">
+                    OTB16TH
+                  </span>
+                  <h1 className="text-sm -mt-2 !mb-0 text-zinc-400">
+                    october16th.store
+                  </h1>
+                </div>
+              </div>
             </Col>
-            <Col span={11} className="relative">
+            <Col span={10} className="relative hidden md:block">
               <ButtonInputSearch
                 className={
                   pathname === "/thong-tin-tai-khoan" && pathname === "/"
@@ -193,13 +191,13 @@ function HeaderComponent() {
               />
               {searchText && (
                 <ul className="absolute bg-white z-50 p-4 w-full shadow-lg rounded-md max-h-[50vh] overflow-auto">
-                  {suggestions.length > 0 && (
+                  {Array.isArray(suggestions) && suggestions.length > 0 && (
                     <h1 className="pl-2">
                       Hiển thị {suggestions.length} kết quả tìm kiếm
                     </h1>
                   )}
                   {searchText &&
-                    (suggestions.length > 0 ? (
+                    (Array.isArray(suggestions) && suggestions.length > 0 ? (
                       suggestions.map((product) => (
                         <li
                           key={product._id}
@@ -213,7 +211,7 @@ function HeaderComponent() {
                             <div>
                               <img
                                 src={product.image}
-                                alt=""
+                                alt="product-image"
                                 width={32}
                                 height={32}
                                 className="object-contain mix-blend-multiply"
@@ -244,7 +242,7 @@ function HeaderComponent() {
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                    ? "flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
                     : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
               >
@@ -256,7 +254,7 @@ function HeaderComponent() {
                 onClick={handleToggleClassContent}
                 className={
                   activeCategory
-                    ? "flex md:hidden flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
+                    ? "flex md:hidden flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
                     : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
               >
@@ -337,18 +335,18 @@ function HeaderComponent() {
                 to="/gio-hang"
                 className={({ isActive }) =>
                   setActive(isActive) ?? active
-                    ? "flex-col md:flex-row text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                    ? "flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
                     : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
                 //  active
-                //    ? "text-blue-600 font-medium hover:text-blue-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
+                //    ? "text-purple-600 font-medium hover:text-purple-600 hover:bg-blue-200 rounded-xl px-4 py-2 flex items-center justify-center gap-2"
                 //    : "rounded-xl px-4 py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200")
               >
                 <Badge count={order?.orderItems?.length} size="small">
                   <ShoppingCartOutlined
                     className={
                       active
-                        ? "text-blue-600 font-medium hover:text-blue-600"
+                        ? "text-purple-600 font-medium hover:text-purple-600"
                         : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                     }
                     style={{ fontSize: "22px" }}

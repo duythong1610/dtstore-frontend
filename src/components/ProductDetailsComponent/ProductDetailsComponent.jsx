@@ -144,7 +144,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
               className={
                 scrollPosition === 0
                   ? "w-8 h-8 text-lg text-white text-center !block rounded-full bg-zinc-400 opacity-80"
-                  : "w-8 h-8 text-lg text-blue-500 text-center !block"
+                  : "w-8 h-8 text-lg text-purple-500 text-center !block"
               }
             />
           </div>
@@ -160,7 +160,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                   className={
                     scrollPosition === 0
                       ? "w-8 h-8 text-lg text-white text-center rounded-full bg-zinc-400 opacity-80 !block"
-                      : "w-8 h-8 text-lg text-blue-500 text-center !block"
+                      : "w-8 h-8 text-lg text-purple-500 text-center !block"
                   }
                 />
               </Badge>
@@ -310,7 +310,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                   size={40}
                   style={{
                     color: "#fff",
-                    background: "rgb(66, 42, 251)",
+                    background: "#9333EA",
                     fontSize: "15px",
                     fontWeight: "600",
                     height: "48px",

@@ -331,7 +331,7 @@ const PaymentPage = () => {
                         <div className="flex items-center gap-2">
                           <img
                             src={later_moneyImg}
-                            alt=""
+                            alt="later-money"
                             width={32}
                             height={32}
                           />
@@ -342,7 +342,7 @@ const PaymentPage = () => {
                     <div className="flex items-center gap-1">
                       <Radio value="vnpay">
                         <div className="flex items-center gap-2">
-                          <img src={vnpayImg} alt="" width={32} height={32} />
+                          <img src={vnpayImg} alt="vnpay-img" width={32} height={32} />
                           <span>Thanh toán qua cổng giao dịch VNPAY</span>
                         </div>
                       </Radio>
@@ -385,7 +385,7 @@ const PaymentPage = () => {
                     <div>
                       <span
                         onClick={handleChangeAddress}
-                        style={{ color: "blue", cursor: "pointer" }}
+                       className="cursor-pointer text-purple-600"
                       >
                         Thay đổi
                       </span>
@@ -505,7 +505,7 @@ const PaymentPage = () => {
                       onClick={() => handleAddOrder()}
                       size={40}
                       styleButton={{
-                        background: "#422AFB",
+                        background: "#9333EA",
                         height: "48px",
                         width: "100%",
                         border: "none",

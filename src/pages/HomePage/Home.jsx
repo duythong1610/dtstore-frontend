@@ -83,28 +83,12 @@ function Home() {
     }
   );
 
-  const filteredProducts = async () => {
-    const res = await ProductService.getAllProduct();
-    console.log(res);
-    if (res) {
-      // setAllProducts(res.data);
-    }
-    return res.data;
-  };
-
-  const { data: allProducts } = useQuery(["allProducts"], filteredProducts, {
-    retry: 3,
-    retryDelay: 1000,
-    keepPreviousData: true,
-  });
-
   const fetchTopProducts = async () => {
     setLoading(true);
     const res = await ProductService.getTopProducts();
     setLoading(false);
     return res.data;
   };
-  console.log(allProducts);
 
   const { data: topProducts } = useQuery(["topProducts"], fetchTopProducts, {
     retry: 3,
@@ -114,7 +98,6 @@ function Home() {
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
-
     console.log(res);
     setTypeProduct(res.data);
     return res;
@@ -160,16 +143,13 @@ function Home() {
 
   console.log(suggestions);
 
-  const onSearch = (e) => {
+  const onSearch = async (e) => {
     const value = e.target.value;
     setSearchText(value);
-    const filteredProducts = allProducts?.filter((product) =>
-      product.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setSuggestions(filteredProducts);
+    const res = await ProductService.getAllProduct(value, 5);
+    setSuggestions(res.data);
   };
 
-  console.log(allProducts);
   console.log(loadingLimit);
 
   const isMobile = window.innerWidth <= 768;
@@ -178,7 +158,7 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Dtstore - Trang chủ</title>
+        <title>Trang chủ - October16th</title>
       </Helmet>
       {/* <Loading isLoading={isLoading}> */}
 
@@ -229,7 +209,7 @@ function Home() {
                       <div>
                         <img
                           src={product.image}
-                          alt=""
+                          alt="product-img"
                           width={32}
                           height={32}
                           className="object-contain"
@@ -273,9 +253,6 @@ function Home() {
           />
 
           <div className="hidden md:block">
-            <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
-              <p className="font-bold text-xl md:text-[26px] mb-0"> Danh mục</p>
-            </Divider>
             <div className="hidden md:flex mt-4 mb-8 text-base justify-between font-normal m-auto text-zinc-400 max-w-7xl ">
               <TypeProduct items={typeProduct} />
             </div>
@@ -286,7 +263,7 @@ function Home() {
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
               <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
-                <p className="font-bold text-xl md:text-[26px] mb-0">
+                <p className="font-bold text-xl md:text-[26px] mb-5">
                   {" "}
                   Sản phẩm bán chạy
                 </p>
@@ -315,7 +292,7 @@ function Home() {
                 slidesPerGroupAuto
                 spaceBetween={20}
                 // loop
-                className="!p-4 !min-h-[330px] !md:py-4 !md:px-0 !md:min-h-[431px]"
+                className="!p-4 md:!p-0 !min-h-[330px] !md:py-4 !md:px-0 !md:min-h-[431px]"
               >
                 {topProducts?.length > 0 &&
                   topProducts?.map((product) => {
@@ -351,7 +328,7 @@ function Home() {
                               >
                                 <img
                                   src={Soldout}
-                                  alt=""
+                                  alt="soldout-img"
                                   className="w-24 md:w-36 m-auto"
                                 />
                               </span>
@@ -481,7 +458,7 @@ function Home() {
                   textButton={isPreviousData ? "Loading..." : "Xem thêm"}
                   type="outline"
                   styleButton={{
-                    backgroundColor: "#422AFB",
+                    backgroundColor: "#9333EA",
                     marginBottom: "20px",
                     color: "#fff",
                     width: "240px",

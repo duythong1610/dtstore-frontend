@@ -18,7 +18,7 @@ export const WrapperCardStyle = styled(Card)`
   position: relative;
   :hover img {
     scale: 1.05;
-    transition: scale 0.5s ease-out;
+    transition: scale 0.5s ease-out !important;
   }
 `;
 

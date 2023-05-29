@@ -59,7 +59,7 @@ function ButtonInputSearch(props) {
         icon={<SearchOutlined />}
         border={border}
         styleButton={{
-          backgroundColor: isHovering ? "rgb(66, 42, 251)" : "transparent",
+          backgroundColor: isHovering ? "#9333EA" : "transparent",
           color: isHovering ? "#fff" : colorButton,
           border: border,
           borderRadius: 0,

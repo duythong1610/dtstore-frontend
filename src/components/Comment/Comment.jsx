@@ -238,13 +238,13 @@ const Comment = ({ idProduct }) => {
                   <div>
                     <img
                       src={user.avatar}
-                      alt=""
+                      alt="avatar"
                       className="w-10 h-10 object-cover rounded-full"
                     />
                   </div>
 
                   <div className="absolute -right-1 -bottom-1">
-                    <img src={likeSvg} alt="" width={18} height={18} />
+                    <img src={likeSvg} alt="like" width={18} height={18} />
                   </div>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -293,7 +293,7 @@ const Comment = ({ idProduct }) => {
                                 ? comment?.postedBy?.avatar
                                 : default_avatar
                             }
-                            alt=""
+                            alt="user-img"
                           />
                         </div>
                         <div>
@@ -332,7 +332,7 @@ const Comment = ({ idProduct }) => {
                       {comment.likes.length > 0 && (
                         <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
                           <div>
-                            <img src={likeSvg} alt="" width={18} height={18} />
+                            <img src={likeSvg} alt="like-icon" width={18} height={18} />
                           </div>
                           {comment.likes.length > 1 && (
                             <div>{comment.likes.length}</div>
@@ -410,7 +410,7 @@ const Comment = ({ idProduct }) => {
                                           ? reply?.postedBy?.avatar
                                           : default_avatar
                                       }
-                                      alt=""
+                                      alt="user-img"
                                     />
                                   </div>
                                   <div>
@@ -456,7 +456,7 @@ const Comment = ({ idProduct }) => {
                                         <div>
                                           <img
                                             src={likeSvg}
-                                            alt=""
+                                            alt="like-icon"
                                             width={18}
                                             height={18}
                                           />

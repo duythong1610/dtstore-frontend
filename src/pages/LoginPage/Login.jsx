@@ -116,7 +116,7 @@ function Login() {
   return (
     <>
       <Helmet>
-        <title>Dtstore - Đăng nhập</title>
+        <title>Đăng nhập - October16th</title>
       </Helmet>
       <Flex position="relative" h="max-content" className="!bg-white !h-screen">
         <Flex
@@ -336,7 +336,7 @@ function Login() {
                   </FormControl>
                   <NavLink>
                     <Text
-                      color={textColorBrand}
+                      className="text-purple-600"
                       fontSize="sm"
                       w="124px"
                       fontWeight="500"
@@ -349,7 +349,7 @@ function Login() {
                 <Loading isLoading={isLoading}>
                   <Button
                     fontSize="sm"
-                    variant="brand"
+                    className="!bg-purple-600 !text-white"
                     fontWeight="500"
                     w="100%"
                     h="50"
@@ -371,7 +371,7 @@ function Login() {
                   Chưa có tài khoản?
                   <NavLink to="/sign-up">
                     <Text
-                      color={textColorBrand}
+                      className="text-purple-600"
                       as="span"
                       ms="5px"
                       fontWeight="500"

@@ -349,7 +349,7 @@ const OrderPage = () => {
   return (
     <>
       <Helmet>
-        <title>Dtstore - Giỏ hàng</title>
+        <title>Giỏ hàng - October16th</title>
       </Helmet>
       <div className="bg-slate-100 w-full pt-12 md:py-5">
         <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0 pb-[289px] md:pb-0">
@@ -368,7 +368,7 @@ const OrderPage = () => {
             <div className="text-center">
               <img
                 src={EmptyCart}
-                alt=""
+                alt="empty-cart"
                 className="inline-block mix-blend-darken md:w-1/3"
               />
               <p className="text-base font-medium mb-4 md:mb-3">
@@ -574,7 +574,7 @@ const OrderPage = () => {
                         onClick={handleAddVoucher}
                         textButton="Áp dụng"
                         style={{
-                          background: "rgb(66, 42, 251)",
+                          background: "#9333EA",
                           color: "#fff",
                         }}
                       ></ButtonComponent>
@@ -603,7 +603,7 @@ const OrderPage = () => {
                         <div>
                           <span
                             onClick={handleChangeAddress}
-                            style={{ color: "blue", cursor: "pointer" }}
+                            className="cursor-pointer text-purple-600"
                           >
                             Thay đổi
                           </span>
@@ -747,7 +747,7 @@ const OrderPage = () => {
                       onClick={() => handleAddCard()}
                       size={40}
                       styleButton={{
-                        background: "#422AFB",
+                        background: "#9333EA",
                         height: "48px",
                         border: "none",
                         width: "100%",

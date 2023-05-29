@@ -2,9 +2,9 @@ import React from "react";
 import vnpayImg from "../../assets/img/vnpay.png";
 import later_money from "../../assets/img/later_money.png";
 import momo from "../../assets/img/momo.png";
-import facebook from "../../assets/img/facebook.png";
-import instagram from "../../assets/img/instagram.png";
-import github from "../../assets/img/github.png";
+import facebook from "../../assets/img/facebook.svg";
+import instagram from "../../assets/img/instagram.svg";
+import github from "../../assets/img/github.svg";
 import { useLocation } from "react-router-dom";
 
 const FooterComponent = () => {
@@ -74,11 +74,11 @@ const FooterComponent = () => {
             <h1 className="text-base">Phương thức thanh toán</h1>
             <div>
               <div className="flex items-center gap-2">
-                <img src={vnpayImg} alt="" width={32} height={32} />
+                <img src={vnpayImg} alt="vnpay-icon" width={32} height={32} />
                 <span>VNPAY</span>
               </div>
               <div className="flex items-center gap-2">
-                <img src={later_money} alt="" width={32} height={32} />
+                <img src={later_money} alt="later-money" width={32} height={32} />
                 <span>Tiền mặt</span>
               </div>
             </div>
@@ -86,21 +86,29 @@ const FooterComponent = () => {
           <div className="mt-2">
             <h1 className="text-base">Ủng hộ tôi tại đây ^^</h1>
             <a href="https://me.momo.vn/unghodt" target="_blank">
-              <img src={momo} alt="" width={32} height={32} />
+              <img src={momo} alt="momo-icon" width={32} height={32} />
             </a>
           </div>
         </div>
         <div className="md:w-[15%] md:max-w-[15%]">
           <h1 className="text-base">Kết nối với tôi</h1>
           <div className="flex items-center gap-2">
-            <a href="">
-              <img src={github} alt="" />
+            <a href="" className="max-w-[32px]">
+              <img src={github} alt="github" />
             </a>
-            <a href="https://www.facebook.com/16LuckyNumber" target="_blank">
-              <img src={facebook} alt="" />
+            <a
+              href="https://www.facebook.com/16LuckyNumber"
+              className="max-w-[32px]"
+              target="_blank"
+            >
+              <img src={facebook} alt="facebook" />
             </a>
-            <a href="https://www.instagram.com/auduythong/ " target="_blank">
-              <img src={instagram} alt="" />
+            <a
+              href="https://www.instagram.com/auduythong/ "
+              className="max-w-[32px]"
+              target="_blank"
+            >
+              <img src={instagram} alt="instagram" />
             </a>
           </div>
         </div>

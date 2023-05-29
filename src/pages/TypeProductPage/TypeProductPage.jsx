@@ -1,6 +1,6 @@
 import React from "react";
 import CardComponent from "../../components/CardComponent/CardComponent";
-import { Pagination, Slider } from "antd";
+import { Collapse, Pagination, Slider } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import * as ProductService from "../../services/ProductService";
 import { useEffect } from "react";
@@ -8,13 +8,19 @@ import { useState } from "react";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import useDebounce from "../../hooks/useDebounce";
-import { CloseCircleOutlined, FilterOutlined } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  FilterOutlined,
+  SearchOutlined,
+  CheckOutlined,
+} from "@ant-design/icons";
 import { convertPrice } from "../../until";
 
 function TypeProductPage() {
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
   const { type, id } = useParams();
+  const { Panel } = Collapse;
 
   const { state } = useLocation();
   const [products, setProducts] = useState("");
@@ -140,16 +146,20 @@ function TypeProductPage() {
 
   const itemsFilter = [
     {
-      label: "Giá",
-      type: "price",
+      label: "Khuyến mãi tốt nhất",
+      type: "discount",
     },
     {
-      label: "Hãng",
-      type: "brand",
+      label: "Bán chạy",
+      type: "sold",
     },
     {
-      label: "Đánh giá",
-      type: "rating",
+      label: "Giá giảm dần",
+      type: "pricedown",
+    },
+    {
+      label: "Giá tăng dần",
+      type: "priceup",
     },
   ];
 
@@ -182,8 +192,9 @@ function TypeProductPage() {
       return (
         <div className="item inline-block mr-2">
           <button
-            className={`py-1 px-5 border border-gray-300 rounded-md ${
-              activeFilter === item.type && "!border-blue-500 rounded-md"
+            className={`py-1 px-5 border border-gray-300 rounded-md hover:bg-zinc-200 ${
+              activeFilter === item.type &&
+              "!bg-purple-600 rounded-md text-white"
             }`}
             onClick={() => handleButton(item.type)}
           >
@@ -194,96 +205,14 @@ function TypeProductPage() {
     });
   }
 
-  function renderItem(type) {
-    if (type === "price") {
-      return (
-        <div>
-          {items.map((item) => {
-            return (
-              <div
-                className={`item inline-block mr-2 mb-2 ${
-                  active === item.type && "border border-blue-500 rounded-md"
-                }`}
-                onClick={() => setActive(item.type)}
-              >
-                <button
-                  className="py-1 px-2 border border-gray-300 rounded-md"
-                  onClick={() => handleSearchPrice(item?.type)}
-                >
-                  {item?.label}
-                </button>
-              </div>
-            );
-          })}
-          <div>
-            <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
-            <Slider
-              step={10000}
-              min={300000}
-              max={50000000}
-              range
-              value={[minValue, maxValue]}
-              defaultValue={[300000, 50000000]}
-              onChange={handleOnChangeSliderPrice}
-              tooltip={{ formatter }}
-            />
-          </div>
-          <div className="flex gap-5 justify-between">
-            <button
-              onClick={() => {
-                setActive(false);
-                setMinValue(300000);
-                setMaxValue(50000000);
-                fetchProductType(state, paginate.page, paginate.limit);
-              }}
-              className="px-3 py-1 border border-blue-500 rounded-md font-medium text-red-400 w-1/2"
-            >
-              Bỏ chọn
-            </button>
-
-            <button
-              className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium w-1/2"
-              // onClick={handleViewResult}
-            >
-              Xem {productsViews.length} kết quả
-            </button>
-          </div>
-        </div>
-      );
-    }
-    if (type === "brand") {
-      return (
-        <div>
-          {brandsOfType.map((item) => {
-            return (
-              <div
-                className={`item inline-block mr-2 mb-2 ${
-                  active === item._id && "border border-blue-500 rounded-md"
-                }`}
-                onClick={() => setActive(item._id)}
-              >
-                <button
-                  className="py-1 px-2 border border-gray-300 rounded-md"
-                  onClick={() => handleFilterByBrand(item?.name)}
-                >
-                  {item?.name}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      );
-    }
-
-    if (type === "rating") {
-      return <div>Hello Quý Dị rating</div>;
-    }
-  }
-
   const handleButton = (type) => {
     if (type) {
       setIsToggle(type);
       setActiveFilter(type);
+    }
+    console.log({ type }, { activeFilter });
+    if (type === activeFilter) {
+      setActiveFilter("");
     }
   };
 
@@ -291,17 +220,136 @@ function TypeProductPage() {
     <Loading isLoading={loading}>
       <div className="bg-slate-100">
         <div className="max-w-7xl m-auto">
-          <div className="relative">
-            <div className="filter fixed md:static top-0 left-0 right-0 bg-white md:bg-transparent z-10 md:py-5 md:px-0 py-2 px-5">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <FilterOutlined className="text-base" />
-                  <span className="font-medium md:block md:text-base">
-                    Bộ lọc:
-                  </span>
+          <div className="flex gap-5 mt-5">
+            <div className="min-w-[15%] w-[15%] rounded-xl overflow-hidden hidden md:block">
+              <Collapse defaultActiveKey={["1", "2"]}>
+                <Panel header="Khoảng giá" key="1" className="font-medium">
+                  <div>
+                    {items.map((item) => {
+                      return (
+                        <div
+                          className={`item inline-block mr-2 mb-2 ${
+                            active === item.type &&
+                            "bg-purple-600 rounded-md text-white"
+                          }`}
+                          onClick={() => setActive(item.type)}
+                        >
+                          <button
+                            className="py-1 px-2 border border-gray-300 rounded-md"
+                            onClick={() => handleSearchPrice(item?.type)}
+                          >
+                            {item?.label}
+                          </button>
+                        </div>
+                      );
+                    })}
+                    <div>
+                      <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
+                      <Slider
+                        step={10000}
+                        min={300000}
+                        max={50000000}
+                        range
+                        value={[minValue, maxValue]}
+                        defaultValue={[300000, 50000000]}
+                        onChange={handleOnChangeSliderPrice}
+                        tooltip={{ formatter }}
+                      />
+                    </div>
+                  </div>
+                </Panel>
+                <Panel header="Thương hiệu" key="2" className="font-medium">
+                  {Array.isArray(brandsOfType) &&
+                    brandsOfType?.map((item) => {
+                      return (
+                        <div onClick={() => setActive(item._id)}>
+                          <button
+                            className={`item inline-block w-full !py-2 text-left${
+                              active === item._id &&
+                              "border bg-purple-600 rounded-md text-white"
+                            }`}
+                            onClick={() => handleFilterByBrand(item?.name)}
+                          >
+                            {item?.name}
+                          </button>
+                        </div>
+                      );
+                    })}
+                </Panel>
+              </Collapse>
+            </div>
+
+            <div className="py-5 md:pt-0 min-h-screen">
+              <div className="flex flex-col justify-between gap-4">
+                <div className="fixed top-0 right-0 left-0 z-10 bg-white py-2 shadow-sm px-4 md:hidden">
+                  <div className="flex justify-between border-none bg-slate-100 w-full rounded-lg overflow-hidden">
+                    <div className="flex items-center flex-1">
+                      <input
+                        type="text"
+                        placeholder="Bạn tìm gì..."
+                        className="outline-none px-3 py-2 h-10 w-full bg-transparent "
+                        // onChange={onSearch}
+                        // onKeyDown={handleSearchEnter}
+                        // value={searchText}
+                      />
+                      {/* {searchText && (
+                        <CloseOutlined
+                          className="p-2"
+                          onClick={handleClearSearchText}
+                        />
+                      )} */}
+                    </div>
+                    <div>
+                      <button
+                        className="outline-none w-10 h-10"
+                        // onClick={handleSearch}
+                      >
+                        <SearchOutlined className="text-xl text-zinc-400" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex justify-between mt-3">
+                    <div>Mặc định</div>
+                    <div>Bộ lọc</div>
+                  </div>
+                  <div className="w-full mt-3">
+                    <ul>
+                      {itemsFilter.map((item) => {
+                        return (
+                          <li
+                            className="py-2 border-b-[1px] w-full flex items-center justify-between"
+                            onClick={() => handleButton(item.type)}
+                          >
+                            <span>{item.label}</span>
+                            {activeFilter === item.type && (
+                              <CheckOutlined className="text-blue-500" />
+                            )}
+                          </li>
+                          // <div className="item inline-block mr-2">
+                          //   <button
+                          //     className={`py-1 px-5 border border-gray-300 rounded-md hover:bg-zinc-200 ${
+                          //       activeFilter === item.type &&
+                          //       "!bg-purple-600 rounded-md text-white"
+                          //     }`}
+                          //     onClick={() => handleButton(item.type)}
+                          //   >
+                          //     {item.label}
+                          //   </button>
+                          // </div>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 </div>
-                <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-item">
-                  {/* <div className="item inline-block mr-2">
+                <div className="hidden md:flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <FilterOutlined className="text-base" />
+                    <span className="font-medium md:block md:text-base">
+                      Bộ lọc:
+                    </span>
+                  </div>
+                  <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-item">
+                    {/* <div className="item inline-block mr-2">
                   <button
                     className="py-1 px-5 border border-gray-300 rounded-md"
                     onClick={() => handleButton("price")}
@@ -309,72 +357,50 @@ function TypeProductPage() {
                     Giá
                   </button>
                 </div> */}
-                  {renderFilter()}
+                    {renderFilter()}
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div
-              className={`hidden w-screen h-[45vh] p-5 fixed md:shadow-xl md:absolute md:h-auto md:!w-[30vw] md:rounded-xl top-11 md:top-[71px] left-0 right-0 z-10 bg-white ${
-                isToggle && "!block"
-              } `}
-            >
-              <div className="text-right -mt-5">
-                <CloseCircleOutlined
-                  className="text-zinc-300 w-5 h-5 text-2xl"
-                  onClick={() => setIsToggle("")}
-                />
-              </div>
-              {renderItem(activeFilter)}
-            </div>
-          </div>
-          <div className="py-5 md:pt-0 min-h-screen">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <div className="mt-6 md:mt-0 grid gap-3 p-5 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-                {productsViews?.length > 0 &&
-                  productsViews
-                    ?.filter((pro) => {
-                      if (searchDebounce === "") {
-                        return pro;
-                      } else if (
-                        pro?.name
-                          ?.toLowerCase()
-                          .includes(searchDebounce.toLowerCase())
-                      ) {
-                        return pro;
-                      }
-                    })
-                    ?.map((product) => {
-                      return (
-                        <CardComponent
-                          key={product._id}
-                          name={product.name}
-                          countInStock={product.countInStock}
-                          description={product.description}
-                          image={product.image}
-                          price={product.price}
-                          rating={product.rating}
-                          type={product.type}
-                          sold={product.sold}
-                          discount={product.discount}
-                          id={product._id}
-                        />
-                      );
-                    })}
-              </div>
+                <div className="mt-6 md:mt-0 grid gap-3 p-4 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                  {productsViews?.length > 0 &&
+                    productsViews
+                      ?.filter((pro) => {
+                        if (searchDebounce === "") {
+                          return pro;
+                        } else if (
+                          pro?.name
+                            ?.toLowerCase()
+                            .includes(searchDebounce.toLowerCase())
+                        ) {
+                          return pro;
+                        }
+                      })
+                      ?.map((product) => {
+                        return (
+                          <CardComponent
+                            key={product._id}
+                            name={product.name}
+                            countInStock={product.countInStock}
+                            description={product.description}
+                            image={product.image}
+                            price={product.price}
+                            rating={product.rating}
+                            type={product.type}
+                            sold={product.sold}
+                            discount={product.discount}
+                            id={product._id}
+                          />
+                        );
+                      })}
+                </div>
 
-              {/* <Pagination
+                {/* <Pagination
                 // showQuickJumper
                 defaultCurrent={paginate?.page}
                 total={paginate?.total}
                 onChange={onChange}
                 style={{ textAlign: "center", margin: "20px 0" }}
               /> */}
+              </div>
             </div>
           </div>
         </div>

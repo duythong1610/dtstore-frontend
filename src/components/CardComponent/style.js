@@ -2,8 +2,9 @@ import { Card } from "antd";
 import styled from "styled-components";
 
 export const StyleNameProduct = styled.div`
+  min-height: 2rem;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   display: -webkit-box;
   font-weight: 900;
   overflow: hidden;
@@ -19,7 +20,7 @@ export const WrapperCardStyle = styled(Card)`
   position: relative;
   :hover img {
     scale: 1.05;
-    transition: scale 0.5s ease-out;
+    transition: scale 0.5s ease-out !important;
   }
 `;
 

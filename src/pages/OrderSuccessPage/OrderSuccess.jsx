@@ -3,8 +3,10 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertPrice } from "../../until";
 import { CheckCircleFilled } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
 const OrderSuccess = () => {
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const location = useLocation();
   const { state } = location;
@@ -14,7 +16,7 @@ const OrderSuccess = () => {
         <div className="mb-5 flex items-center">
           <img
             src="https://media2.giphy.com/media/BPJmthQ3YRwD6QqcVD/giphy.gif"
-            alt=""
+            alt="success"
             className="md:rounded-xl"
           />
         </div>
@@ -32,7 +34,11 @@ const OrderSuccess = () => {
 
           <div className="flex gap-3 w-full max-w-xs">
             <ButtonComponent
-              onClick={() => navigate("/don-hang-cua-toi")}
+              onClick={() =>
+                navigate("/don-hang-cua-toi", {
+                  state: { id: user?.id, token: user?.access_token },
+                })
+              }
               size={40}
               styleButton={{
                 flex: "1 1 0%",
