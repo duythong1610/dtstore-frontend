@@ -21,9 +21,9 @@ const FooterComponent = () => {
     >
       <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white p-4">
         <div className="md:w-[30%] md:max-w-[30%]">
-          <h1 className="text-base">Giới thiệu về DT STORE</h1>
+          <h1 className="text-base">Giới thiệu về October16th</h1>
           <span>
-            DT Store là một project web app ecommerce được phát triển bởi Duy
+            October16th là một project web app ecommerce được phát triển bởi Duy
             Thông trong quá trình học tập nhằm áp dụng những kiến thức cũ và tìm
             hiểu những kiến thức mới để tạo ra một project để đưa vào CV, vì đây
             là project "chỉnh chu" đầu tiên hi vọng nhận được ý kiến và đóng góp
