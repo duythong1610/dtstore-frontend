@@ -58,6 +58,7 @@ function HeaderComponent() {
     localStorage.removeItem("refresh_token");
     message.success("Đăng xuất thành công!");
     dispatch(resetUser());
+    navigate("/");
     setLoading(false);
   };
 
