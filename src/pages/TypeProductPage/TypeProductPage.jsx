@@ -9,6 +9,7 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { useSelector } from "react-redux";
 import useDebounce from "../../hooks/useDebounce";
 import {
+  CaretDownOutlined,
   CloseOutlined,
   FilterOutlined,
   SearchOutlined,
@@ -23,13 +24,20 @@ function TypeProductPage() {
   const { Panel } = Collapse;
 
   const { state } = useLocation();
+  const [sort, setSort] = useState({
+    sortBy: null,
+    sort: null,
+  });
   const [products, setProducts] = useState("");
+  const [label, setLabel] = useState("Mặc định");
   const [brandsOfType, setBrandsOfType] = useState("");
   const [productsViews, setProductsView] = useState("");
   const [minValue, setMinValue] = useState(300000);
   const [maxValue, setMaxValue] = useState(50000000);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
+  const [isToggleContent, setIsToggleContent] = useState(false);
+  const [isOpenFilterMobile, setIsOpenFilterMobile] = useState(false);
   const [active, setActive] = useState("");
   const [isToggle, setIsToggle] = useState("");
   const [paginate, setPaginate] = useState({
@@ -38,12 +46,13 @@ function TypeProductPage() {
     total: 1,
   });
 
+  console.log(active);
   console.log(type, id);
   const fetchProductType = async (type) => {
     setLoading(true);
-    const res = await ProductService.getProductByType(type);
+    const res = await ProductService.getProductByType(type, sort, active);
     console.log(res);
-    if (res?.status === "OK") {
+    if (res) {
       setLoading(false);
       setProducts(res?.data);
       setProductsView(res?.data);
@@ -56,6 +65,8 @@ function TypeProductPage() {
     }
   };
 
+  console.log(sort);
+
   const fetchBrandByType = async () => {
     setLoading(true);
     const res = await ProductService.getBrandByType(id);
@@ -66,8 +77,11 @@ function TypeProductPage() {
   useEffect(() => {
     if (type) {
       fetchProductType(type);
-      fetchBrandByType();
     }
+  }, [type, sort, active]);
+
+  useEffect(() => {
+    fetchBrandByType();
   }, [type]);
 
   // const onChange = (current, pageSize) => {
@@ -120,11 +134,11 @@ function TypeProductPage() {
     }
   };
 
-  const handleFilterByBrand = async (brand) => {
-    const res = await ProductService.getProductByBrandAndType(brand, type);
-    setProductsView(res.data);
-    return res;
-  };
+  // const handleFilterByBrand = async (brand) => {
+  //   const res = await ProductService.getProductByBrandAndType(brand, type);
+  //   setProductsView(res?.data);
+  //   return res;
+  // };
   const handleOnChangeSliderPrice = (value) => {
     setProductsView(products);
     setMinValue(value[0]);
@@ -143,23 +157,35 @@ function TypeProductPage() {
   // };
 
   // const handleActive = (type) => {};
-
+  console.log(label);
   const itemsFilter = [
     {
+      id: 1,
+      label: "Mặc định",
+    },
+    {
+      id: 2,
       label: "Khuyến mãi tốt nhất",
-      type: "discount",
+      sortBy: "discount",
+      sort: "desc",
     },
     {
+      id: 3,
       label: "Bán chạy",
-      type: "sold",
+      sortBy: "sold",
+      sort: "desc",
     },
     {
+      id: 4,
       label: "Giá giảm dần",
-      type: "pricedown",
+      sortBy: "price",
+      sort: "desc",
     },
     {
+      id: 5,
       label: "Giá tăng dần",
-      type: "priceup",
+      sortBy: "price",
+      sort: "asc",
     },
   ];
 
@@ -192,11 +218,10 @@ function TypeProductPage() {
       return (
         <div className="item inline-block mr-2">
           <button
-            className={`py-1 px-5 border border-gray-300 rounded-md hover:bg-zinc-200 ${
-              activeFilter === item.type &&
-              "!bg-purple-600 rounded-md text-white"
+            className={`py-1 px-5 shadow-sm bg-white rounded-md hover:bg-zinc-200 ${
+              activeFilter === item.id && "!bg-purple-600 rounded-md text-white"
             }`}
-            onClick={() => handleButton(item.type)}
+            onClick={() => handleButton(item)}
           >
             {item.label}
           </button>
@@ -205,13 +230,19 @@ function TypeProductPage() {
     });
   }
 
-  const handleButton = (type) => {
-    if (type) {
-      setIsToggle(type);
-      setActiveFilter(type);
+  const handleButton = async (item) => {
+    console.log(item.id);
+    if (item?.id) {
+      setActiveFilter(item?.id);
+      setLabel(item.label);
+      setIsOpenFilterMobile(!isOpenFilterMobile);
+      setSort({
+        sortBy: item?.sortBy,
+        sort: item.sort,
+      });
     }
-    console.log({ type }, { activeFilter });
-    if (type === activeFilter) {
+    if (item.id === activeFilter) {
+      setSort("");
       setActiveFilter("");
     }
   };
@@ -232,7 +263,9 @@ function TypeProductPage() {
                             active === item.type &&
                             "bg-purple-600 rounded-md text-white"
                           }`}
-                          onClick={() => setActive(item.type)}
+                          onClick={() => {
+                            setActive(item.type);
+                          }}
                         >
                           <button
                             className="py-1 px-2 border border-gray-300 rounded-md"
@@ -262,7 +295,11 @@ function TypeProductPage() {
                   {Array.isArray(brandsOfType) &&
                     brandsOfType?.map((item) => {
                       return (
-                        <div onClick={() => setActive(item._id)}>
+                        <div
+                          onClick={() => {
+                            setActive(item._id);
+                          }}
+                        >
                           <button
                             className={`item inline-block w-full !py-2 text-left${
                               active === item._id &&
@@ -281,48 +318,73 @@ function TypeProductPage() {
 
             <div className="py-5 md:pt-0 min-h-screen">
               <div className="flex flex-col justify-between gap-4">
-                <div className="fixed top-0 right-0 left-0 z-[4] bg-white py-2 shadow-sm px-4 md:hidden">
-                  <div className="flex justify-between border-none bg-slate-100 w-full rounded-lg overflow-hidden">
-                    <div className="flex items-center flex-1">
-                      <input
-                        type="text"
-                        placeholder="Bạn tìm gì..."
-                        className="outline-none px-3 py-2 h-10 w-full bg-transparent "
-                        // onChange={onSearch}
-                        // onKeyDown={handleSearchEnter}
-                        // value={searchText}
-                      />
-                      {/* {searchText && (
-                        <CloseOutlined
-                          className="p-2"
-                          onClick={handleClearSearchText}
+                <div className="fixed top-0 right-0 left-0 z-[4] bg-white py-3 shadow-sm px-4 md:hidden">
+                  <div className="flex justify-between">
+                    <div
+                      className="flex items-center gap-1"
+                      onClick={() => setIsOpenFilterMobile(!isOpenFilterMobile)}
+                    >
+                      <h1 className="mb-0 text-base">{label}</h1>
+                      <CaretDownOutlined />
+                    </div>
+                    <div
+                      className="flex items-center gap-1"
+                      onClick={() => setIsToggleContent(!isToggleContent)}
+                    >
+                      <h1 className="mb-0 text-base">Bộ lọc</h1>
+                      <FilterOutlined />
+                    </div>
+                  </div>
+                  <div
+                    className={
+                      !isToggleContent
+                        ? "content-typepro content-bg"
+                        : "content-typepro visible content-bg"
+                    }
+                  >
+                    <div className="p-5">
+                      <h1 className="text-xl">Thương hiệu</h1>
+                      {Array.isArray(brandsOfType) &&
+                        brandsOfType?.map((item) => {
+                          return (
+                            <div
+                              onClick={() => {
+                                setActive(item._id);
+                                setIsToggleContent(!isToggleContent);
+                              }}
+                            >
+                              <button
+                                className={`item inline-block w-full !py-2 text-left${
+                                  active === item._id &&
+                                  "border bg-purple-600 rounded-md text-white"
+                                }`}
+                                onClick={() => handleFilterByBrand(item?.name)}
+                              >
+                                {item?.name}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      {/* <div className="grid grid-cols-2 max-h-[80vh] overflow-auto scrollbar-item">
+                        <TypeProduct
+                          items={typeProduct}
+                          // thumbnail={thumb}
+                          handleToggleClassContent={handleToggleClassContent}
                         />
-                      )} */}
-                    </div>
-                    <div>
-                      <button
-                        className="outline-none w-10 h-10"
-                        // onClick={handleSearch}
-                      >
-                        <SearchOutlined className="text-xl text-zinc-400" />
-                      </button>
+                      </div> */}
                     </div>
                   </div>
-                  <div className="flex justify-between mt-3">
-                    <div>Mặc định</div>
-                    <div>Bộ lọc</div>
-                  </div>
-                  {false && (
+                  {isOpenFilterMobile && (
                     <div className="w-full mt-3">
                       <ul>
                         {itemsFilter.map((item) => {
                           return (
                             <li
                               className="py-2 border-b-[1px] w-full flex items-center justify-between"
-                              onClick={() => handleButton(item.type)}
+                              onClick={() => handleButton(item)}
                             >
                               <span>{item.label}</span>
-                              {activeFilter === item.type && (
+                              {activeFilter === item.id && (
                                 <CheckOutlined className="text-blue-500" />
                               )}
                             </li>
@@ -345,9 +407,8 @@ function TypeProductPage() {
                 </div>
                 <div className="hidden md:flex items-center gap-2">
                   <div className="flex items-center gap-1">
-                    <FilterOutlined className="text-base" />
                     <span className="font-medium md:block md:text-base">
-                      Bộ lọc:
+                      Sắp xếp theo:
                     </span>
                   </div>
                   <div className="scroll-main overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-item">
@@ -362,7 +423,7 @@ function TypeProductPage() {
                     {renderFilter()}
                   </div>
                 </div>
-                <div className="mt-6 md:mt-0 grid gap-3 p-4 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+                <div className="mt-1 md:mt-0 grid gap-3 p-4 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                   {productsViews?.length > 0 &&
                     productsViews
                       ?.filter((pro) => {

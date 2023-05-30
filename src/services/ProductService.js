@@ -33,8 +33,27 @@ export const getBrandByType = async (query) => {
   return res.data;
 };
 
-export const getProductByType = async (type) => {
-  if (type) {
+export const getProductByType = async (type, sortObj, brandId) => {
+  const { sort, sortBy } = sortObj;
+  console.log(sortBy);
+  if (type && sortBy && brandId) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&sort=${sort}&sort=${sortBy}`
+    );
+    return res.data;
+  }
+  if (type && sortBy) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&sort=${sort}&sort=${sortBy}`
+    );
+    return res.data;
+  }
+  if (type && brandId) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}`
+    );
+    return res.data;
+  } else {
     const res = await axios.get(
       `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}`
     );

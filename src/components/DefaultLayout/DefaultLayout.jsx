@@ -40,7 +40,7 @@ function DefaultLayout({ children }) {
             className="h-8 w-8 md:w-12 md:h-12 flex items-center bg-purple-500 rounded-full cursor-pointer"
             onClick={() => scrollToTop()}
           >
-            <UpOutlined className="text-white text-xl w-full h-full !block" />
+            <UpOutlined className="text-white md:text-xl w-full !block" />
           </div>
         </div>
       )}
