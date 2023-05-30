@@ -529,7 +529,7 @@ const Comment = ({ idProduct }) => {
                               alt="user-avatar"
                             />
                             <textarea
-                              className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
+                              className="mt-3 w-full border-none outline-none resize-none"
                               placeholder="Viết câu trả lời..."
                               value={replyText?.text}
                               type="text"
@@ -597,7 +597,7 @@ const Comment = ({ idProduct }) => {
               alt="user-avatar"
             />
             <textarea
-              className="mt-3 w-full md:h-20 h-10 border-none outline-none resize-none"
+              className="mt-3 w-full border-none outline-none resize-none"
               placeholder={"Viết bình luận, hỏi đáp..."}
               value={commentText?.text}
               type="text"
