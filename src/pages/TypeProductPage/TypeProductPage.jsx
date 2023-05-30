@@ -281,7 +281,7 @@ function TypeProductPage() {
 
             <div className="py-5 md:pt-0 min-h-screen">
               <div className="flex flex-col justify-between gap-4">
-                <div className="fixed top-0 right-0 left-0 z-10 bg-white py-2 shadow-sm px-4 md:hidden">
+                <div className="fixed top-0 right-0 left-0 z-[4] bg-white py-2 shadow-sm px-4 md:hidden">
                   <div className="flex justify-between border-none bg-slate-100 w-full rounded-lg overflow-hidden">
                     <div className="flex items-center flex-1">
                       <input

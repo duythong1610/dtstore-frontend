@@ -59,7 +59,7 @@ const CardComponent = ({
         <LazyLoadImage
           effect="blur"
           src={image}
-          className="my-2 md:my-4 mx-0 object-contain md:min-h-[218px] aspect-square"
+          className="mb-2 md:my-4 object-contain h-[150px] md:h-[190px] aspect-square mx-auto"
         />
         {countInStock === 0 && (
           <span style={{ position: "absolute", top: "30%", left: 0, right: 0 }}>

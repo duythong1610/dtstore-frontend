@@ -21,7 +21,7 @@ function ProductDetailsPage() {
     }
   }, [productDetails?.name]);
 
-  console.log(productDetails)
+  console.log(productDetails);
 
   return (
     <>
@@ -34,9 +34,17 @@ function ProductDetailsPage() {
                 title: <Link to="/">Trang chủ</Link>,
               },
               {
-                title: ` ${
-                  productDetails?.type?.name ? productDetails?.type : ""
-                }`,
+                title: (
+                  <Link
+                    to={`/san-pham/${productDetails?.type?.code}/${productDetails?.type?._id}`}
+                  >
+                    {`${
+                      productDetails?.type?.name
+                        ? `${productDetails?.type.name}`
+                        : ""
+                    }  `}
+                  </Link>
+                ),
               },
               {
                 title: `${productDetails?.name ? productDetails?.name : ""}`,

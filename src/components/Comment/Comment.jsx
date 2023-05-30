@@ -332,7 +332,12 @@ const Comment = ({ idProduct }) => {
                       {comment.likes.length > 0 && (
                         <div className="flex gap-1 items-center p-[1px] rounded-xl bg-slate-200 cursor-pointer">
                           <div>
-                            <img src={likeSvg} alt="like-icon" width={18} height={18} />
+                            <img
+                              src={likeSvg}
+                              alt="like-icon"
+                              width={18}
+                              height={18}
+                            />
                           </div>
                           {comment.likes.length > 1 && (
                             <div>{comment.likes.length}</div>
@@ -438,7 +443,7 @@ const Comment = ({ idProduct }) => {
                                 )}
                               </div>
                               <div className="user-bottom">
-                                <p className="text-sm md:text-base ml-[42px] mb-0">
+                                <p className="text-sm md:text-base pl-[42px] md:pl-[58px] mb-0">
                                   {reply?.text}
                                 </p>
                               </div>
@@ -512,7 +517,7 @@ const Comment = ({ idProduct }) => {
                     {commentIdReplying === comment?._id && (
                       <div className="w-full md:w-1/2 mb-4 mt-1">
                         <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-                          <div className="flex gap-4">
+                          <div className="flex gap-4 items-center h-full">
                             <img
                               src={user?.avatar || default_avatar}
                               style={{
@@ -549,7 +554,7 @@ const Comment = ({ idProduct }) => {
           })}
           {false && (
             <div className="mb-[20%] md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white absolute z-20">
-              <div className="flex gap-4">
+              <div className="flex gap-4 items-center h-full">
                 <img
                   src={user?.avatar || default_avatar}
                   style={{
@@ -580,7 +585,7 @@ const Comment = ({ idProduct }) => {
       </Loading>
       <div className="w-full md:w-1/2 flex flex-col gap-2 p-4 md:pb-4 md:px-0">
         <div className="gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center h-full">
             <img
               src={user?.avatar || default_avatar}
               style={{

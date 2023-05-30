@@ -152,13 +152,15 @@ function HeaderComponent() {
             }
           >
             <Col span={5} className="hidden md:block">
-              <div className="flex items-center">
+              <div
+                className="flex items-center cursor-pointer"
+                onClick={() => navigate("/")}
+              >
                 <span className="hidden md:block">
                   <img
-                    onClick={() => navigate("/")}
                     src={logo}
                     alt="logo"
-                    className="w-12 h-12 object-contain cursor-pointer"
+                    className="w-12 h-12 object-contain "
                   />
                 </span>
                 <div className="text-center">

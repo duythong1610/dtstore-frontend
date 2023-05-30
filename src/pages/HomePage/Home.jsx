@@ -306,7 +306,7 @@ function Home() {
                       >
                         <WrapperCardStyle
                           key={product?._id}
-                          className="rounded-xl min-h-[290px] md:min-h-[392px] border-none"
+                          className="rounded-xl min-h-[301px] md:min-h-[385px] border-none"
                           hoverable
                           bodyStyle={{ padding: 10 }}
                           onClick={() => handleProductDetails(product?._id)}
@@ -315,7 +315,7 @@ function Home() {
                             <LazyLoadImage
                               effect="blur"
                               src={product?.image}
-                              className="my-2 md:my-4 mx-0 object-contain md:min-h-[218px] aspect-square"
+                              className="mb-2 md:my-4 mx-auto object-contain h-[150px] md:h-[190px] aspect-square"
                             />
                             {product?.countInStock === 0 && (
                               <span
