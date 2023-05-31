@@ -113,6 +113,7 @@ export const routes = [
     component: ProductDetailsPage,
     isDefaultLayout: true,
   },
+
   // {
   //   path: "/product",
   //   component: ProductPage,

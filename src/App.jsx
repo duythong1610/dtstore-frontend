@@ -19,7 +19,7 @@ import theme from "./theme/theme";
 import Loading from "./components/LoadingComponent/Loading";
 import { useState } from "react";
 import history from "./history";
-import NprogressWrapper from "./components/NprogressWrapper/NprogressWrapper";
+import FallBackComponent from "./components/FallBackComponent/FallBackComponent";
 
 function App() {
   const dispatch = useDispatch();
@@ -87,32 +87,27 @@ function App() {
       <ChakraProvider theme={theme}>
         {/* <ThemeEditorProvider> */}
         <Router history={history}>
-          <NprogressWrapper>
-            <React.Suspense fallback={<h1>Hello anh em</h1>}>
-              <Routes>
-                {routes.map((route, index) => {
-                  const Page = route.component;
-                  const isCheckAuth = route.isPrivate && user.isAdmin;
-                  const Layout = route.isDefaultLayout
-                    ? DefaultLayout
-                    : Fragment;
-                  return (
-                    <Route
-                      key={index}
-                      path={isCheckAuth ? route.pathAdmin : route.path}
-                      element={
-                        <Layout>
-                          <Page />
-                        </Layout>
-                      }
-                    />
-                  );
-                })}
-              </Routes>
-            </React.Suspense>
-          </NprogressWrapper>
+          <React.Suspense fallback={<FallBackComponent />}>
+            <Routes>
+              {routes.map((route, index) => {
+                const Page = route.component;
+                const isCheckAuth = route.isPrivate && user.isAdmin;
+                const Layout = route.isDefaultLayout ? DefaultLayout : Fragment;
+                return (
+                  <Route
+                    key={index}
+                    path={isCheckAuth ? route.pathAdmin : route.path}
+                    element={
+                      <Layout>
+                        <Page />
+                      </Layout>
+                    }
+                  />
+                );
+              })}
+            </Routes>
+          </React.Suspense>
         </Router>
-
         {/* </ThemeEditorProvider> */}
       </ChakraProvider>
     </div>
