@@ -76,7 +76,7 @@ const ProductSimilar = ({ idProduct }) => {
             slidesPerGroupAuto
             spaceBetween={20}
             // loop
-            className="!p-4 !min-h-[330px] !md:py-4 !md:px-0 !md:min-h-[431px]"
+            className="!p-4 !min-h-[330px] md:!py-4 md:!px-0"
           >
             {productSimilar?.length > 0 &&
               productSimilar?.map((product) => {

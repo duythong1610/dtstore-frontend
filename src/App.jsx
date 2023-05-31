@@ -86,9 +86,9 @@ function App() {
     <div className="App">
       <ChakraProvider theme={theme}>
         {/* <ThemeEditorProvider> */}
-        <Loading isLoading={isLoading}>
-          <Router history={history}>
-            <NprogressWrapper>
+        <Router history={history}>
+          <NprogressWrapper>
+            <React.Suspense fallback={<h1>Hello anh em</h1>}>
               <Routes>
                 {routes.map((route, index) => {
                   const Page = route.component;
@@ -109,9 +109,10 @@ function App() {
                   );
                 })}
               </Routes>
-            </NprogressWrapper>
-          </Router>
-        </Loading>
+            </React.Suspense>
+          </NprogressWrapper>
+        </Router>
+
         {/* </ThemeEditorProvider> */}
       </ChakraProvider>
     </div>

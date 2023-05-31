@@ -55,10 +55,8 @@ const Comment = ({ idProduct }) => {
         user?.access_token
       );
       fetchProductDetails();
-      if (res) {
-        setCommentText({ text: "", createAt: "" });
-        message.success("Gửi đánh giá thành công");
-      }
+      setCommentText({ text: "", createAt: "" });
+      message.success("Gửi đánh giá thành công");
       return res;
     } else {
       message.error("Vui lòng nhập nội dung đánh giá");
@@ -72,11 +70,11 @@ const Comment = ({ idProduct }) => {
         replyText,
         user?.access_token
       );
+
       fetchProductDetails();
-      if (res) {
-        message.success("Đã gửi câu trả lời");
-        setReplyText({ text: "", createAt: "", commentId: "" });
-      }
+      message.success("Đã gửi câu trả lời");
+      setReplyText({ text: "", createAt: "", commentId: "" });
+
       return res;
     } else {
       message.error("Vui lòng nhập nội dung.");

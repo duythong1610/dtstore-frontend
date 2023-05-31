@@ -1,18 +1,52 @@
-import AdminPage from "../pages/AdminPage/AdminPage";
-import Home from "../pages/HomePage/Home";
-import Login from "../pages/LoginPage/Login";
-import MyOrder from "../pages/MyOrderPage/MyOrder";
-import OrderPage from "../pages/OrderPage/OrderPage";
-import PaymentPage from "../pages/PaymentPage/PaymentPage";
-import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
-import ProductPage from "../pages/ProductPage/ProductPage";
-import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import SignUpPage from "../pages/SignUpPage/SignUpPage";
-import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
-import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
-import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
-import ViewedProductsPage from "../pages/ViewedProductsPage/ViewedProductsPage";
-import VnpayStatusPage from "../pages/VnpayStatusPage/VnpayStatusPage";
+import React from "react";
+// import AdminPage from "../pages/AdminPage/AdminPage";
+// import Home from "../pages/HomePage/Home";
+// import Login from "../pages/LoginPage/Login";
+// import MyOrder from "../pages/MyOrderPage/MyOrder";
+// import OrderPage from "../pages/OrderPage/OrderPage";
+// import PaymentPage from "../pages/PaymentPage/PaymentPage";
+// import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
+// import ProductPage from "../pages/ProductPage/ProductPage";
+// import ProfilePage from "../pages/ProfilePage/ProfilePage";
+// import SignUpPage from "../pages/SignUpPage/SignUpPage";
+// import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
+// import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
+// import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
+// import ViewedProductsPage from "../pages/ViewedProductsPage/ViewedProductsPage";
+// import VnpayStatusPage from "../pages/VnpayStatusPage/VnpayStatusPage";
+
+const AdminPage = React.lazy(() => import("../pages/AdminPage/AdminPage"));
+const Home = React.lazy(() => import("../pages/HomePage/Home"));
+const Login = React.lazy(() => import("../pages/LoginPage/Login"));
+const MyOrder = React.lazy(() => import("../pages/MyOrderPage/MyOrder"));
+const OrderPage = React.lazy(() => import("../pages/OrderPage/OrderPage"));
+const PaymentPage = React.lazy(() =>
+  import("../pages/PaymentPage/PaymentPage")
+);
+const ProductDetailsPage = React.lazy(() =>
+  import("../pages/ProductDetailsPage/ProductDetailsPage")
+);
+const ProfilePage = React.lazy(() =>
+  import("../pages/ProfilePage/ProfilePage")
+);
+const SignUpPage = React.lazy(() => import("../pages/SignUpPage/SignUpPage"));
+const TypeProductPage = React.lazy(() =>
+  import("../pages/TypeProductPage/TypeProductPage")
+);
+const OrderSuccess = React.lazy(() =>
+  import("../pages/OrderSuccessPage/OrderSuccess")
+);
+const DetailsOrderPage = React.lazy(() =>
+  import("../pages/DetailsOrderPage/DetailsOrderPage")
+);
+const ViewedProductsPage = React.lazy(() =>
+  import("../pages/ViewedProductsPage/ViewedProductsPage")
+);
+
+const VnpayStatusPage = React.lazy(() =>
+  import("../pages/VnpayStatusPage/VnpayStatusPage")
+);
+
 export const routes = [
   {
     path: "/",
@@ -79,11 +113,11 @@ export const routes = [
     component: ProductDetailsPage,
     isDefaultLayout: true,
   },
-  {
-    path: "/product",
-    component: ProductPage,
-    isDefaultLayout: false,
-  },
+  // {
+  //   path: "/product",
+  //   component: ProductPage,
+  //   isDefaultLayout: false,
+  // },
   {
     path: "/thong-tin-tai-khoan",
     component: ProfilePage,
