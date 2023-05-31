@@ -33,9 +33,50 @@ export const getBrandByType = async (query) => {
   return res.data;
 };
 
-export const getProductByType = async (type, sortObj, brandId) => {
+export const getProductByType = async (
+  type,
+  sortObj,
+  brandId,
+  minPrice,
+  maxPrice
+) => {
   const { sort, sortBy } = sortObj;
   console.log(sortBy);
+  if (type && brandId && sortBy && minPrice && maxPrice) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&sort=${sort}&sort=${sortBy}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+    return res.data;
+  }
+
+  if (type && brandId && minPrice && maxPrice) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+    return res.data;
+  }
+
+  if (type && sortBy && minPrice && maxPrice) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&sort=${sort}&sort=${sortBy}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+    return res.data;
+  }
+
+  if (type && brandId && minPrice && maxPrice) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+    return res.data;
+  }
+
+  if (type && minPrice && maxPrice) {
+    const res = await axios.get(
+      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+    return res.data;
+  }
+
   if (type && sortBy && brandId) {
     const res = await axios.get(
       `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&sort=${sort}&sort=${sortBy}`

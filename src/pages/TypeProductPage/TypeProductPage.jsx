@@ -32,13 +32,14 @@ function TypeProductPage() {
   const [label, setLabel] = useState("Mặc định");
   const [brandsOfType, setBrandsOfType] = useState("");
   const [productsViews, setProductsView] = useState("");
-  const [minValue, setMinValue] = useState(300000);
-  const [maxValue, setMaxValue] = useState(50000000);
+  const [minValue, setMinValue] = useState(null);
+  const [maxValue, setMaxValue] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
+  const [activeBrand, setActiveBrand] = useState("");
+  const [activePrice, setActivePrice] = useState("");
   const [isToggleContent, setIsToggleContent] = useState(false);
   const [isOpenFilterMobile, setIsOpenFilterMobile] = useState(false);
-  const [active, setActive] = useState("");
   const [isToggle, setIsToggle] = useState("");
   const [paginate, setPaginate] = useState({
     page: 0,
@@ -46,11 +47,16 @@ function TypeProductPage() {
     total: 1,
   });
 
-  console.log(active);
   console.log(type, id);
   const fetchProductType = async (type) => {
     setLoading(true);
-    const res = await ProductService.getProductByType(type, sort, active);
+    const res = await ProductService.getProductByType(
+      type,
+      sort,
+      activeBrand,
+      minValue,
+      maxValue
+    );
     console.log(res);
     if (res) {
       setLoading(false);
@@ -78,7 +84,7 @@ function TypeProductPage() {
     if (type) {
       fetchProductType(type);
     }
-  }, [type, sort, active]);
+  }, [type, sort, activeBrand, minValue, maxValue]);
 
   useEffect(() => {
     fetchBrandByType();
@@ -89,45 +95,20 @@ function TypeProductPage() {
   // };
 
   const handleSearchPrice = (type) => {
-    let result;
     switch (type) {
       case "2to4":
-        result = products.filter((item) => {
-          return (
-            item.price - (item.price * item.discount) / 100 >= 2000000 &&
-            item.price - (item.price * item.discount) / 100 <= 4000000
-          );
-        });
-        return setProductsView(result);
+        return setMinValue(2000000), setMaxValue(4000000);
       case "4to7":
-        result = products.filter((item) => {
-          return (
-            item.price - (item.price * item.discount) / 100 >= 4000000 &&
-            item.price - (item.price * item.discount) / 100 <= 7000000
-          );
-        });
-        return setProductsView(result);
+        return setMinValue(4000000), setMaxValue(7000000);
+
       case "7to13":
-        result = products.filter((item) => {
-          return (
-            item.price - (item.price * item.discount) / 100 >= 7000000 &&
-            item.price - (item.price * item.discount) / 100 <= 13000000
-          );
-        });
-        return setProductsView(result);
+        return setMinValue(7000000), setMaxValue(13000000);
+
       case "13to20":
-        result = products.filter((item) => {
-          return (
-            item.price - (item.price * item.discount) / 100 >= 13000000 &&
-            item.price - (item.price * item.discount) / 100 <= 20000000
-          );
-        });
-        return setProductsView(result);
+        return setMinValue(13000000), setMaxValue(20000000);
+
       case "20upto":
-        result = products.filter((item) => {
-          return item.price - (item.price * item.discount) / 100 >= 20000000;
-        });
-        return setProductsView(result);
+        return setMinValue(20000000), setMaxValue("");
 
       default:
         console.log("hhh");
@@ -247,6 +228,20 @@ function TypeProductPage() {
     }
   };
 
+  const handleFilterPrice = (item) => {
+    setActivePrice(item.type);
+    if (item.type === activePrice) {
+      setActivePrice("");
+    }
+  };
+
+  const handleFilterBrand = (item) => {
+    setActiveBrand(item._id);
+    if (item._id === activeBrand) {
+      setActiveBrand(null);
+    }
+  };
+
   return (
     <Loading isLoading={loading}>
       <div className="bg-slate-100">
@@ -260,11 +255,11 @@ function TypeProductPage() {
                       return (
                         <div
                           className={`item inline-block mr-2 mb-2 ${
-                            active === item.type &&
+                            activePrice === item.type &&
                             "bg-purple-600 rounded-md text-white"
                           }`}
                           onClick={() => {
-                            setActive(item.type);
+                            handleFilterPrice(item);
                           }}
                         >
                           <button
@@ -297,15 +292,14 @@ function TypeProductPage() {
                       return (
                         <div
                           onClick={() => {
-                            setActive(item._id);
+                            handleFilterBrand(item);
                           }}
                         >
                           <button
                             className={`item inline-block w-full !py-2 text-left${
-                              active === item._id &&
+                              activeBrand === item._id &&
                               "border bg-purple-600 rounded-md text-white"
                             }`}
-                            onClick={() => handleFilterByBrand(item?.name)}
                           >
                             {item?.name}
                           </button>
@@ -343,28 +337,68 @@ function TypeProductPage() {
                     }
                   >
                     <div className="p-5">
-                      <h1 className="text-xl">Thương hiệu</h1>
-                      {Array.isArray(brandsOfType) &&
-                        brandsOfType?.map((item) => {
+                      <div>
+                        <h1 className="text-xl">Theo giá</h1>
+                        {items.map((item) => {
                           return (
                             <div
+                              className={`item inline-block mr-2 mb-2 ${
+                                activePrice === item.type &&
+                                "bg-purple-600 rounded-md text-white"
+                              }`}
                               onClick={() => {
-                                setActive(item._id);
+                                handleFilterPrice(item);
                                 setIsToggleContent(!isToggleContent);
                               }}
                             >
                               <button
-                                className={`item inline-block w-full !py-2 text-left${
-                                  active === item._id &&
-                                  "border bg-purple-600 rounded-md text-white"
-                                }`}
-                                onClick={() => handleFilterByBrand(item?.name)}
+                                className="py-1 px-2 border border-gray-300 rounded-md"
+                                onClick={() => handleSearchPrice(item?.type)}
                               >
-                                {item?.name}
+                                {item?.label}
                               </button>
                             </div>
                           );
                         })}
+                        <div>
+                          <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
+                          <Slider
+                            step={10000}
+                            min={300000}
+                            max={50000000}
+                            range
+                            value={[minValue, maxValue]}
+                            defaultValue={[300000, 50000000]}
+                            onChange={handleOnChangeSliderPrice}
+                            tooltip={{ formatter }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <h1 className="text-xl">Thương hiệu</h1>
+                        {Array.isArray(brandsOfType) &&
+                          brandsOfType?.map((item) => {
+                            return (
+                              <div
+                                onClick={() => {
+                                  setActiveBrand(item._id);
+                                  setIsToggleContent(!isToggleContent);
+                                }}
+                              >
+                                <button
+                                  className={`item inline-block w-full !py-2 text-left${
+                                    activeBrand === item._id &&
+                                    "border bg-purple-600 rounded-md text-white"
+                                  }`}
+                                  onClick={() => handleFilterBrand(item?.name)}
+                                >
+                                  {item?.name}
+                                </button>
+                              </div>
+                            );
+                          })}
+                      </div>
+
                       {/* <div className="grid grid-cols-2 max-h-[80vh] overflow-auto scrollbar-item">
                         <TypeProduct
                           items={typeProduct}
