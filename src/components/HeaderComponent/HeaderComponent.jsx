@@ -245,7 +245,7 @@ function HeaderComponent() {
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
+                    ? "flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:md:bg-purple-100 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
                     : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
               >
@@ -257,7 +257,7 @@ function HeaderComponent() {
                 onClick={handleToggleClassContent}
                 className={
                   activeCategory
-                    ? "flex md:hidden flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
+                    ? "flex md:hidden flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:md:bg-purple-100 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
                     : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
               >
