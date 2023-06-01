@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import { Collapse, Pagination, Slider } from "antd";
 import { useLocation, useParams } from "react-router-dom";
@@ -23,7 +23,6 @@ function TypeProductPage() {
   const { type, id } = useParams();
   const { Panel } = Collapse;
 
-  const { state } = useLocation();
   const [sort, setSort] = useState({
     sortBy: null,
     sort: null,
@@ -34,7 +33,10 @@ function TypeProductPage() {
   const [productsViews, setProductsView] = useState("");
   const [minValue, setMinValue] = useState(null);
   const [maxValue, setMaxValue] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
   const [activeBrand, setActiveBrand] = useState("");
   const [activePrice, setActivePrice] = useState("");
@@ -62,6 +64,7 @@ function TypeProductPage() {
       setLoading(false);
       setProducts(res?.data);
       setProductsView(res?.data);
+      setIsDataLoaded(true);
       setPaginate({
         ...paginate,
         total: res?.totalPage,
@@ -107,30 +110,17 @@ function TypeProductPage() {
       case "13to20":
         return setMinValue(13000000), setMaxValue(20000000);
 
-      case "20upto":
-        return setMinValue(20000000), setMaxValue("");
+      case "20to30":
+        return setMinValue(20000000), setMaxValue(30000000);
 
       default:
         console.log("hhh");
     }
   };
 
-  // const handleFilterByBrand = async (brand) => {
-  //   const res = await ProductService.getProductByBrandAndType(brand, type);
-  //   setProductsView(res?.data);
-  //   return res;
-  // };
   const handleOnChangeSliderPrice = (value) => {
-    setProductsView(products);
     setMinValue(value[0]);
     setMaxValue(value[1]);
-    const productFilter = products.filter((item) => {
-      return (
-        item.price - (item.price * item.discount) / 100 >= minValue &&
-        item.price - (item.price * item.discount) / 100 <= maxValue
-      );
-    });
-    setProductsView(productFilter);
   };
 
   // const handleToggleClass = () => {
@@ -188,8 +178,8 @@ function TypeProductPage() {
       type: "13to20",
     },
     {
-      label: "Trên 20 triệu",
-      type: "20upto",
+      label: "Từ 20-30 triệu",
+      type: "20to30",
     },
   ];
 
@@ -232,6 +222,8 @@ function TypeProductPage() {
     setActivePrice(item.type);
     if (item.type === activePrice) {
       setActivePrice("");
+      setMinValue(null);
+      setMaxValue(null);
     }
   };
 
@@ -242,11 +234,40 @@ function TypeProductPage() {
     }
   };
 
+  // const minValueDefault = useMemo(() => {
+  //   const minPrice =
+  //     products?.length > 0 &&
+  //     products?.reduce((max, product) => {
+  //       if (product.price > max) {
+  //         return product.price;
+  //       }
+  //       return max;
+  //     }, 0);
+  //   return minPrice;
+  // }, [type]);
+
+  useEffect(() => {
+    if (isDataLoaded && !maxPrice) {
+      const initialMaxPrice = Math.max(
+        ...products?.map((product) => product.price)
+      );
+
+      const initialMinPrice =
+        Array.isArray(products) &&
+        Math.min(...products?.map((product) => product.price));
+      setMaxPrice(initialMaxPrice);
+      setMinPrice(initialMinPrice);
+    }
+  }, [isDataLoaded]);
+
+  console.log(maxPrice);
+  console.log(minPrice);
+  console.log(products);
   return (
     <Loading isLoading={loading}>
       <div className="bg-slate-100">
         <div className="max-w-7xl m-auto">
-          <div className="flex gap-5 mt-5">
+          <div className="flex flex-col md:flex-row gap-5 mt-5 pb-5">
             <div className="min-w-[15%] w-[15%] rounded-xl overflow-hidden hidden md:block">
               <Collapse defaultActiveKey={["1", "2"]}>
                 <Panel header="Khoảng giá" key="1" className="font-medium">
@@ -272,17 +293,37 @@ function TypeProductPage() {
                       );
                     })}
                     <div>
-                      <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
-                      <Slider
-                        step={10000}
-                        min={300000}
-                        max={50000000}
-                        range
-                        value={[minValue, maxValue]}
-                        defaultValue={[300000, 50000000]}
-                        onChange={handleOnChangeSliderPrice}
-                        tooltip={{ formatter }}
-                      />
+                      <h1 className="mt-2">Chọn mức giá phù hợp</h1>
+                      <div className="flex items-center gap-1">
+                        <div>
+                          {minValue ? (
+                            <span>{convertPrice(minValue).slice(0, -4)} </span>
+                          ) : (
+                            <span>{convertPrice(minPrice).slice(0, -4)}</span>
+                          )}
+                        </div>
+                        <span>đến</span>
+                        <div>
+                          {maxValue ? (
+                            <span>{convertPrice(maxValue).slice(0, -4)} </span>
+                          ) : (
+                            <span>{convertPrice(maxPrice).slice(0, -4)}</span>
+                          )}
+                        </div>
+                      </div>
+                      {minPrice && maxPrice && (
+                        <div>
+                          <Slider
+                            step={10000}
+                            min={minPrice}
+                            max={maxPrice}
+                            range
+                            defaultValue={[minPrice, maxPrice]}
+                            onAfterChange={handleOnChangeSliderPrice}
+                            tooltip={{ formatter }}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Panel>
@@ -310,7 +351,7 @@ function TypeProductPage() {
               </Collapse>
             </div>
 
-            <div className="py-5 md:pt-0 min-h-screen">
+            <div className="py-5 md:pt-0 min-h-screen md:min-h-0">
               <div className="flex flex-col justify-between gap-4">
                 <div className="fixed top-0 right-0 left-0 z-[4] bg-white py-3 shadow-sm px-4 md:hidden">
                   <div className="flex justify-between">
@@ -457,6 +498,7 @@ function TypeProductPage() {
                     {renderFilter()}
                   </div>
                 </div>
+
                 <div className="mt-1 md:mt-0 grid gap-3 p-4 md:p-0 grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
                   {productsViews?.length > 0 &&
                     productsViews
@@ -498,6 +540,11 @@ function TypeProductPage() {
                 style={{ textAlign: "center", margin: "20px 0" }}
               /> */}
               </div>
+              {productsViews.length === 0 && (
+                <div className="text-center w-full pt-[40%]">
+                  <h1 className="">Không tìm thấy sản phẩm phù hợp</h1>
+                </div>
+              )}
             </div>
           </div>
         </div>

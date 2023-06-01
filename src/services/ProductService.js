@@ -41,65 +41,18 @@ export const getProductByType = async (
   maxPrice
 ) => {
   const { sort, sortBy } = sortObj;
-  console.log(sortBy);
-  if (type && brandId && sortBy && minPrice && maxPrice) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&sort=${sort}&sort=${sortBy}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
-    return res.data;
+  let url = `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}`;
+  if (brandId) {
+    url += `&brandCode=${brandId}`;
   }
-
-  if (type && brandId && minPrice && maxPrice) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
-    return res.data;
+  if (sortBy) {
+    url += `&sort=${sort}&sort=${sortBy}`;
   }
-
-  if (type && sortBy && minPrice && maxPrice) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&sort=${sort}&sort=${sortBy}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
-    return res.data;
+  if (minPrice && maxPrice) {
+    url += `&minPrice=${minPrice}&maxPrice=${maxPrice}`;
   }
-
-  if (type && brandId && minPrice && maxPrice) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
-    return res.data;
-  }
-
-  if (type && minPrice && maxPrice) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
-    return res.data;
-  }
-
-  if (type && sortBy && brandId) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}&sort=${sort}&sort=${sortBy}`
-    );
-    return res.data;
-  }
-  if (type && sortBy) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&sort=${sort}&sort=${sortBy}`
-    );
-    return res.data;
-  }
-  if (type && brandId) {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}&brandCode=${brandId}`
-    );
-    return res.data;
-  } else {
-    const res = await axios.get(
-      `https://dtstore-backend.onrender.com/api/product/get-product-by-type/?typeCode=${type}`
-    );
-    return res.data;
-  }
+  const res = await axios.get(url);
+  return res.data;
 };
 
 export const getProductByBrandAndType = async (filter, typeCode) => {
