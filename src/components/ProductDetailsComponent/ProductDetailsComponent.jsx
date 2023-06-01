@@ -112,9 +112,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             amount: numProduct,
             image: productDetails?.image,
             price: productDetails?.price,
-            priceDiscount:
-              productDetails?.price -
-              (productDetails?.price * productDetails?.discount) / 100,
+            priceAfterDiscount: productDetails?.priceAfterDiscount,
             product: productDetails?._id,
             discount: productDetails?.discount,
             countInstock: productDetails?.countInStock,

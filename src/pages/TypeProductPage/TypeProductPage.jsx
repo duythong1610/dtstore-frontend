@@ -37,7 +37,7 @@ function TypeProductPage() {
   const [maxPrice, setMaxPrice] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [activeFilter, setActiveFilter] = useState("");
+  const [activeFilter, setActiveFilter] = useState(1);
   const [activeBrand, setActiveBrand] = useState("");
   const [activePrice, setActivePrice] = useState("");
   const [isToggleContent, setIsToggleContent] = useState(false);
@@ -276,7 +276,7 @@ function TypeProductPage() {
                     {items.map((item) => {
                       return (
                         <div
-                          className={`item inline-block mr-2 mb-2 ${
+                          className={`item mr-2 mb-2 ${
                             activePrice === item.type &&
                             "bg-purple-600 rounded-md text-white"
                           }`}
@@ -285,7 +285,7 @@ function TypeProductPage() {
                           }}
                         >
                           <button
-                            className="py-1 px-2 border border-gray-300 rounded-md"
+                            className="py-1 px-2 border border-gray-300 rounded-md w-full"
                             onClick={() => handleSearchPrice(item?.type)}
                           >
                             {item?.label}
@@ -456,12 +456,19 @@ function TypeProductPage() {
                         {itemsFilter.map((item) => {
                           return (
                             <li
-                              className="py-2 border-b-[1px] w-full flex items-center justify-between"
+                              className="py-3 border-b-[1px] w-full flex items-center justify-between cursor-pointer"
                               onClick={() => handleButton(item)}
                             >
-                              <span>{item.label}</span>
+                              <span
+                                className={
+                                  activeFilter === item.id &&
+                                  `text-purple-600 font-medium`
+                                }
+                              >
+                                {item.label}
+                              </span>
                               {activeFilter === item.id && (
-                                <CheckOutlined className="text-blue-500" />
+                                <CheckOutlined className="text-purple-600" />
                               )}
                             </li>
                             // <div className="item inline-block mr-2">

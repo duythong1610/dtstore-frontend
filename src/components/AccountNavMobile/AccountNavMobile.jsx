@@ -122,7 +122,7 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                   </li>
                   <li
                     className="cursor-pointer"
-                    onClick={() => handleNavigate("viewed-products")}
+                    onClick={() => handleNavigate("san-pham-da-xem")}
                   >
                     <div className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                       <div className="flex items-center justify-center gap-3">

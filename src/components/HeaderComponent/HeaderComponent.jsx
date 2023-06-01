@@ -268,7 +268,7 @@ function HeaderComponent() {
               <Loading isLoading={loading}>
                 <div className="hidden md:block">
                   <Popover
-                    trigger="click"
+                    trigger={["hover", "click"]}
                     content={content}
                     style={{ padding: "0px" }}
                     className="hidden md:block"

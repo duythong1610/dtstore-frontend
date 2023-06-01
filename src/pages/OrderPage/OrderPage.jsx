@@ -398,8 +398,8 @@ const OrderPage = () => {
                     }
                   />
                 </WrapperStyleHeaderDilivery>
-                <WrapperStyleHeader className="top-60 md:top-28 justify-between">
-                  <span className="md:mr-[110px]">
+                <WrapperStyleHeader className="top-60 md:top-20 justify-between">
+                  <span className="md:mr-[165px]">
                     <Checkbox
                       onChange={handleOnchangeCheckAll}
                       checked={
@@ -454,17 +454,21 @@ const OrderPage = () => {
                               objectFit: "cover",
                             }}
                           />
-                          <div className="flex flex-col">
-                            <span className="md:w-60 w-full font-medium overflow-hidden text-ellipsis whitespace-nowrap">
+                          <div className="flex flex-col md:flex-none">
+                            <span className="md:!max-w-[160px] max-w-[180px] font-medium line-clamp-2">
                               {order?.name}
                             </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between w-full mt-2 md:ml-[150px]">
+                          <div className="flex flex-col">
                             {order?.discount > 0 && (
-                              <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
+                              <span className=" w-full overflow-hidden text-ellipsis whitespace-nowrap text-zinc-500 text-xs line-through">
                                 {convertPrice(order?.price)}
                               </span>
                             )}
 
-                            <span className="md:hidden w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
+                            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-red-500 font-medium text-sm">
                               {order?.discount
                                 ? convertPrice(
                                     priceDiscount(order?.price, order) *
@@ -473,9 +477,7 @@ const OrderPage = () => {
                                 : convertPrice(order?.price * order?.amount)}
                             </span>
                           </div>
-                        </div>
-                        <div className="flex items-center justify-between w-full mt-2">
-                          <span className="hidden md:block">
+                          {/* <span className="hidden md:block">
                             <span
                               style={{ fontSize: "13px", color: "#242424" }}
                             >
@@ -485,7 +487,7 @@ const OrderPage = () => {
                                   )
                                 : convertPrice(order?.price)}
                             </span>
-                          </span>
+                          </span> */}
                           <WrapperCountOrder className="ml-9">
                             <button
                               style={{
@@ -554,7 +556,7 @@ const OrderPage = () => {
               </WrapperLeft>
 
               <div className="mt-5 md:mt-0 md:ml-5 flex flex-col gap-2 md:gap-3 items-center">
-                <div className="w-full fixed md:sticky z-10 bottom-0 left-0 right-0 md:top-5">
+                <div className="w-full fixed md:static bottom-0 left-0 right-0 md:top-5">
                   <div
                     className={
                       moreInfoOrder

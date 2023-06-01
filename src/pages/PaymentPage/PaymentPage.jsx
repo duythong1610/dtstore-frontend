@@ -322,7 +322,7 @@ const PaymentPage = () => {
                     Chọn phương thức thanh toán
                   </h1>
                   <Radio.Group
-                    className="mt-2 bg-blue-50 border border-blue-200 rounded h-24 p-4 flex flex-col gap-3 justify-center md:w-[500px]"
+                    className="mt-2 bg-blue-50 border border-blue-200 rounded h-32 md:h-24 p-4 flex flex-col gap-3 justify-center md:w-[500px]"
                     onChange={handlePayment}
                     value={payment}
                   >
@@ -342,7 +342,12 @@ const PaymentPage = () => {
                     <div className="flex items-center gap-1">
                       <Radio value="vnpay">
                         <div className="flex items-center gap-2">
-                          <img src={vnpayImg} alt="vnpay-img" width={32} height={32} />
+                          <img
+                            src={vnpayImg}
+                            alt="vnpay-img"
+                            width={32}
+                            height={32}
+                          />
                           <span>Thanh toán qua cổng giao dịch VNPAY</span>
                         </div>
                       </Radio>
@@ -385,7 +390,7 @@ const PaymentPage = () => {
                     <div>
                       <span
                         onClick={handleChangeAddress}
-                       className="cursor-pointer text-purple-600"
+                        className="cursor-pointer text-purple-600"
                       >
                         Thay đổi
                       </span>
@@ -522,7 +527,7 @@ const PaymentPage = () => {
                         onClick={() => handleVnPay()}
                         size={40}
                         styleButton={{
-                          background: "#422AFB",
+                          background: "#9333EA",
                           height: "48px",
                           width: "100%",
                           border: "none",
