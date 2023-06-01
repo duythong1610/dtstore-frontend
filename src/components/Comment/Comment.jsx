@@ -24,6 +24,7 @@ const Comment = ({ idProduct }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [userLikeInfo, setUserLikeInfo] = useState("");
   const [loadingLike, setLoadingLike] = useState(false);
+  const [replyId, setReplyId] = useState("");
 
   const [replyText, setReplyText] = useState({
     text: "",
@@ -33,6 +34,8 @@ const Comment = ({ idProduct }) => {
   const [productDetails, setProductDetails] = useState([]);
   const [commentId, setCommentId] = useState("");
   const [commentIdReplying, setCommentIdReplying] = useState("");
+  const [commentIdReplyingTheReplying, setCommentIdReplyingTheReplying] =
+    useState("");
   const fetchProductDetails = async () => {
     const res = await ProductService.getDetailsProduct(idProduct);
     setProductDetails(res.data);
@@ -82,6 +85,8 @@ const Comment = ({ idProduct }) => {
   };
 
   const handleReplyClick = (commentId) => {
+    console.log(commentId);
+    console.log("abc");
     if (!user.id) {
       message.error("Vui lòng đăng nhập để trả lời");
     } else {
@@ -89,6 +94,19 @@ const Comment = ({ idProduct }) => {
         setCommentIdReplying("");
       } else {
         setCommentIdReplying(commentId);
+      }
+    }
+  };
+
+  const handleReplyTheReplyClick = (commentId) => {
+    setReplyId(commentId);
+    if (!user.id) {
+      message.error("Vui lòng đăng nhập để trả lời");
+    } else {
+      if (commentIdReplyingTheReplying === commentId) {
+        setCommentIdReplyingTheReplying("");
+      } else {
+        setCommentIdReplyingTheReplying(commentId);
       }
     }
   };
@@ -248,7 +266,9 @@ const Comment = ({ idProduct }) => {
                 <div className="flex gap-2 items-center">
                   <span className="text-base font-medium">{user.name}</span>
                   {user.isAdmin && (
-                    <CheckCircleFilled className="text-blue-500" />
+                    <Tooltip title="Người sáng lập">
+                      <CheckCircleFilled className="text-blue-500" />
+                    </Tooltip>
                   )}
                 </div>
               </div>
@@ -300,7 +320,9 @@ const Comment = ({ idProduct }) => {
                               {comment?.postedBy?.name}
                             </h1>
                             {comment?.postedBy?.isAdmin && (
-                              <CheckCircleFilled className="text-blue-500" />
+                              <Tooltip title="Người sáng lập">
+                                <CheckCircleFilled className="text-blue-500" />
+                              </Tooltip>
                             )}
                           </div>
                           <h2 className="text-xs md:text-sm font-normal m-0">
@@ -422,7 +444,9 @@ const Comment = ({ idProduct }) => {
                                         {reply?.postedBy?.name}
                                       </h1>
                                       {reply?.postedBy?.isAdmin && (
-                                        <CheckCircleFilled className="text-blue-500" />
+                                        <Tooltip title="Người sáng lập">
+                                          <CheckCircleFilled className="text-blue-500" />
+                                        </Tooltip>
                                       )}
                                     </div>
                                     <h2 className="text-xs md:text-sm font-normal m-0">
@@ -476,9 +500,11 @@ const Comment = ({ idProduct }) => {
                               <div className="flex gap-3">
                                 <span
                                   className="cursor-pointer"
-                                  onClick={() => handleReplyClick(reply?._id)}
+                                  onClick={() =>
+                                    handleReplyTheReplyClick(reply?._id)
+                                  }
                                 >
-                                  Trả lời
+                                  Trả lờii
                                 </span>
                                 <span
                                   className={
@@ -512,7 +538,8 @@ const Comment = ({ idProduct }) => {
                           </div>
                         );
                       })}
-                    {commentIdReplying === comment?._id && (
+                    {(commentIdReplying === comment?._id ||
+                      commentIdReplyingTheReplying === replyId) && (
                       <div className="w-full md:w-1/2 mb-4 mt-1">
                         <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
                           <div className="flex gap-4 items-center h-full">

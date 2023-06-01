@@ -23,6 +23,7 @@ const CardComponent = ({
   description,
   image,
   price,
+  priceAfterDiscount,
   rating,
   type,
   name,
@@ -109,7 +110,7 @@ const CardComponent = ({
       {discount > 0 && (
         <WrapperPriceText className="text-red-500 text-sm md:text-base">
           <span style={{ marginRight: "8px" }}>
-            {convertPrice(price - (price * discount) / 100)}
+            {convertPrice(priceAfterDiscount)}
           </span>
         </WrapperPriceText>
       )}

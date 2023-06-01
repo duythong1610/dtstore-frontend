@@ -213,9 +213,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                   }
                 >
                   {productDetails?.discount
-                    ? convertPrice(
-                        priceDiscount(productDetails?.price, productDetails)
-                      )
+                    ? convertPrice(productDetails?.priceAfterDiscount)
                     : convertPrice(productDetails?.price)}
                 </div>
 

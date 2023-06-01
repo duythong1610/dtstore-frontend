@@ -380,10 +380,7 @@ function Home() {
                           {product?.discount > 0 && (
                             <WrapperPriceText className="text-red-500 text-sm md:text-base">
                               <span style={{ marginRight: "8px" }}>
-                                {convertPrice(
-                                  product?.price -
-                                    (product?.price * product?.discount) / 100
-                                )}
+                                {convertPrice(product.priceAfterDiscount)}
                               </span>
                             </WrapperPriceText>
                           )}
@@ -432,6 +429,7 @@ function Home() {
                       description={product.description}
                       image={product.image}
                       price={product.price}
+                      priceAfterDiscount={product.priceAfterDiscount}
                       rating={product.rating}
                       type={product.type}
                       sold={product.sold}
@@ -479,6 +477,7 @@ function Home() {
           {/* <NavbarComponent /> */}
         </div>
       </div>
+
       {/* </Loading> */}
     </>
   );

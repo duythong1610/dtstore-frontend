@@ -50,6 +50,7 @@ function TypeProductPage() {
   });
 
   console.log(type, id);
+
   const fetchProductType = async (type) => {
     setLoading(true);
     const res = await ProductService.getProductByType(
@@ -149,13 +150,13 @@ function TypeProductPage() {
     {
       id: 4,
       label: "Giá giảm dần",
-      sortBy: "price",
+      sortBy: "priceAfterDiscount",
       sort: "desc",
     },
     {
       id: 5,
       label: "Giá tăng dần",
-      sortBy: "price",
+      sortBy: "priceAfterDiscount",
       sort: "asc",
     },
   ];
@@ -522,6 +523,7 @@ function TypeProductPage() {
                             description={product.description}
                             image={product.image}
                             price={product.price}
+                            priceAfterDiscount={product.priceAfterDiscount}
                             rating={product.rating}
                             type={product.type}
                             sold={product.sold}

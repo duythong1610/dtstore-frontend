@@ -108,6 +108,11 @@ body {
   color: #fff;
   border-radius: 0px !important;
 }
+
+.ant-steps .ant-steps-item-process .ant-steps-item-icon {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
 .ant-radio-wrapper {
   display: flex;
   align-items: center;
