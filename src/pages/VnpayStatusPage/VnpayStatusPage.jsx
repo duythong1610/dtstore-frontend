@@ -59,16 +59,6 @@ const VnpayStatusPage = () => {
     }
   }, [isOpenModalUpdateInfo]);
 
-  const priceMemo = useMemo(() => {
-    const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + cur.priceAfterDiscount * cur.amount;
-    }, 0);
-    return result;
-  }, [order]);
-
-  console.log(priceMemo);
-  console.log(order);
-
   const handleAddOrder = () => {
     if (
       user?.access_token &&
@@ -78,7 +68,7 @@ const VnpayStatusPage = () => {
       user?.phone &&
       user?.city &&
       user?.district &&
-      priceMemo &&
+      totalPrice &&
       user?.id
     ) {
       mutationAddOrder.mutate({
@@ -129,12 +119,12 @@ const VnpayStatusPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt hàng thành công");
-      sessionStorage.removeItem("paymentMethod");
-      sessionStorage.removeItem("delivery");
-      sessionStorage.removeItem("freeshipPrice");
-      sessionStorage.removeItem("itemsPrice");
-      sessionStorage.removeItem("totalPrice");
-      sessionStorage.removeItem("shippingPrice");
+      // sessionStorage.removeItem("paymentMethod");
+      // sessionStorage.removeItem("delivery");
+      // sessionStorage.removeItem("freeshipPrice");
+      // sessionStorage.removeItem("itemsPrice");
+      // sessionStorage.removeItem("totalPrice");
+      // sessionStorage.removeItem("shippingPrice");
       navigate("/order-success");
     } else if (isError) {
       message.error();

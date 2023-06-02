@@ -218,7 +218,7 @@ const PaymentPage = () => {
     sessionStorage.setItem("shippingPrice", handleDeliveryPrice());
 
     const data = {
-      amount: state?.totalPrice,
+      amount: totalPrice,
       bankCode: "",
       language: "vn",
       vnp_OrderInfo: "test thu coi",
