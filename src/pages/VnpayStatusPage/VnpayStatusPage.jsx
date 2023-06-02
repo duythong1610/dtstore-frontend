@@ -60,6 +60,7 @@ const VnpayStatusPage = () => {
   }, [order]);
 
   console.log(priceMemo);
+  console.log(order);
 
   const handleAddOrder = () => {
     if (
@@ -86,6 +87,7 @@ const VnpayStatusPage = () => {
         delivery,
         itemsPrice: priceMemo,
         shippingPrice: 30000,
+        freeshipPrice: 0,
         totalPrice: priceMemo,
         user: user?.id,
         email: user?.email,
