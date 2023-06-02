@@ -47,11 +47,20 @@ const VnpayStatusPage = React.lazy(() =>
   import("../pages/VnpayStatusPage/VnpayStatusPage")
 );
 
+const Uploaded = React.lazy(() =>
+  import("../components/UploadedComponent/UploadedComponent")
+);
+
 export const routes = [
   {
     path: "/",
     component: Home,
     isDefaultLayout: true,
+  },
+  {
+    path: "/uploaded",
+    component: Uploaded,
+    isDefaultLayout: false,
   },
 
   {

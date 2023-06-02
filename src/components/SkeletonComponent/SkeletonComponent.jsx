@@ -12,7 +12,7 @@ const SkeletonComponent = () => {
         span={14}
         className="max-w-full md:pl-5 flex flex-col flex-none md:flex-auto"
       >
-        <div className="flex flex-col gap:3 md:gap-4 mb-[30px]">
+        <div className="flex flex-col gap-3 md:gap-4 mb-[30px]">
           <div className="skeleton h-11 w-full rounded-md" />
           <div className="skeleton h-6 w-1/2 rounded-md" />
           <div className="skeleton h-14 w-full rounded-md" />

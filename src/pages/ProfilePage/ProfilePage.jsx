@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { WrapperUploadFile } from "./style";
-
+import storage from "../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
@@ -29,6 +30,7 @@ const ProfilePage = () => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [districtsRender, setDistrictsRender] = useState([]);
+  const [userAvatarUpload, setUserAvatarUpload] = useState("");
   const [stateUserDetails, setStateUserDetails] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -133,11 +135,13 @@ const ProfilePage = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
+    setUserAvatarUpload(file.originFileObj);
     setStateUserDetails({
       ...stateUserDetails,
       avatar: file.preview,
     });
   };
+  console.log(userAvatarUpload);
 
   const fetchProvince = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/");
@@ -164,18 +168,27 @@ const ProfilePage = () => {
     return { value: dis?.name };
   });
 
-  const handleUpdate = () => {
-    mutation.mutate({
-      id: user?.id,
-      email: stateUserDetails?.email,
-      name: stateUserDetails?.name,
-      phone: stateUserDetails?.phone,
-      address: stateUserDetails?.address,
-      district: stateUserDetails?.district,
-      city: stateUserDetails?.city,
-      avatar: stateUserDetails?.avatar,
-      access_token: user?.access_token,
-    });
+  const handleUpdate = async () => {
+    try {
+      const imageRef = ref(storage, `images/${userAvatarUpload.name}`);
+      await uploadBytes(imageRef, userAvatarUpload);
+      const imageURL = await getDownloadURL(imageRef);
+      console.log("URL của hình ảnh:", imageURL);
+
+      mutation.mutate({
+        id: user?.id,
+        email: stateUserDetails?.email,
+        name: stateUserDetails?.name,
+        phone: stateUserDetails?.phone,
+        address: stateUserDetails?.address,
+        district: stateUserDetails?.district,
+        city: stateUserDetails?.city,
+        avatar: imageURL,
+        access_token: user?.access_token,
+      });
+    } catch (error) {
+      console.error("Lỗi khi tải lên hình ảnh và lấy URL:", error);
+    }
   };
 
   return (

@@ -125,8 +125,10 @@ const Comment = ({ idProduct }) => {
         payload,
         user?.access_token
       );
-      fetchProductDetails();
-      setLoadingLike(false);
+      if (res) {
+        fetchProductDetails();
+        setLoadingLike(false);
+      }
     }
   };
 
@@ -209,12 +211,8 @@ const Comment = ({ idProduct }) => {
 
   const items = [
     {
-      label: "Xóa",
+      label: "Xóa bình luận",
       key: "1",
-    },
-    {
-      label: "Chỉnh sửa",
-      key: "2",
     },
   ];
 
@@ -496,7 +494,7 @@ const Comment = ({ idProduct }) => {
                                   );
                                 })}
                             </div>
-                            <div className="pl-[50px] flex justify-between items-center">
+                            <div className="pl-[50px] md:pl-[74px] flex justify-between items-center">
                               <div className="flex gap-3">
                                 <span
                                   className="cursor-pointer"
@@ -504,7 +502,7 @@ const Comment = ({ idProduct }) => {
                                     handleReplyTheReplyClick(reply?._id)
                                   }
                                 >
-                                  Trả lờii
+                                  Trả lời
                                 </span>
                                 <span
                                   className={
@@ -538,8 +536,7 @@ const Comment = ({ idProduct }) => {
                           </div>
                         );
                       })}
-                    {(commentIdReplying === comment?._id ||
-                      commentIdReplyingTheReplying === replyId) && (
+                    {commentIdReplying === comment?._id && (
                       <div className="w-full md:w-1/2 mb-4 mt-1">
                         <div className="md:mb-0 gap-2 md:p-5 p-2 md:h-28 h-20 rounded-xl bg-white">
                           <div className="flex gap-4 items-center h-full">
