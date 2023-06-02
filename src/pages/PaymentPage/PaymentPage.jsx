@@ -115,7 +115,6 @@ const PaymentPage = () => {
       user?.district &&
       user?.phone &&
       user?.city &&
-      user?.district &&
       priceMemo &&
       user?.id
     ) {
@@ -658,7 +657,7 @@ const PaymentPage = () => {
               </Form.Item>
               <button
                 type="submit"
-                className="w-full m-0 md:w-80 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+                className="w-full m-0 md:w-80 md:mt-2 bg-[#9333EA] h-12 border-none outline-none rounded-md text-white text-base font-medium"
               >
                 Xác nhận
               </button>

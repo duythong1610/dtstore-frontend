@@ -113,6 +113,15 @@ function Login() {
     });
   };
 
+  const handleSignInEnter = (e) => {
+    if (e.keyCode == 13) {
+      mutation.mutate({
+        email,
+        password,
+      });
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -297,6 +306,7 @@ function Login() {
                     type={show ? "text" : "password"}
                     variant="auth"
                     value={password}
+                    onKeyDown={handleSignInEnter}
                   />
                   {/* <InputForm
                   placeholder="password"

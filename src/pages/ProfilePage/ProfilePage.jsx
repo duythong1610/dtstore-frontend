@@ -20,21 +20,30 @@ import {
 } from "@ant-design/icons";
 import Loading from "../../components/LoadingComponent/Loading";
 import default_avatar from "../../assets/img/default_avatar.png";
+import { AutoComplete, Form } from "antd";
+import InputComponent from "../../components/InputComponent/InputComponent";
+import axios from "axios";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [phone, setPhone] = useState(user?.phone || "");
-  const [address, setAddress] = useState(user?.address || "");
-  const [district, setDistrict] = useState(user?.district || "");
-  const [city, setCity] = useState(user?.city || "");
-  const [avatar, setAvatar] = useState("");
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [districtsRender, setDistrictsRender] = useState([]);
+  const [stateUserDetails, setStateUserDetails] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    avatar: user?.avatar || "",
+    phone: user?.phone || "",
+    address: user?.address || "",
+    district: user?.district || "",
+    city: user?.city || "",
+  });
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (user?.name) {
@@ -43,21 +52,33 @@ const ProfilePage = () => {
     }
   }, [user?.name]);
 
+  useEffect(() => {
+    setStateUserDetails({
+      avatar: user?.avatar,
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
+      address: user?.address,
+      district: user?.district,
+      city: user?.city,
+    });
+  }, [user]);
+
+  const handleOnchangeDetails = (e) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  console.log(stateUserDetails);
+
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     return UserService.updateUser(id, rests, access_token);
   });
 
   const { data, isLoading, isSuccess, isError } = mutation;
-  useEffect(() => {
-    setName(user?.name),
-      setEmail(user?.email),
-      setPhone(user?.phone),
-      setAddress(user?.address),
-      setDistrict(user?.district),
-      setCity(user?.city),
-      setAvatar(user?.avatar);
-  }, [user]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -72,26 +93,39 @@ const ProfilePage = () => {
     const res = await UserService.getDetailsUser(id, access_token);
     dispatch(updateUser({ ...res?.data, access_token: access_token }));
   };
-  const handleChangeName = (e) => {
-    setName(e.target.value);
+  // const handleChangeName = (e) => {
+  //   setName(e.target.value);
+  // };
+
+  // const handleChangeEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+
+  // const handleChangePhone = (e) => {
+  //   setPhone(e.target.value);
+  // };
+
+  // const handleChangeAddress = (e) => {
+  //   setAddress(e.target.value);
+  // };
+
+  const handleOnChangeProvince = (data, option) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      city: data,
+    });
+
+    const res = districts.filter((dis) => {
+      return dis?.province_code === option?.code;
+    });
+    setDistrictsRender(res);
   };
 
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleChangePhone = (e) => {
-    setPhone(e.target.value);
-  };
-
-  const handleChangeAddress = (e) => {
-    setAddress(e.target.value);
-  };
-  const handleChangeDistrict = (e) => {
-    setDistrict(e.target.value);
-  };
-  const handleChangeCity = (e) => {
-    setCity(e.target.value);
+  const handleOnChangeDistrict = (data) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      district: data,
+    });
   };
 
   const handleChangeAvatar = async ({ fileList }) => {
@@ -99,19 +133,47 @@ const ProfilePage = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
-    setAvatar(file.preview);
+    setStateUserDetails({
+      ...stateUserDetails,
+      avatar: file.preview,
+    });
   };
+
+  const fetchProvince = async () => {
+    const res = await axios.get("https://provinces.open-api.vn/api/");
+    console.log({ res });
+    setProvinces(res.data);
+  };
+
+  const fetchDistrict = async () => {
+    const res = await axios.get("https://provinces.open-api.vn/api/d");
+    console.log({ res });
+    setDistricts(res.data);
+  };
+
+  useEffect(() => {
+    fetchProvince();
+    fetchDistrict();
+  }, []);
+
+  const province = provinces.map((pro) => {
+    return { value: pro?.name, code: pro.code };
+  });
+
+  const district = districtsRender?.map((dis) => {
+    return { value: dis?.name };
+  });
 
   const handleUpdate = () => {
     mutation.mutate({
       id: user?.id,
-      email,
-      name,
-      phone,
-      address,
-      district,
-      city,
-      avatar,
+      email: stateUserDetails?.email,
+      name: stateUserDetails?.name,
+      phone: stateUserDetails?.phone,
+      address: stateUserDetails?.address,
+      district: stateUserDetails?.district,
+      city: stateUserDetails?.city,
+      avatar: stateUserDetails?.avatar,
       access_token: user?.access_token,
     });
   };
@@ -213,44 +275,108 @@ const ProfilePage = () => {
               <div className="info flex flex-col-reverse md:flex-row items-center">
                 <div className="left md:border-r-[1px] md:pr-5 border-zinc-300 w-full">
                   <div className="text-sm md:text-base">
-                    <div className="form-control mb-5 flex items-center">
-                      <label className="w-40 font-medium" htmlFor="name">
-                        Họ và tên:
-                      </label>
-                      <input
-                        className="px-3 py-2 outline-none rounded-lg border border-zinc-300 focus:border-blue-500  w-full"
-                        id="name"
-                        type="text"
-                        value={name}
-                        onChange={handleChangeName}
-                      />
-                    </div>
-                    <div className="form-control mb-5 flex items-center ">
-                      <label className="w-40 font-medium" htmlFor="email">
-                        Email:
-                      </label>
-                      <input
-                        className="px-3 py-2 outline-none rounded-lg border border-zinc-300 focus:border-blue-500 w-full"
-                        id="email"
-                        type="text"
-                        value={email}
-                        onChange={handleChangeEmail}
-                      />
-                    </div>
-                    <div className="form-control mb-5 flex items-center ">
-                      <label className="w-40 font-medium" htmlFor="address">
-                        Địa chỉ:
-                      </label>
-                      <input
-                        className="px-3 py-2 outline-none rounded-lg border border-zinc-300 focus:border-blue-500  w-full"
-                        id="address"
-                        type="text"
-                        value={address}
-                        onChange={handleChangeAddress}
-                      />
-                    </div>
+                    <Form
+                      name="basic"
+                      labelCol={{ span: 4 }}
+                      wrapperCol={{ span: 20 }}
+                      onFinish={handleUpdate}
+                      autoComplete="on"
+                      form={form}
+                    >
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Họ và tên"
+                        // name="name"
+                      >
+                        <InputComponent
+                          value={stateUserDetails.name}
+                          onChange={handleOnchangeDetails}
+                          name="name"
+                        />
+                      </Form.Item>
 
-                    <div className="form-control mb-5 flex items-center ">
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Email"
+                        // name="email"
+                      >
+                        <InputComponent
+                          value={stateUserDetails.email}
+                          onChange={handleOnchangeDetails}
+                          name="email"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Số điện thoại"
+                        // name="phone"
+                      >
+                        <InputComponent
+                          value={stateUserDetails.phone}
+                          onChange={handleOnchangeDetails}
+                          name="phone"
+                        />
+                      </Form.Item>
+
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Tỉnh, thành phố"
+                        // name="city"
+                      >
+                        <AutoComplete
+                          options={province}
+                          placeholder="Chọn tỉnh, thành phố"
+                          filterOption={(inputValue, option) =>
+                            option.value
+                              .toUpperCase()
+                              .indexOf(inputValue.toUpperCase()) !== -1
+                          }
+                          onChange={handleOnChangeProvince}
+                          value={stateUserDetails["city"]}
+                          name="city"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Quận, huyện"
+                        // name="district"
+                      >
+                        <AutoComplete
+                          options={district}
+                          placeholder="Chọn quận, huyện"
+                          filterOption={(inputValue, option) =>
+                            option.value
+                              .toUpperCase()
+                              .indexOf(inputValue.toUpperCase()) !== -1
+                          }
+                          onChange={handleOnChangeDistrict}
+                          value={stateUserDetails["district"]}
+                          name="district"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        className="font-medium p-0"
+                        label="Địa chỉ"
+                        // name="address"
+                      >
+                        <InputComponent
+                          value={stateUserDetails.address}
+                          onChange={handleOnchangeDetails}
+                          name="address"
+                        />
+                      </Form.Item>
+
+                      <div className="text-end">
+                        <button
+                          type="submit"
+                          className="py-2 mt-7 md:mt-0 w-full bg-purple-600 text-sm md:text-base font-medium text-white h-10 md:w-1/3 rounded-lg"
+                        >
+                          Cập nhật
+                        </button>
+                      </div>
+                    </Form>
+
+                    {/* <div className="form-control mb-5 flex items-center ">
                       <label className="w-40 font-medium" htmlFor="address">
                         Quận, huyện:
                       </label>
@@ -274,9 +400,9 @@ const ProfilePage = () => {
                         value={city}
                         onChange={handleChangeCity}
                       />
-                    </div>
+                    </div> */}
 
-                    <div className="form-control mb-5 flex items-center">
+                    {/* <div className="form-control mb-5 flex items-center">
                       <label className="w-40 font-medium" htmlFor="phone">
                         Số điện thoại:
                       </label>
@@ -287,15 +413,7 @@ const ProfilePage = () => {
                         value={phone}
                         onChange={handleChangePhone}
                       />
-                    </div>
-                  </div>
-                  <div className="text-end">
-                    <button
-                      className="py-2 mt-7 md:mt-0 w-full bg-blue-600 text-sm md:text-base font-medium text-white h-10 md:w-1/3 rounded-lg"
-                      onClick={handleUpdate}
-                    >
-                      Cập nhật
-                    </button>
+                    </div> */}
                   </div>
                 </div>
 
@@ -307,7 +425,7 @@ const ProfilePage = () => {
                       onChange={handleChangeAvatar}
                     >
                       <img
-                        src={avatar || default_avatar}
+                        src={stateUserDetails?.avatar || default_avatar}
                         style={{
                           height: "150px",
                           width: "150px",

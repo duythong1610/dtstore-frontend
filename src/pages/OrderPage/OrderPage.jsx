@@ -167,7 +167,7 @@ const OrderPage = () => {
   }, [isOpenModalUpdateInfo]);
 
   const handleChangeAddress = () => {
-    if (!user.name) {
+    if (!user.email) {
       message.error(
         "Bạn chưa đăng nhập! Vui lòng đăng nhập để thay đổi địa chỉ"
       );
@@ -611,7 +611,7 @@ const OrderPage = () => {
                           </span>
                         </div>
                       </div>
-                      {user?.name ? (
+                      {user?.email ? (
                         <div>
                           <div className="customer_info flex items-center">
                             <span className="font-medium">{user?.name}</span>
@@ -880,7 +880,7 @@ const OrderPage = () => {
               <div className=" md:text-right">
                 <button
                   type="submit"
-                  className="w-full m-0 md:w-40 md:mt-2 bg-[#422AFB] h-12 border-none outline-none rounded-md text-white text-base font-medium"
+                  className="w-full m-0 md:w-40 md:mt-2 bg-[#9333EA] h-12 border-none outline-none rounded-md text-white text-base font-medium"
                 >
                   Xác nhận
                 </button>
