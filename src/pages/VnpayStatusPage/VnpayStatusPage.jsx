@@ -74,6 +74,7 @@ const VnpayStatusPage = () => {
       priceMemo &&
       user?.id
     ) {
+      console.log(kkk);
       mutationAddOrder.mutate({
         token: user?.access_token,
         orderItems: order?.orderItemsSelected,
@@ -102,6 +103,7 @@ const VnpayStatusPage = () => {
   }, [user?.id]);
 
   const mutationAddOrder = useMutationHooks((data) => {
+    console.log("abc");
     const { token, ...rests } = data;
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
