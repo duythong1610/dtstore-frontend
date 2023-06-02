@@ -190,12 +190,16 @@ const OrderPage = () => {
   }, [order]);
 
   const deliveryPriceMemo = useMemo(() => {
-    if (priceMemo >= 200000 && priceMemo < 500000) {
-      return 10000;
-    } else if (priceMemo >= 500000 || order?.orderItemsSelected?.length === 0) {
+    if (priceMemo > 500000 && priceMemo < 2000000) {
+      return 15000;
+    }
+    if (priceMemo < 500000) {
       return 0;
+    }
+    if (priceMemo > 2000000 && priceMemo < 4999999) {
+      return 25000;
     } else {
-      return 20000;
+      return 100;
     }
   }, [priceMemo]);
 
@@ -225,12 +229,13 @@ const OrderPage = () => {
         navigate("/thanh-toan", {
           state: {
             priceVoucher: priceVoucher,
+            freeshipPrice: deliveryPriceMemo,
             totalPrice: isVoucher
               ? +`${priceAddVoucher(totalPriceMemo)}`
               : deliveryPriceMemo
               ? totalPriceMemo - deliveryPriceMemo - priceVoucher
               : totalPriceMemo,
-            price: totalPriceMemo,
+            price: priceMemo,
             districts: districts,
             provinces: provinces,
           },
@@ -334,16 +339,16 @@ const OrderPage = () => {
   };
   const itemsDelivery = [
     {
-      title: "Phí giao hàng 20K",
-      description: "Đơn hàng dưới 200K",
+      title: "Freeship 15k",
+      description: "Đơn hàng 500k-2tr",
     },
     {
-      title: "Phí giao hàng 10K",
-      description: "Đơn hàng từ 200K đến 500K",
+      title: "Freeship 25k",
+      description: "Đơn hàng 2000K-4tr999",
     },
     {
       title: "Freeship",
-      description: "Đơn hàng trên 500K",
+      description: "Đơn hàng trên 5000K",
     },
   ];
   return (
@@ -388,13 +393,13 @@ const OrderPage = () => {
                   <StepComponent
                     items={itemsDelivery}
                     current={
-                      deliveryPriceMemo === 10000
+                      deliveryPriceMemo === 25000
                         ? 2
-                        : deliveryPriceMemo === 20000
+                        : deliveryPriceMemo === 15000
                         ? 1
-                        : order.orderItemsSelected.length === 0
-                        ? 0
-                        : 3
+                        : deliveryPriceMemo === 100
+                        ? 3
+                        : 0
                     }
                   />
                 </WrapperStyleHeaderDilivery>
@@ -673,25 +678,6 @@ const OrderPage = () => {
                         </span>
                       </div>
                     )}
-
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span>Phí giao hàng</span>
-                      <span
-                        style={{
-                          color: "#000",
-                          fontSize: "14px",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {convertPrice(deliveryPriceMemo)}
-                      </span>
-                    </div>
                   </div>
                   <div className="flex items-center justify-between px-5 py-2 md:py-4 bg-white h-20 ">
                     <div className="flex items-center gap-1 leading-none">
@@ -725,7 +711,7 @@ const OrderPage = () => {
                                     .toLocaleString()
                                     .replaceAll(",", ".")} VNĐ`
                                 : convertPrice(
-                                    deliveryPriceMemo
+                                    priceVoucher
                                       ? priceMemo -
                                           deliveryPriceMemo -
                                           priceVoucher

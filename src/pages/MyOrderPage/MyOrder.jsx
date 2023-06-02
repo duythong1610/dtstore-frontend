@@ -80,6 +80,8 @@ const MyOrderPage = () => {
     }
   }, [isErrorCancle, isSuccessCancel]);
 
+  console.log(data);
+
   const renderProduct = (data) => {
     return (
       <div className="w-full flex flex-col gap-2">
@@ -103,7 +105,7 @@ const MyOrderPage = () => {
                   <div className="flex gap-3">
                     <span
                       className={
-                        order?.priceDiscount
+                        order?.priceAfterDiscount
                           ? "text-zinc-400 line-through"
                           : "" + "text-red-500 font-medium "
                       }
@@ -112,10 +114,10 @@ const MyOrderPage = () => {
                     </span>
                     <p>{"x" + order?.amount}</p>
                   </div>
-                  {order?.priceDiscount && (
+                  {order?.priceAfterDiscount && (
                     <div className="flex gap-3">
                       <span className="text-red-500 font-medium">
-                        {convertPrice(order?.priceDiscount)}
+                        {convertPrice(order?.priceAfterDiscount)}
                       </span>
                       <p>{"x" + order?.amount}</p>
                     </div>
@@ -131,7 +133,7 @@ const MyOrderPage = () => {
 
   return (
     <Loading isLoading={isLoading || isLoadingCancel}>
-      <div className="h-full max-w-7xl m-auto px-5 pt-12 bg-slate-100">
+      <div className="h-full max-w-7xl min-h-screen m-auto px-5 pt-12 md:pt-5 bg-slate-100">
         <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
           <div className="flex justify-center items-center">
             <LeftOutlined
@@ -214,7 +216,7 @@ const MyOrderPage = () => {
                       size={40}
                       styleButton={{
                         flex: "1 1 0%",
-                        background: "#422AFB",
+                        background: "#9333EA",
                         height: "40px",
                         border: "none",
                         width: "100%",

@@ -54,10 +54,12 @@ const VnpayStatusPage = () => {
 
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + cur.priceDiscount * cur.amount;
+      return total + cur.priceAfterDiscount * cur.amount;
     }, 0);
     return result;
   }, [order]);
+
+  console.log(priceMemo);
 
   const handleAddOrder = () => {
     if (

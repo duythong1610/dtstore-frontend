@@ -32,7 +32,10 @@ const DescriptionProduct = ({ productDescription }) => {
           <p className="whitespace-pre-wrap">{limitedSentences?.join(". ")}</p>
 
           {sentences?.length > 5 && (
-            <button onClick={toggleText} className="font-medium w-full m-auto -mb-4">
+            <button
+              onClick={toggleText}
+              className="font-medium w-full m-auto -mb-4"
+            >
               Xem thêm...
             </button>
           )}
@@ -46,7 +49,7 @@ const DescriptionProduct = ({ productDescription }) => {
       <h1 className="font-medium text-base md:text-2xl mt-5">
         Thông tin sản phẩm
       </h1>
-      <div className="bg-white rounded-xl p-5">{renderText()}</div>
+      <div>{renderText()}</div>
     </div>
   );
 };

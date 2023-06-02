@@ -181,7 +181,7 @@ const ProfilePage = () => {
   return (
     <Loading isLoading={isLoading}>
       <div className="main h-auto">
-        <div className="max-w-7xl m-auto">
+        <div className="max-w-7xl m-auto min-h-[80vh]">
           <div className="content gap-5 pt-16 md:py-5 px-5 md:px-0 flex flex-col md:flex-row">
             <div className="content-left md:w-1/4 md:p-5 rounded-xl hidden md:block bg-white">
               <div className="flex gap-2 mb-3">

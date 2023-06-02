@@ -270,6 +270,7 @@ function HeaderComponent() {
                   <Popover
                     trigger={["hover", "click"]}
                     content={content}
+                    placement="bottom"
                     style={{ padding: "0px" }}
                     className="hidden md:block"
                   >

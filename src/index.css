@@ -151,6 +151,10 @@ body {
   outline: none;
 }
 
+.check-blue svg {
+  margin-left: 10px;
+  margin-bottom: 6px;
+}
 .nav-btn {
   border: none;
   background-color: transparent;

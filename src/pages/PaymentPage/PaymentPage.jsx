@@ -99,12 +99,24 @@ const PaymentPage = () => {
     setIsOpenModalUpdateInfo(true);
   };
 
+  const handleDeliveryPrice = () => {
+    if (delivery === "now") {
+      return 40000;
+    }
+    if (delivery === "fast") {
+      return 30000;
+    }
+  };
+
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
       return total + cur.price * cur.amount;
     }, 0);
     return result;
   }, [order]);
+
+  const freeshipPrice =
+    state?.freeshipPrice === 100 ? handleDeliveryPrice() : state?.freeshipPrice;
 
   const handleAddOrder = () => {
     if (
@@ -131,7 +143,8 @@ const PaymentPage = () => {
         delivery,
         itemsPrice: state?.price,
         shippingPrice: handleDeliveryPrice(),
-        totalPrice: state?.totalPrice,
+        freeshipPrice: freeshipPrice,
+        totalPrice: totalPrice,
         user: user?.id,
         email: user?.email,
       });
@@ -158,6 +171,12 @@ const PaymentPage = () => {
     isError,
   } = mutationAddOrder;
 
+  const totalPrice =
+    state?.price +
+    handleDeliveryPrice(payment) -
+    freeshipPrice -
+    state?.priceVoucher;
+
   useEffect(() => {
     if (isSuccess && dataAdd?.status === "OK") {
       const arrayOrdered = [];
@@ -171,7 +190,7 @@ const PaymentPage = () => {
           delivery,
           payment,
           orders: order?.orderItemsSelected,
-          totalPriceMemo: state?.totalPrice,
+          totalPriceMemo: totalPrice,
         },
       });
     } else if (isError) {
@@ -242,15 +261,6 @@ const PaymentPage = () => {
 
   const handlePayment = (e) => {
     setPayment(e.target.value);
-  };
-
-  const handleDeliveryPrice = () => {
-    if (delivery === "now") {
-      return 40000;
-    }
-    if (delivery === "fast") {
-      return 30000;
-    }
   };
 
   // const addPaypalScript = async () => {
@@ -476,7 +486,12 @@ const PaymentPage = () => {
                   >
                     <span>Khuyến mãi vận chuyển</span>
                     <span className="text-sm font-medium text-green-400">
-                      - {convertPrice(handleDeliveryPrice(payment))}
+                      -{" "}
+                      {convertPrice(
+                        state?.freeshipPrice === 100
+                          ? handleDeliveryPrice(payment)
+                          : state?.freeshipPrice
+                      )}
                     </span>
                   </div>
                 </div>
@@ -496,7 +511,7 @@ const PaymentPage = () => {
                   </div>
                   <span style={{ display: "flex", flexDirection: "column" }}>
                     <span className="text-xl font-medium md:text-base text-red-500">
-                      {convertPrice(state?.totalPrice)}
+                      {convertPrice(totalPrice)}
                     </span>
                     <span style={{ color: "#000", fontSize: "11px" }}>
                       (Đã bao gồm VAT nếu có)
