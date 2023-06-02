@@ -74,7 +74,7 @@ const VnpayStatusPage = () => {
       priceMemo &&
       user?.id
     ) {
-      console.log(kkk);
+      console.log("kkk");
       mutationAddOrder.mutate({
         token: user?.access_token,
         orderItems: order?.orderItemsSelected,
