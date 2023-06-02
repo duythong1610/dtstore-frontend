@@ -212,6 +212,11 @@ const PaymentPage = () => {
   const handleVnPay = async () => {
     sessionStorage.setItem("paymentMethod", payment);
     sessionStorage.setItem("delivery", delivery);
+    sessionStorage.setItem("freeshipPrice", freeshipPrice);
+    sessionStorage.setItem("itemsPrice", state?.price);
+    sessionStorage.setItem("totalPrice", totalPrice);
+    sessionStorage.setItem("shippingPrice", handleDeliveryPrice());
+
     const data = {
       amount: state?.totalPrice,
       bankCode: "",

@@ -32,6 +32,13 @@ const VnpayStatusPage = () => {
 
   let payment = sessionStorage.getItem("paymentMethod");
   let delivery = sessionStorage.getItem("delivery");
+  let freeshipPrice = sessionStorage.setItem("freeshipPrice", freeshipPrice);
+  let itemsPrice = sessionStorage.setItem("itemsPrice", state?.price);
+  let totalPrice = sessionStorage.setItem("totalPrice", totalPrice);
+  let shippingPrice = sessionStorage.setItem(
+    "shippingPrice",
+    handleDeliveryPrice()
+  );
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -74,7 +81,6 @@ const VnpayStatusPage = () => {
       priceMemo &&
       user?.id
     ) {
-      console.log("kkk");
       mutationAddOrder.mutate({
         token: user?.access_token,
         orderItems: order?.orderItemsSelected,
@@ -86,10 +92,10 @@ const VnpayStatusPage = () => {
         paymentMethod: payment,
         isPaid: true,
         delivery,
-        itemsPrice: priceMemo,
-        shippingPrice: 30000,
-        freeshipPrice: 0,
-        totalPrice: priceMemo,
+        itemsPrice: itemsPrice,
+        shippingPrice: shippingPrice,
+        freeshipPrice: freeshipPrice,
+        totalPrice: totalPrice,
         user: user?.id,
         email: user?.email,
       });
@@ -103,7 +109,6 @@ const VnpayStatusPage = () => {
   }, [user?.id]);
 
   const mutationAddOrder = useMutationHooks((data) => {
-    console.log("abc");
     const { token, ...rests } = data;
     const res = OrderService.createOrder({ ...rests }, token);
     return res;
@@ -124,6 +129,12 @@ const VnpayStatusPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt hàng thành công");
+      sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("delivery");
+      sessionStorage.removeItem("freeshipPrice");
+      sessionStorage.removeItem("itemsPrice");
+      sessionStorage.removeItem("totalPrice");
+      sessionStorage.removeItem("shippingPrice");
       navigate("/order-success");
     } else if (isError) {
       message.error();
