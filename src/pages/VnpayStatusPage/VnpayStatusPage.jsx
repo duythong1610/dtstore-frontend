@@ -1,5 +1,5 @@
-import { Form } from "antd";
 import React, { useEffect, useState } from "react";
+import { Form } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
@@ -32,13 +32,10 @@ const VnpayStatusPage = () => {
 
   let payment = sessionStorage.getItem("paymentMethod");
   let delivery = sessionStorage.getItem("delivery");
-  let freeshipPrice = sessionStorage.setItem("freeshipPrice", freeshipPrice);
-  let itemsPrice = sessionStorage.setItem("itemsPrice", state?.price);
-  let totalPrice = sessionStorage.setItem("totalPrice", totalPrice);
-  let shippingPrice = sessionStorage.setItem(
-    "shippingPrice",
-    handleDeliveryPrice()
-  );
+  let freeshipPrice = sessionStorage.getItem("freeshipPrice");
+  let itemsPrice = sessionStorage.getItem("itemsPrice");
+  let totalPrice = sessionStorage.getItem("totalPrice");
+  let shippingPrice = sessionStorage.getItem("shippingPrice");
 
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -119,12 +116,12 @@ const VnpayStatusPage = () => {
       });
       dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
       message.success("Đặt hàng thành công");
-      // sessionStorage.removeItem("paymentMethod");
-      // sessionStorage.removeItem("delivery");
-      // sessionStorage.removeItem("freeshipPrice");
-      // sessionStorage.removeItem("itemsPrice");
-      // sessionStorage.removeItem("totalPrice");
-      // sessionStorage.removeItem("shippingPrice");
+      sessionStorage.removeItem("paymentMethod");
+      sessionStorage.removeItem("delivery");
+      sessionStorage.removeItem("freeshipPrice");
+      sessionStorage.removeItem("itemsPrice");
+      sessionStorage.removeItem("totalPrice");
+      sessionStorage.removeItem("shippingPrice");
       navigate("/order-success");
     } else if (isError) {
       message.error();
