@@ -151,5 +151,3 @@ const VnpayStatusPage = () => {
 };
 
 export default VnpayStatusPage;
-
-1;
