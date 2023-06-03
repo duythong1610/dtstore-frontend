@@ -55,9 +55,7 @@ export const WrapperAddressProduct = styled.div`
     font-size: 16px;
     line-height: 24px;
     font-weight: 500;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
     margin: 0 5px;
   }
   span.change-address {

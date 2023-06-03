@@ -288,7 +288,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             </span> */}
                   </WrapperDescriptionProduct>
                   <WrapperAddressProduct>
-                    <span style={{ fontSize: "16px" }}>Giao đến </span>
+                    <span style={{ fontSize: "16px" }}>Giao đến: </span>
                     <span className="address">
                       {`${user?.address}${user?.district ? "," : ""} ${
                         user?.district
