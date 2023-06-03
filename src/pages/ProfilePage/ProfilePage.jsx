@@ -31,6 +31,7 @@ const ProfilePage = () => {
   const [districts, setDistricts] = useState([]);
   const [districtsRender, setDistrictsRender] = useState([]);
   const [userAvatarUpload, setUserAvatarUpload] = useState("");
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -77,7 +78,8 @@ const ProfilePage = () => {
 
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
-    return UserService.updateUser(id, rests, access_token);
+    const res = UserService.updateUser(id, rests, access_token);
+    return res;
   });
 
   const { data, isLoading, isSuccess, isError } = mutation;
@@ -170,11 +172,13 @@ const ProfilePage = () => {
 
   const handleUpdate = async () => {
     try {
+      setLoadingUpdate(true);
       const imageRef = ref(storage, `images/${userAvatarUpload.name}`);
-      await uploadBytes(imageRef, userAvatarUpload);
-      const imageURL = await getDownloadURL(imageRef);
-      console.log("URL của hình ảnh:", imageURL);
-
+      let imageURL;
+      if (userAvatarUpload) {
+        await uploadBytes(imageRef, userAvatarUpload);
+        imageURL = await getDownloadURL(imageRef);
+      }
       mutation.mutate({
         id: user?.id,
         email: stateUserDetails?.email,
@@ -183,16 +187,18 @@ const ProfilePage = () => {
         address: stateUserDetails?.address,
         district: stateUserDetails?.district,
         city: stateUserDetails?.city,
-        avatar: imageURL,
+        avatar: imageURL ?? user?.avatar,
         access_token: user?.access_token,
       });
+      setLoadingUpdate(false);
     } catch (error) {
       console.error("Lỗi khi tải lên hình ảnh và lấy URL:", error);
     }
   };
+  console.log(loadingUpdate);
 
   return (
-    <Loading isLoading={isLoading}>
+    <Loading isLoading={loadingUpdate}>
       <div className="main h-auto">
         <div className="max-w-7xl m-auto min-h-[80vh]">
           <div className="content gap-5 pt-16 md:py-5 px-5 md:px-0 flex flex-col md:flex-row">
