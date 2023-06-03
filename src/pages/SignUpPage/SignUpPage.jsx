@@ -70,11 +70,12 @@ function SignUpPage() {
   const { data, isLoading, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      message.success();
+    console.log(data);
+    if (isSuccess && data?.status === "OK") {
+      message.success("Đăng ký thành công");
       handleNavigateSignUp();
-    } else if (isError) {
-      message.error();
+    } else if (data?.status === "ERR") {
+      message.error(data?.message);
     }
   }, [isSuccess, isError]);
 
