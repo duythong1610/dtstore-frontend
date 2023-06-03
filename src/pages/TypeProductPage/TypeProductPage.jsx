@@ -120,15 +120,20 @@ function TypeProductPage() {
   };
 
   const handleOnChangeSliderPrice = (value) => {
+    setActivePrice(value);
     setMinValue(value[0]);
     setMaxValue(value[1]);
+    setIsToggleContent(!isToggleContent);
   };
 
-  // const handleToggleClass = () => {
-  //   setIsToggle((current) => !current);
-  // };
+  const handleRemoveAllFilter = () => {
+    setActivePrice("");
+    setActiveFilter("");
+    setActiveBrand("");
+    setMinValue(null);
+    setMaxValue(null);
+  };
 
-  // const handleActive = (type) => {};
   console.log(label);
   const itemsFilter = [
     {
@@ -234,18 +239,6 @@ function TypeProductPage() {
       setActiveBrand(null);
     }
   };
-
-  // const minValueDefault = useMemo(() => {
-  //   const minPrice =
-  //     products?.length > 0 &&
-  //     products?.reduce((max, product) => {
-  //       if (product.price > max) {
-  //         return product.price;
-  //       }
-  //       return max;
-  //     }, 0);
-  //   return minPrice;
-  // }, [type]);
 
   useEffect(() => {
     if (isDataLoaded && !maxPrice) {
@@ -371,85 +364,7 @@ function TypeProductPage() {
                       <FilterOutlined />
                     </div>
                   </div>
-                  <div
-                    className={
-                      !isToggleContent
-                        ? "content-typepro content-bg"
-                        : "content-typepro visible content-bg"
-                    }
-                  >
-                    <div className="p-5">
-                      <div>
-                        <h1 className="text-xl">Theo giá</h1>
-                        {items.map((item) => {
-                          return (
-                            <div
-                              className={`item inline-block mr-2 mb-2 ${
-                                activePrice === item.type &&
-                                "bg-purple-600 rounded-md text-white"
-                              }`}
-                              onClick={() => {
-                                handleFilterPrice(item);
-                                setIsToggleContent(!isToggleContent);
-                              }}
-                            >
-                              <button
-                                className="py-1 px-2 border border-gray-300 rounded-md"
-                                onClick={() => handleSearchPrice(item?.type)}
-                              >
-                                {item?.label}
-                              </button>
-                            </div>
-                          );
-                        })}
-                        <div>
-                          <h1 className="mt-2">Hoặc chọn mức giá phù hợp</h1>
-                          <Slider
-                            step={10000}
-                            min={300000}
-                            max={50000000}
-                            range
-                            value={[minValue, maxValue]}
-                            defaultValue={[300000, 50000000]}
-                            onChange={handleOnChangeSliderPrice}
-                            tooltip={{ formatter }}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <h1 className="text-xl">Thương hiệu</h1>
-                        {Array.isArray(brandsOfType) &&
-                          brandsOfType?.map((item) => {
-                            return (
-                              <div
-                                onClick={() => {
-                                  setActiveBrand(item._id);
-                                  setIsToggleContent(!isToggleContent);
-                                }}
-                              >
-                                <button
-                                  className={`item inline-block w-full !py-2 text-left${
-                                    activeBrand === item._id &&
-                                    "border bg-purple-600 rounded-md text-white"
-                                  }`}
-                                  onClick={() => handleFilterBrand(item?.name)}
-                                >
-                                  {item?.name}
-                                </button>
-                              </div>
-                            );
-                          })}
-                      </div>
 
-                      {/* <div className="grid grid-cols-2 max-h-[80vh] overflow-auto scrollbar-item">
-                        <TypeProduct
-                          items={typeProduct}
-                          // thumbnail={thumb}
-                          handleToggleClassContent={handleToggleClassContent}
-                        />
-                      </div> */}
-                    </div>
-                  </div>
                   {isOpenFilterMobile && (
                     <div className="w-full mt-3">
                       <ul>
@@ -554,6 +469,124 @@ function TypeProductPage() {
                   <h1 className="">Không tìm thấy sản phẩm phù hợp</h1>
                 </div>
               )}
+            </div>
+            <div
+              className={
+                !isToggleContent
+                  ? "content-typepro content-bg"
+                  : "content-typepro visible content-bg"
+              }
+            >
+              <div className="flex flex-col justify-between h-full">
+                <div className="p-5 flex flex-col gap-10">
+                  <div>
+                    <h1 className="text-xl">Theo giá</h1>
+                    {items.map((item) => {
+                      return (
+                        <div
+                          className={`item inline-block mr-2 mb-2 ${
+                            activePrice === item.type &&
+                            "bg-purple-600 rounded-md text-white"
+                          }`}
+                          onClick={() => {
+                            handleFilterPrice(item);
+                            setIsToggleContent(!isToggleContent);
+                          }}
+                        >
+                          <button
+                            className="py-1 px-2 border border-gray-300 rounded-md"
+                            onClick={() => handleSearchPrice(item?.type)}
+                          >
+                            {item?.label}
+                          </button>
+                        </div>
+                      );
+                    })}
+                    <div>
+                      <h1 className="mt-2">Chọn mức giá phù hợp</h1>
+                      <div className="flex items-center gap-1">
+                        <div>
+                          {minValue ? (
+                            <span>{convertPrice(minValue).slice(0, -4)} </span>
+                          ) : (
+                            <span>{convertPrice(minPrice).slice(0, -4)}</span>
+                          )}
+                        </div>
+                        <span>đến</span>
+                        <div>
+                          {maxValue ? (
+                            <span>{convertPrice(maxValue).slice(0, -4)} </span>
+                          ) : (
+                            <span>{convertPrice(maxPrice).slice(0, -4)}</span>
+                          )}
+                        </div>
+                      </div>
+                      {minPrice && maxPrice && (
+                        <div>
+                          <Slider
+                            step={10000}
+                            min={minPrice}
+                            max={maxPrice}
+                            range
+                            defaultValue={[minPrice, maxPrice]}
+                            onAfterChange={handleOnChangeSliderPrice}
+                            tooltip={{ formatter }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="text-xl">Thương hiệu</h1>
+
+                    <div className="grid grid-cols-2">
+                      {Array.isArray(brandsOfType) &&
+                        brandsOfType?.map((item) => {
+                          return (
+                            <div
+                              onClick={() => {
+                                setActiveBrand(item._id);
+                                setIsToggleContent(!isToggleContent);
+                              }}
+                            >
+                              <button
+                                className={`item inline-block w-full !py-2 text-left${
+                                  activeBrand === item._id &&
+                                  "border bg-purple-600 rounded-md text-white"
+                                }`}
+                                onClick={() => handleFilterBrand(item?.name)}
+                              >
+                                {item?.name}
+                              </button>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+
+                  {/* <div className="grid grid-cols-2 max-h-[80vh] overflow-auto scrollbar-item">
+                        <TypeProduct
+                          items={typeProduct}
+                          // thumbnail={thumb}
+                          handleToggleClassContent={handleToggleClassContent}
+                        />
+                      </div> */}
+                </div>
+                <div className="flex items-center gap-3 w-full mb-10 px-5">
+                  <button
+                    className="text-white bg-purple-600 px-5 py-2 rounded-md w-1/2 font-medium"
+                    onClick={() => handleRemoveAllFilter()}
+                  >
+                    Xóa bộ lọc
+                  </button>
+                  <button
+                    className="text-purple-600 border-[2px] font-medium border-purple-600 px-5 py-2 rounded-md w-1/2"
+                    onClick={() => setIsToggleContent(!isToggleContent)}
+                  >
+                    Đóng
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

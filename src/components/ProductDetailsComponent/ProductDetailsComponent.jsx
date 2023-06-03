@@ -13,11 +13,10 @@ import {
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "../LoadingComponent/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slides/orderSlice";
-import { convertPrice, priceDiscount } from "../../until";
+import { convertPrice } from "../../until";
 import {
   LeftOutlined,
   ShoppingCartOutlined,
@@ -28,11 +27,11 @@ import history from "../../history";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { useCallback } from "react";
-import { useRef } from "react";
 import logo from "../../assets/img/logo.png";
 import shippingIcon from "../../assets/img/shippingIcon.png";
 import protectIcon from "../../assets/img/protectIcon.png";
 import changeIcon from "../../assets/img/changeIcon.png";
+import * as message from "../Message/Message";
 
 function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -42,9 +41,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const order = useSelector((state) => state.order);
-  // const [isNavigatedBack, setIsNavigatedBack] = useState(false);
   const [numProduct, setNumProduct] = useState(1);
-  const [isFetched, setIsFetched] = useState(false);
 
   const handleScroll = useCallback(() => {
     const position = window.scrollY;
@@ -68,13 +65,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     }
   };
 
-  // useEffect(() => {
-  //   if (idProduct) {
-  //     fetchProductDetails();
-  //     setIsFetched(true);
-  //   }
-  // }, [idProduct]);
-
   const { isLoading, data: productDetails } = useQuery(
     ["product-details", idProduct],
     fetchProductDetails,
@@ -83,7 +73,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
     }
   );
 
-  console.log(productDetails);
   const sendData = () => {
     cbProductDetails(productDetails);
   };
@@ -227,8 +216,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
             ) : (
               <>
                 <Col className="max-w-full md:pr-3" span={10}>
-                  <img
-                    // effect="blur"
+                  <LazyLoadImage
+                    effect="blur"
                     className={`h-60 md:h-80 w-full object-contain block rounded-xl`}
                     src={productDetails?.image}
                     alt="img product"
@@ -305,10 +294,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                         user?.district
                       }${user?.city ? "," : ""} ${user?.city}`}{" "}
                     </span>
-
-                    <span className="change-address">
-                      {user?.email && "- Đổi địa chỉ"}{" "}
-                    </span>
                   </WrapperAddressProduct>
 
                   <div
@@ -382,8 +367,8 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                       size={40}
                       style={{
                         background: "#fff",
-                        border: "1px solid rgb(13, 92, 182)",
-                        color: "rgb(13, 92, 182)",
+                        border: "1px solid #9333EA",
+                        color: "#9333EA",
                         fontSize: "15px",
                         fontWeight: "600",
                         height: "48px",
@@ -391,6 +376,9 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                         borderRadius: "12px",
                       }}
                       textButton={"Mua trả sau"}
+                      onClick={() =>
+                        message.warning("Chức năng đang phát triển")
+                      }
                     />
                   </div>
                 </Col>
