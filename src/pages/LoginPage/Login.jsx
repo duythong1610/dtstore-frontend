@@ -125,7 +125,7 @@ function Login() {
   return (
     <>
       <Helmet>
-        <title>Đăng nhập - October16th</title>
+        <title>Đăng nhập | October16th</title>
       </Helmet>
       <Flex position="relative" h="max-content" className="!bg-white !h-screen">
         <Flex
@@ -238,6 +238,7 @@ function Login() {
                 _hover={googleHover}
                 _active={googleActive}
                 _focus={googleActive}
+                onClick={() => message.warning("Chức năng đang phát triển")}
               >
                 <Icon as={FcGoogle} w="20px" h="20px" me="10px" />
                 Đăng nhập với Google

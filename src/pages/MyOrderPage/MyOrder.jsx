@@ -17,7 +17,7 @@ const MyOrderPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (user?.name) {
-      const pageTitle = `Đơn hàng - ${user?.name}`;
+      const pageTitle = `Đơn hàng | ${user?.name}`;
       document.title = pageTitle;
     }
   }, [user?.name]);
@@ -143,7 +143,7 @@ const MyOrderPage = () => {
           </div>
           <div className="text-center w-full mr-8">
             <h1 className="text-xl font-medium m-0">
-              ĐƠN HÀNG CỦA TÔI ({data?.length})
+              ĐƠN HÀNG CỦA TÔI {data?.length > 0 && `(${data?.length})`}
             </h1>
           </div>
         </div>

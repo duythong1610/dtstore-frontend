@@ -106,7 +106,7 @@ function SignUpPage() {
   return (
     <>
       <Helmet>
-        <title>Đăng ký - October16th</title>
+        <title>Đăng ký | October16th</title>
       </Helmet>
       <Flex
         position="relative"

@@ -49,7 +49,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user?.name) {
-      const pageTitle = `Tài khoản - ${user?.name}`;
+      const pageTitle = `Tài khoản | ${user?.name}`;
       document.title = pageTitle;
     }
   }, [user?.name]);

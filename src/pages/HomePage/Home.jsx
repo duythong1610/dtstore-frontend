@@ -158,7 +158,7 @@ function Home() {
   return (
     <>
       <Helmet>
-        <title>Trang chủ - October16th</title>
+        <title>Trang chủ | October16th</title>
       </Helmet>
       {/* <Loading isLoading={isLoading}> */}
 

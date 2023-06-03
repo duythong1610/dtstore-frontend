@@ -354,7 +354,7 @@ const OrderPage = () => {
   return (
     <>
       <Helmet>
-        <title>Giỏ hàng - October16th</title>
+        <title>Giỏ hàng | October16th</title>
       </Helmet>
       <div className="bg-slate-100 w-full pt-12 md:py-5 min-h-screen">
         <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0 pb-[289px] md:pb-0">
