@@ -50,19 +50,39 @@ const Comment = ({ idProduct }) => {
     fetchProductDetails();
   }, [idProduct]);
 
+  const isValidText = commentText.text.trim();
+
   const handleComment = async () => {
-    if (commentText.text) {
+    if (isValidText) {
       const res = await ProductService.postComment(
         productDetails?._id,
         commentText,
         user?.access_token
       );
-      fetchProductDetails();
       setCommentText({ text: "", createAt: "" });
+      fetchProductDetails();
       message.success("Gửi đánh giá thành công");
       return res;
     } else {
       message.error("Vui lòng nhập nội dung đánh giá");
+    }
+  };
+
+  const handleCommentEnter = async (e) => {
+    if (e.keyCode === 13) {
+      if (isValidText) {
+        const res = await ProductService.postComment(
+          productDetails?._id,
+          commentText,
+          user?.access_token
+        );
+        setCommentText({ text: "", createAt: "" });
+        fetchProductDetails();
+        message.success("Gửi đánh giá thành công");
+        return res;
+      } else {
+        message.error("Vui lòng nhập nội dung đánh giá");
+      }
     }
   };
 
@@ -624,6 +644,7 @@ const Comment = ({ idProduct }) => {
               value={commentText?.text}
               type="text"
               onChange={onChangeComment}
+              onKeyDown={handleCommentEnter}
             />
             <SendOutlined
               onClick={handleComment}

@@ -105,38 +105,42 @@ function HeaderComponent() {
   }, [user?.name, user?.avatar]);
 
   const content = (
-    <div className="hidden md:block">
-      <WrapperContentPopup
-        onClick={() => {
-          navigate("/thong-tin-tai-khoan");
-        }}
-      >
-        Thông tin tài khoản
-      </WrapperContentPopup>
+    <>
+      {user.id && (
+        <div className="hidden md:block">
+          <WrapperContentPopup
+            onClick={() => {
+              navigate("/thong-tin-tai-khoan");
+            }}
+          >
+            Thông tin tài khoản
+          </WrapperContentPopup>
 
-      <WrapperContentPopup
-        onClick={() => {
-          navigate("/don-hang-cua-toi", {
-            state: { id: user?.id, token: user?.access_token },
-          });
-        }}
-      >
-        Đơn hàng của tôi
-      </WrapperContentPopup>
+          <WrapperContentPopup
+            onClick={() => {
+              navigate("/don-hang-cua-toi", {
+                state: { id: user?.id, token: user?.access_token },
+              });
+            }}
+          >
+            Đơn hàng của tôi
+          </WrapperContentPopup>
 
-      {user?.isAdmin && (
-        <WrapperContentPopup
-          onClick={() => {
-            navigate("/system-admin");
-          }}
-        >
-          Quản lý hệ thống
-        </WrapperContentPopup>
+          {user?.isAdmin && (
+            <WrapperContentPopup
+              onClick={() => {
+                navigate("/system-admin");
+              }}
+            >
+              Quản lý hệ thống
+            </WrapperContentPopup>
+          )}
+          <WrapperContentPopup onClick={handleLogout}>
+            Đăng xuất
+          </WrapperContentPopup>
+        </div>
       )}
-      <WrapperContentPopup onClick={handleLogout}>
-        Đăng xuất
-      </WrapperContentPopup>
-    </div>
+    </>
   );
 
   return (

@@ -356,7 +356,7 @@ const OrderPage = () => {
       <Helmet>
         <title>Giỏ hàng - October16th</title>
       </Helmet>
-      <div className="bg-slate-100 w-full pt-12 md:py-5">
+      <div className="bg-slate-100 w-full pt-12 md:py-5 min-h-screen">
         <div className="h-full max-w-7xl px-5 md:px-0 m-auto pt-5 md:pt-0 pb-[289px] md:pb-0">
           <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
             <div className="flex justify-center items-center">
@@ -380,7 +380,7 @@ const OrderPage = () => {
                 Bạn chưa có sản phẩm nào trong giỏ hàng!
               </p>
               <ButtonComponent
-                className="bg-[#422AFB] h-12 w-full md:w-72 rounded-md text-white text-base font-bold"
+                className="bg-[#9333EA] h-12 w-full md:w-72 rounded-md text-white text-base font-bold"
                 onClick={() => navigate("/")}
                 size={40}
                 textButton={"Tiếp tục mua sắm"}

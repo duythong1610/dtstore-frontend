@@ -149,7 +149,7 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                 </ul>
                 <button
                   onClick={handleLogout}
-                  className="h-12 w-full bg-blue-600 text-sm font-medium text-white rounded-lg"
+                  className="h-12 w-full bg-purple-600 text-sm font-medium text-white rounded-lg"
                   // onClick={handleUpdate}
                 >
                   Đăng xuất

@@ -5,6 +5,7 @@ import momo from "../../assets/img/momo.png";
 import facebook from "../../assets/img/facebook.svg";
 import instagram from "../../assets/img/instagram.svg";
 import github from "../../assets/img/github.svg";
+import zalo from "../../assets/img/zalo.svg";
 import { useLocation } from "react-router-dom";
 
 const FooterComponent = () => {
@@ -21,80 +22,79 @@ const FooterComponent = () => {
     >
       <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white p-4">
         <div className="md:w-[30%] md:max-w-[30%]">
-          <h1 className="text-base">Giới thiệu về October16th</h1>
+          <h1 className="text-base">OCTOBER16TH STORE</h1>
           <span>
-            October16th là một project web app ecommerce được phát triển bởi Duy
-            Thông trong quá trình học tập nhằm áp dụng những kiến thức cũ và tìm
-            hiểu những kiến thức mới để tạo ra một project để đưa vào CV, vì đây
-            là project "chỉnh chu" đầu tiên hi vọng nhận được ý kiến và đóng góp
-            của mọi người để tui/em/anh có thể hoàn thiện hơn. Thanks for
-            reading! Chúc mọi người 1 ngày tốt lành!
+            October16th Store là project demo 1 số chức năng của một website bán
+            hàng online (Điện thoại, laptop & Gaming Gear). Trong quá trình thực
+            hiện project có những lỗi phát sinh, mong nhận được ý kiến và đóng
+            góp của mọi người để{" "}
+            <a
+              href="https://www.facebook.com/16LuckyNumber"
+              className="text-purple-600"
+              target="_blank"
+            >
+              em/mình
+            </a>{" "}
+            có thể hoàn thiện hơn. Thanks!
           </span>
           <div>
             <h2 className="inline-block mb-0 mr-1">Lưu ý:</h2>
             <span>
               Vì đây là project chỉ mang tính chất demo nên không có chức năng
-              thay thế website ecommerce, đọc kĩ hướng dẫn sử dụng trước khi
-              dùng.
+              thay thế hoàn toàn các website khác.
             </span>
           </div>
-
-          {/*
-          <div>
-            <h2 className="inline-block mb-0 mr-1">Về tài khoản:</h2>
-            <span>
-              Đăng ký, đăng nhập, cập nhật thông tin tài khoản, giỏ hàng, thanh
-              toán(tiền mặt khi nhận hàng & thanh toán qua cổng vnpay), lịch sử
-              mua hàng, lịch sử các sản phẩm đã xem,...
-            </span>
-          </div> */}
         </div>
-        <div className="md:w-[40%] md:max-w-40%]">
-          <h1 className="text-base">Thông tin công ty</h1>
+        <div className="md:w-[35%] md:max-w-35%]">
+          <h1 className="text-base">THÔNG TIN CÔNG TY</h1>
+          <h2 className="mb-0">Trụ sở đặt tại: </h2>
           <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
-            <h2 className="mb-0">Trụ sở đặt tại: </h2>
             <span>Ấp 3, xã Tân Thành, huyện Tân Thạnh, tỉnh Long An</span>
           </div>
+          <h2 className="mb-0">Trụ sở văn phòng:</h2>
           <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
-            <h2 className="mb-0">Trụ sở văn phòng:</h2>
-
             <span>43 Hồ Văn Huê, quận Phú Nhuận, thành phố Hồ Chí Minh</span>
           </div>
-          <div className="flex flex-col md:flex-row md:gap-2 mb- md:mb-0">
+          <div className="flex md:flex-row gap-2 mb-2 md:mb-0">
             <h2 className="mb-0">Điện thoại:</h2>
             <span>0398.052.707</span>
           </div>
-          <div className="flex flex-col md:flex-row md:gap-2 mb-2 md:mb-0">
+          <div className="flex md:flex-row gap-2 mb-2 md:mb-0">
             <h2 className="mb-0">Email:</h2>
             <span>dt.store.development@gmail.com</span>
           </div>
         </div>
-        <div className="md:w-[15%] md:max-w[-15%]">
+        <div className="md:w-[20%] md:max-w[-20%]">
           <div>
-            <h1 className="text-base">Phương thức thanh toán</h1>
+            <h1 className="text-base">PHƯƠNG THỨC THANH TOÁN</h1>
             <div>
               <div className="flex items-center gap-2">
                 <img src={vnpayImg} alt="vnpay-icon" width={32} height={32} />
                 <span>VNPAY</span>
               </div>
               <div className="flex items-center gap-2">
-                <img src={later_money} alt="later-money" width={32} height={32} />
+                <img
+                  src={later_money}
+                  alt="later-money"
+                  width={32}
+                  height={32}
+                />
                 <span>Tiền mặt</span>
               </div>
             </div>
           </div>
           <div className="mt-2">
-            <h1 className="text-base">Ủng hộ tôi tại đây ^^</h1>
+            <h1 className="text-base">ỦNG HỘ TÔI TẠI ĐÂY ^^</h1>
             <a href="https://me.momo.vn/unghodt" target="_blank">
               <img src={momo} alt="momo-icon" width={32} height={32} />
             </a>
           </div>
         </div>
         <div className="md:w-[15%] md:max-w-[15%]">
-          <h1 className="text-base">Kết nối với tôi</h1>
+          <h1 className="text-base">KẾT NỐI VỚI TÔI</h1>
           <div className="flex items-center gap-2">
-            <a href="" className="max-w-[32px]">
-              <img src={github} alt="github" />
+            <a href="https://zalo.me/0398052707" className="max-w-[32px]">
+              <img src={zalo} alt="zalo" className="brightness-110" />
             </a>
             <a
               href="https://www.facebook.com/16LuckyNumber"

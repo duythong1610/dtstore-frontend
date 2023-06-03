@@ -68,7 +68,7 @@ function Login() {
   useEffect(() => {
     if (data?.status === "OK") {
       message.success("Đăng nhập thành công!");
-      navigate("/");
+      navigate(-1);
       localStorage.setItem("access_token", JSON.stringify(data?.access_token));
       localStorage.setItem(
         "refresh_token",
