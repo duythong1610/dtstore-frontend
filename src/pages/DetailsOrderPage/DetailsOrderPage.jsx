@@ -28,14 +28,6 @@ const DetailsOrderPage = () => {
   );
   const { isLoading, data } = queryOrder;
 
-  // const priceMemo = useMemo(() => {
-  //   const result = data?.orderItems?.reduce((total, cur) => {
-  //     return total + cur.price * cur.amount;
-  //   }, 0);
-  //   return result;
-  // }, [data]);
-  console.log(data)
-
   return (
     <Loading isLoading={isLoading}>
       <div className="min-h-screen h-full w-full bg-slate-100">

@@ -15,7 +15,6 @@ import CardComponent from "../../components/CardComponent/CardComponent";
 import { useQuery } from "@tanstack/react-query";
 import * as ProductService from "../../services/ProductService";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../../components/LoadingComponent/Loading";
 import useDebounce from "../../hooks/useDebounce";
 import { SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import { searchProduct } from "../../redux/slides/productSlice";
@@ -59,7 +58,6 @@ function Home() {
     const res = await UserService.getDetailsUser(user?.id, user?.access_token);
     setUserInfo(res.data);
   };
-  console.log(userInfo);
   useEffect(() => {
     handleGetUserDetails();
   }, []);
@@ -98,7 +96,6 @@ function Home() {
 
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
-    console.log(res);
     setTypeProduct(res.data);
     return res;
   };
@@ -139,18 +136,12 @@ function Home() {
     }
   };
 
-  console.log("re-render");
-
-  console.log(suggestions);
-
   const onSearch = async (e) => {
     const value = e.target.value;
     setSearchText(value);
     const res = await ProductService.getAllProduct(value, 5);
     setSuggestions(res.data);
   };
-
-  console.log(loadingLimit);
 
   const isMobile = window.innerWidth <= 768;
 
@@ -263,7 +254,7 @@ function Home() {
               <div className="skeleton h-7 md:w-[30%] w-[50%] mt-5 m-auto rounded-3xl"></div>
             ) : (
               <Divider className={`${loading ? "hidden" : "block"} !mb-0`}>
-                <p className="font-bold text-xl md:text-[26px] mb-5">
+                <p className="font-bold text-xl md:text-[26px] mb-0 md:mb-5">
                   {" "}
                   Sản phẩm bán chạy
                 </p>
@@ -271,9 +262,12 @@ function Home() {
             )}
             {loading ? (
               <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
-                {Array.from({ length: itemLength }).map((_) => {
+                {Array.from({ length: itemLength }).map((_, index) => {
                   return (
-                    <div className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]">
+                    <div
+                      className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]"
+                      key={index}
+                    >
                       <div className="skeleton h-36 md:h-60 w-full rounded-md" />
                       <div className="skeleton h-6 w-full rounded-md" />
                       <div className="skeleton h-[18px] w-full rounded-md" />
@@ -298,7 +292,7 @@ function Home() {
                   topProducts?.map((product) => {
                     return (
                       <SwiperSlide
-                        // key={film.id}
+                        key={product._id}
                         className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
                         // onClick={() =>
                         //   navigate(`/${film.media_type || endpoint}/${film.id}`)

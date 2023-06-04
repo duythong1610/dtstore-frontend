@@ -569,6 +569,7 @@ const PaymentPage = () => {
           title="Cập nhật thông tin giao hàng"
           open={isOpenModalUpdateInfo}
           onCancel={handleCancelUpdate}
+          forceRender
           // onOk={handleUpdateInfoUser}
         >
           <Loading isLoading={isLoading}>

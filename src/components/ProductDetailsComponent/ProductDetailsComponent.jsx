@@ -170,7 +170,7 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
           </div>
         </div>
         <div className="w-full md:w-[75%]">
-          <Row className="flex flex-col w-full md:flex-row md:flex-nowrap md:flex p-4 bg-white md:rounded-xl">
+          <Row className="flex flex-col w-full md:flex-row  md:flex p-4 bg-white md:rounded-xl">
             {contextHolder}
             <div
               className="fixed flex items-center justify-between py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10"
@@ -221,7 +221,6 @@ function ProductDetailsComponent({ idProduct, cbProductDetails }) {
                     className={`h-60 md:h-80 w-full object-contain block rounded-xl`}
                     src={productDetails?.image}
                     alt="img product"
-                    preview={false}
                   />
                 </Col>
 

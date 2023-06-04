@@ -46,7 +46,6 @@ const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const [voucherCode, setVoucherCode] = useState("");
-  const [discount, setDiscount] = useState(0);
   const [moreInfoOrder, setMoreInfoOrder] = useState(false);
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -67,13 +66,11 @@ const OrderPage = () => {
 
   const fetchProvince = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/");
-    console.log({ res });
     setProvinces(res.data);
   };
 
   const fetchDistrict = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/d");
-    console.log({ res });
     setDistricts(res.data);
   };
 
@@ -81,11 +78,6 @@ const OrderPage = () => {
     fetchProvince();
     fetchDistrict();
   }, []);
-  useEffect(() => {
-    if (isVoucher) {
-      setDiscount(priceVoucher);
-    }
-  }, [order?.orderItems]);
 
   const province = provinces.map((pro) => {
     return { value: pro?.name, code: pro.code };
@@ -95,9 +87,8 @@ const OrderPage = () => {
     return { value: dis?.name };
   });
 
-  console.log({ province });
-
   const navigate = useNavigate();
+
   const [form] = Form.useForm();
 
   const dispatch = useDispatch();
@@ -293,7 +284,6 @@ const OrderPage = () => {
     setIsOpenModalUpdateInfo(false);
   };
 
-  console.log({ district }, { districtsRender });
   const handleUpdateInfoUser = () => {
     const { name, address, district, city, phone } = stateUserDetails;
     if (name && address && city && phone) {
@@ -323,11 +313,9 @@ const OrderPage = () => {
       city: data,
     });
 
-    console.log(option.code);
     const res = districts.filter((dis) => {
       return dis?.province_code === option?.code;
     });
-    console.log({ res }, { districts });
     setDistrictsRender(res);
   };
 
@@ -439,13 +427,12 @@ const OrderPage = () => {
                 </WrapperStyleHeader>
                 <WrapperListOrder className="flex-col md:flex-row overflow-hidden h-auto">
                   {order?.orderItems?.map((order) => {
-                    console.log({ order });
                     return (
                       <WrapperItemOrder
                         className="flex-col md:flex-row"
                         key={order?.product}
                       >
-                        <div class="flex items-center gap-3 w-full md:w-64">
+                        <div className="flex items-center gap-3 w-full md:w-64">
                           <Checkbox
                             onChange={onChange}
                             value={order?.product}
@@ -757,6 +744,7 @@ const OrderPage = () => {
           title="Cập nhật thông tin giao hàng"
           open={isOpenModalUpdateInfo}
           onCancel={handleCancelUpdate}
+          forceRender
           // onOk={handleUpdateInfoUser}
         >
           <Loading isLoading={isLoading}>

@@ -11,7 +11,6 @@ const DescriptionProduct = ({ productDescription }) => {
     const sentences = productDescription
       ?.split(/[.!?]/)
       .filter((sentence) => sentence.trim() !== "");
-    console.log(sentences);
 
     if (showFullText) {
       return (

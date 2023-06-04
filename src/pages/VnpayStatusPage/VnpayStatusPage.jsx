@@ -20,7 +20,6 @@ const VnpayStatusPage = () => {
   const { id } = params;
 
   const navigate = useNavigate();
-  const [sdkReady, setSdkReady] = useState(false);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
@@ -37,24 +36,7 @@ const VnpayStatusPage = () => {
   let totalPrice = sessionStorage.getItem("totalPrice");
   let shippingPrice = sessionStorage.getItem("shippingPrice");
 
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    form.setFieldsValue(stateUserDetails);
-  }, [form, stateUserDetails]);
-
-  useEffect(() => {
-    if (isOpenModalUpdateInfo) {
-      setStateUserDetails({
-        city: user?.city,
-        name: user?.name,
-        address: user?.address,
-        district: user?.district,
-        phone: user?.phone,
-      });
-    }
-  }, [isOpenModalUpdateInfo]);
 
   const handleAddOrder = () => {
     if (

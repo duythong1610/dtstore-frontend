@@ -80,8 +80,6 @@ const MyOrderPage = () => {
     }
   }, [isErrorCancle, isSuccessCancel]);
 
-  console.log(data);
-
   const renderProduct = (data) => {
     return (
       <div className="w-full flex flex-col gap-2">

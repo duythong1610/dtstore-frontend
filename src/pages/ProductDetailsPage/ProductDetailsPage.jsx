@@ -21,8 +21,6 @@ function ProductDetailsPage() {
     }
   }, [productDetails?.name]);
 
-  console.log(productDetails);
-
   return (
     <>
       <div style={{ height: "100%" }}>

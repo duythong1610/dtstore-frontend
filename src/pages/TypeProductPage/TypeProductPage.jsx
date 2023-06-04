@@ -49,7 +49,12 @@ function TypeProductPage() {
     total: 1,
   });
 
-  console.log(type, id);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const fetchProductType = async (type) => {
     setLoading(true);
@@ -60,7 +65,6 @@ function TypeProductPage() {
       minValue,
       maxValue
     );
-    console.log(res);
     if (res) {
       setLoading(false);
       setProducts(res?.data);
@@ -75,22 +79,29 @@ function TypeProductPage() {
     }
   };
 
-  console.log(sort);
-
   const fetchBrandByType = async () => {
     setLoading(true);
     const res = await ProductService.getBrandByType(id);
-    console.log(res);
     setBrandsOfType(res.data);
   };
 
   useEffect(() => {
     if (type) {
+      scrollToTop();
       fetchProductType(type);
     }
   }, [type, sort, activeBrand, minValue, maxValue]);
 
+  const handleRemoveAllFilter = () => {
+    setActivePrice("");
+    setActiveFilter("");
+    setActiveBrand("");
+    setMinValue(null);
+    setMaxValue(null);
+  };
+
   useEffect(() => {
+    handleRemoveAllFilter();
     fetchBrandByType();
   }, [type]);
 
@@ -126,15 +137,6 @@ function TypeProductPage() {
     setIsToggleContent(!isToggleContent);
   };
 
-  const handleRemoveAllFilter = () => {
-    setActivePrice("");
-    setActiveFilter("");
-    setActiveBrand("");
-    setMinValue(null);
-    setMaxValue(null);
-  };
-
-  console.log(label);
   const itemsFilter = [
     {
       id: 1,
@@ -196,7 +198,9 @@ function TypeProductPage() {
         <div className="item inline-block mr-2">
           <button
             className={`py-1 px-5 shadow-sm bg-white rounded-md hover:bg-zinc-200 ${
-              activeFilter === item.id && "!bg-purple-600 rounded-md text-white"
+              activeFilter === item.id
+                ? "!bg-purple-600 rounded-md text-white"
+                : ""
             }`}
             onClick={() => handleButton(item)}
           >
@@ -208,7 +212,6 @@ function TypeProductPage() {
   }
 
   const handleButton = async (item) => {
-    console.log(item.id);
     if (item?.id) {
       setActiveFilter(item?.id);
       setLabel(item.label);
@@ -254,9 +257,6 @@ function TypeProductPage() {
     }
   }, [isDataLoaded]);
 
-  console.log(maxPrice);
-  console.log(minPrice);
-  console.log(products);
   return (
     <Loading isLoading={loading}>
       <div className="bg-slate-100">

@@ -55,9 +55,12 @@ const ProductSimilar = ({ idProduct }) => {
 
         {loading ? (
           <div className="flex gap-5 w-full flex-wrap min-h-[290px] md:min-h-[376px] px-4 md:px-0 pt-4">
-            {Array.from({ length: itemLength }).map((_) => {
+            {Array.from({ length: itemLength }).map((_, index) => {
               return (
-                <div className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]">
+                <div
+                  className="flex flex-col gap-2 pb-[18px] basis-[calc(50%-10px)] md:basis-[calc(20%-16px)] min-h-[290px] md:min-h-[431px]"
+                  key={index}
+                >
                   <div className="skeleton h-36 md:h-60 w-full rounded-md" />
                   <div className="skeleton h-6 w-full rounded-md" />
                   <div className="skeleton h-[18px] w-full rounded-md" />
@@ -82,6 +85,7 @@ const ProductSimilar = ({ idProduct }) => {
               productSimilar?.map((product) => {
                 return (
                   <SwiperSlide
+                    key={product?._id}
                     // key={film.id}
                     className="!w-[calc(50%-10px)] md:!w-[calc(20%-16px)]"
                     // onClick={() =>
@@ -89,7 +93,6 @@ const ProductSimilar = ({ idProduct }) => {
                     // }
                   >
                     <WrapperCardStyle
-                      key={product?._id}
                       className="rounded-xl min-h-[290px] md:min-h-[392px] border-none"
                       hoverable
                       bodyStyle={{ padding: 10 }}

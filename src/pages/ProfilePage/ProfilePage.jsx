@@ -74,8 +74,6 @@ const ProfilePage = () => {
     });
   };
 
-  console.log(stateUserDetails);
-
   const mutation = useMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
     const res = UserService.updateUser(id, rests, access_token);
@@ -143,17 +141,14 @@ const ProfilePage = () => {
       avatar: file.preview,
     });
   };
-  console.log(userAvatarUpload);
 
   const fetchProvince = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/");
-    console.log({ res });
     setProvinces(res.data);
   };
 
   const fetchDistrict = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/d");
-    console.log({ res });
     setDistricts(res.data);
   };
 
@@ -195,7 +190,6 @@ const ProfilePage = () => {
       console.error("Lỗi khi tải lên hình ảnh và lấy URL:", error);
     }
   };
-  console.log(loadingUpdate);
 
   return (
     <Loading isLoading={loadingUpdate}>

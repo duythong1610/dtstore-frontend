@@ -95,8 +95,6 @@ const AdminTypeProduct = () => {
     );
   };
 
-  console.log(stateTypeProduct, stateTypeProductDetails);
-
   const renderAction = () => {
     return (
       <div>

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Badge, Col, Popover, Row } from "antd";
-// import Search from "antd/lib/transfer/search";
 import { WrapperContentPopup, WrapperHeaderAccount } from "./style";
 import {
   UserOutlined,
@@ -80,8 +79,8 @@ function HeaderComponent() {
 
   const handleToggleClassContent = useCallback(() => {
     setIsToggleContent((current) => !current);
-    setActiveCategory((current) => !current);
-  }, []);
+    setActiveCategory(true);
+  }, [activeCategory]);
 
   const handleClearSearchText = () => {
     setSearchText("");
@@ -190,7 +189,6 @@ function HeaderComponent() {
                 border="none"
                 placeholder="Bạn tìm sản phẩm gì... "
                 textButton="Tìm kiếm"
-                enterButton="Search"
                 size="large"
                 value={searchText}
                 onChange={onSearch}
@@ -257,10 +255,10 @@ function HeaderComponent() {
 
                 <span className="text-sm md:text-base">Trang chủ</span>
               </NavLink>
-              <NavLink
+              <div
                 onClick={handleToggleClassContent}
                 className={
-                  activeCategory
+                  pathname.startsWith("/san-pham/")
                     ? "flex md:hidden flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:md:bg-purple-100 rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2"
                     : "flex md:hidden flex-col md:flex-row rounded-xl px-4 py-2 items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
@@ -268,7 +266,7 @@ function HeaderComponent() {
                 <AppstoreOutlined style={{ fontSize: "22px" }} />
 
                 <span className="text-sm md:text-base">Danh mục</span>
-              </NavLink>
+              </div>
               <Loading isLoading={loading}>
                 <div className="hidden md:block">
                   <Popover
@@ -297,7 +295,12 @@ function HeaderComponent() {
                         <UserOutlined style={{ fontSize: "22px" }} />
                       )}
 
-                      <span className="text-base cursor-pointer">
+                      <span
+                        className={`text-base text-slate-500 cursor-pointer" ${
+                          pathname === "/thong-tin-tai-khoan" &&
+                          `!text-purple-600 font-medium`
+                        }`}
+                      >
                         Tài khoản
                       </span>
                     </WrapperHeaderAccount>
@@ -325,7 +328,12 @@ function HeaderComponent() {
 
                     {user?.access_token ? (
                       <>
-                        <span className="text-sm md:text-base md:hidden cursor-pointer">
+                        <span
+                          className={`text-sm text-slate-500 cursor-pointer" ${
+                            pathname === "/thong-tin-tai-khoan" &&
+                            `!text-purple-600 font-medium`
+                          }`}
+                        >
                           Tài khoản
                         </span>
                       </>
@@ -342,7 +350,7 @@ function HeaderComponent() {
               <NavLink
                 to="/gio-hang"
                 className={({ isActive }) =>
-                  setActive(isActive) ?? active
+                  isActive
                     ? "flex-col md:flex-row text-purple-600 font-medium hover:text-purple-600 hover:bg-purple-100 rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2"
                     : "flex-col md:flex-row rounded-xl px-4 py-2 flex items-center justify-center gap-1 md:gap-2 text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                 }
@@ -353,7 +361,7 @@ function HeaderComponent() {
                 <Badge count={order?.orderItems?.length} size="small">
                   <ShoppingCartOutlined
                     className={
-                      active
+                      pathname === "/gio-hang"
                         ? "text-purple-600 font-medium hover:text-purple-600"
                         : "text-slate-500 hover:text-slate-500 hover:bg-zinc-200"
                     }

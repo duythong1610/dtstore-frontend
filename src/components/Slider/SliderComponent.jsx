@@ -33,10 +33,9 @@ const SliderComponent = ({ arrImages }) => {
     >
       {arrImages.map((img, index) => {
         return (
-          <SwiperSlide>
+          <SwiperSlide key={index}>
             <Image
               className="rounded-xl !h-[150px] md:!h-[500px] !object-cover"
-              key={index}
               src={img}
               alt="slider"
               preview={false}

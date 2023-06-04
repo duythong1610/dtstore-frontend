@@ -9,10 +9,11 @@ function ButtonInputSearch(props) {
     textButton,
     border,
     backgroundColorInput,
-    onClearSearchText,
     searchText,
+    onClearSearchText,
     // backgroundColorButton = "rgb(13,92,182)",
     colorButton = "rgb(128, 128, 137)",
+    ...restProps
   } = props;
 
   const [isHovering, setIsHovering] = useState(false);
@@ -45,12 +46,12 @@ function ButtonInputSearch(props) {
             padding: "8px 16px",
             boxShadow: "none",
           }}
-          {...props}
+          {...restProps}
         />
         {searchText && (
           <CloseOutlined
             className="p-2 cursor-pointer outline-none text-zinc-400"
-            onClick={onClearSearchText}
+            onClick={() => onClearSearchText}
           />
         )}
       </div>
@@ -74,7 +75,7 @@ function ButtonInputSearch(props) {
         textButton={textButton}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        {...props}
+        {...restProps}
       ></ButtonComponent>
     </div>
   );

@@ -70,7 +70,6 @@ function SignUpPage() {
   const { data, isLoading, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    console.log(data);
     if (isSuccess && data?.status === "OK") {
       message.success("Đăng ký thành công");
       handleNavigateSignUp();
@@ -274,7 +273,7 @@ function SignUpPage() {
                     onChange={handleChangePassword}
                     isRequired={true}
                     fontSize="sm"
-                    placeholder="Ít nhất 8 ký tự"
+                    placeholder="Ít nhất 8 ký tự, bao gồm chữ cái thường, viết hoa, kí tự đặc biệt"
                     mb="24px"
                     size="lg"
                     type={isShowPassWord ? "text" : "password"}

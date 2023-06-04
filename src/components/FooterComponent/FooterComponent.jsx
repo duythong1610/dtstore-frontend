@@ -4,7 +4,6 @@ import later_money from "../../assets/img/later_money.png";
 import momo from "../../assets/img/momo.png";
 import facebook from "../../assets/img/facebook.svg";
 import instagram from "../../assets/img/instagram.svg";
-import github from "../../assets/img/github.svg";
 import zalo from "../../assets/img/zalo.svg";
 import { useLocation } from "react-router-dom";
 

@@ -196,10 +196,7 @@ const AdminProduct = () => {
     queryFn: fetchAllTypeProduct,
   });
 
-  console.log(typeProduct.data);
-
   const { data: products, isLoading: isLoadingProduct } = queryProduct;
-  console.log(products);
 
   const { data, isLoading, isSuccess, isError } = mutation;
   const {
@@ -331,7 +328,6 @@ const AdminProduct = () => {
   };
 
   const handleChangeSelect = (value) => {
-    console.log(value);
     if (value) {
       setTypeSelect(value);
     }
@@ -354,9 +350,6 @@ const AdminProduct = () => {
     return res;
   };
 
-  console.log(stateProduct);
-  console.log(brandProduct);
-
   useEffect(() => {
     fetchBrandByType(typeSelect);
   }, [typeSelect]);
@@ -375,7 +368,6 @@ const AdminProduct = () => {
     }));
   };
 
-  console.log(stateProductDetails.type.name);
   const dataProduct =
     products?.length &&
     products?.map((product) => {
@@ -384,8 +376,6 @@ const AdminProduct = () => {
         key: product._id,
       };
     });
-
-  console.log(dataProduct);
 
   const handleChangeImageProduct = async ({ fileList }) => {
     const file = fileList[0];
