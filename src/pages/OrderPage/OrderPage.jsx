@@ -207,7 +207,7 @@ const OrderPage = () => {
   };
 
   const handleAddCard = () => {
-    if (!user.name) {
+    if (!user.id) {
       message.error(
         "Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục mua hàng."
       );

@@ -298,6 +298,18 @@ const ProfilePage = () => {
                     >
                       <Form.Item
                         className="font-medium p-0"
+                        label="Email"
+                        // name="email"
+                      >
+                        <InputComponent
+                          value={stateUserDetails.email}
+                          onChange={handleOnchangeDetails}
+                          name="email"
+                          disabled
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        className="font-medium p-0"
                         label="Họ và tên"
                         // name="name"
                       >
@@ -308,17 +320,6 @@ const ProfilePage = () => {
                         />
                       </Form.Item>
 
-                      <Form.Item
-                        className="font-medium p-0"
-                        label="Email"
-                        // name="email"
-                      >
-                        <InputComponent
-                          value={stateUserDetails.email}
-                          onChange={handleOnchangeDetails}
-                          name="email"
-                        />
-                      </Form.Item>
                       <Form.Item
                         className="font-medium p-0"
                         label="Số điện thoại"

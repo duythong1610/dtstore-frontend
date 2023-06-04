@@ -38,6 +38,7 @@ const AdminProduct = () => {
   const [stateProduct, setStateProduct] = useState({
     name: "",
     price: "",
+    priceAfterDiscount: "",
     countInStock: "",
     rating: "",
     type: "",
@@ -141,6 +142,7 @@ const AdminProduct = () => {
     const {
       name,
       price,
+      priceAfterDiscount,
       countInStock,
       rating,
       type,
@@ -153,6 +155,7 @@ const AdminProduct = () => {
     return ProductService.createProduct({
       name,
       price,
+      priceAfterDiscount,
       countInStock,
       rating,
       type,
@@ -265,6 +268,9 @@ const AdminProduct = () => {
     const params = {
       name: stateProduct?.name,
       price: stateProduct?.price,
+      priceAfterDiscount: (
+        +stateProduct?.price * +stateProduct?.discount
+      ).toString(),
       countInStock: stateProduct?.countInStock,
       discount: stateProduct?.discount,
       rating: stateProduct?.rating,

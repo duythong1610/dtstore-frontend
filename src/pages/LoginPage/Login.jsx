@@ -276,6 +276,7 @@ function Login() {
                   fontWeight="500"
                   size="lg"
                   value={email}
+                  onKeyDown={handleSignInEnter}
                 />
 
                 {/* <InputForm
