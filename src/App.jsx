@@ -5,6 +5,7 @@ import {
   Routes,
   Route,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { routes } from "./routes";
 import DefaultLayout from "./components/DefaultLayout/DefaultLayout";
@@ -30,6 +31,7 @@ function App() {
     setIsLoading(true);
     const { storageData, decoded } = handleDecoded();
     if (decoded?.id) {
+      console.log(decoded);
       handleGetDetailUser(decoded?.id, storageData);
     }
     setIsLoading(false);
@@ -59,6 +61,10 @@ function App() {
           const data = await UserService.refreshToken(refreshToken);
           config.headers["token"] = `Bearer ${data?.access_token}`;
         } else {
+          await UserService.logoutUser();
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
+          message.success("Đăng xuất thành công!");
           dispatch(resetUser());
         }
       }

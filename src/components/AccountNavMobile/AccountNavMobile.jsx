@@ -11,6 +11,7 @@ import {
   OrderedListOutlined,
   SettingOutlined,
   RightOutlined,
+  UnlockOutlined,
 } from "@ant-design/icons";
 import Loading from "../LoadingComponent/Loading";
 import { resetUser } from "../../redux/slides/userSlice";
@@ -124,7 +125,7 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                     className="cursor-pointer"
                     onClick={() => handleNavigate("san-pham-da-xem")}
                   >
-                    <div className="py-5  w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
+                    <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
                       <div className="flex items-center justify-center gap-3">
                         <EyeFilled className="text-gray-500" />
                         <span>Sản phẩm đã xem</span>
@@ -132,6 +133,18 @@ const AccountNavMobile = ({ handleToggleClass }) => {
                       <RightOutlined className="md:hidden text-gray-500" />
                     </div>
                     <hr />
+                  </li>
+                  <li
+                    className="cursor-pointer"
+                    onClick={() => handleNavigate("doi-mat-khau")}
+                  >
+                    <div className="py-5 w-full hover:bg-gray-200 rounded-md flex items-center justify-between">
+                      <div className="flex items-center justify-center gap-3">
+                        <UnlockOutlined className="text-gray-500" />
+                        <span>Đổi mật khẩu</span>
+                      </div>
+                      <RightOutlined className="md:hidden text-gray-500" />
+                    </div>
                   </li>
                   {/* <li
                     className="cursor-pointer"

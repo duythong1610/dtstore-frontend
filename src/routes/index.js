@@ -18,6 +18,9 @@ import React from "react";
 const AdminPage = React.lazy(() => import("../pages/AdminPage/AdminPage"));
 const Home = React.lazy(() => import("../pages/HomePage/Home"));
 const Login = React.lazy(() => import("../pages/LoginPage/Login"));
+const ChangePassword = React.lazy(() =>
+  import("../pages/ChangePasswordPage/ChangePasswordPage")
+);
 const MyOrder = React.lazy(() => import("../pages/MyOrderPage/MyOrder"));
 const OrderPage = React.lazy(() => import("../pages/OrderPage/OrderPage"));
 const PaymentPage = React.lazy(() =>
@@ -57,6 +60,12 @@ export const routes = [
   {
     path: "/gio-hang",
     component: OrderPage,
+    isDefaultLayout: true,
+  },
+
+  {
+    path: "/doi-mat-khau",
+    component: ChangePassword,
     isDefaultLayout: true,
   },
 

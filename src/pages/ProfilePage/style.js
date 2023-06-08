@@ -1,4 +1,4 @@
-import { Upload } from "antd";
+import { AutoComplete, Upload } from "antd";
 import styled from "styled-components";
 
 export const WrapperHeader = styled.h1`
@@ -41,5 +41,18 @@ export const WrapperUploadFile = styled(Upload)`
   }
   & .ant-upload-list {
     display: none;
+  }
+`;
+
+export const WrapperAutoComplete = styled(AutoComplete)`
+  & .ant-select-selector {
+    height: 100% !important;
+    border: 1px solid #e0e5f2 !important;
+  }
+  & .ant-select-selector input {
+    height: 100% !important;
+  }
+  & .ant-select-selector {
+    height: 100% !important;
   }
 `;

@@ -25,6 +25,20 @@ export const signupUser = async (data) => {
   return res.data;
 };
 
+export const changePassword = async (data, access_token) => {
+  const res = await axiosJWT.post(
+    "https://dtstore-backend.onrender.com/api/user/change-password",
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
     "https://dtstore-backend.onrender.com/api/user/get-all/",

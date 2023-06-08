@@ -273,7 +273,7 @@ function SignUpPage() {
                     onChange={handleChangePassword}
                     isRequired={true}
                     fontSize="sm"
-                    placeholder="Ít nhất 8 ký tự, bao gồm chữ cái thường, viết hoa, kí tự đặc biệt"
+                    placeholder="Nhập vào mật khẩu"
                     mb="24px"
                     size="lg"
                     type={isShowPassWord ? "text" : "password"}
@@ -301,6 +301,10 @@ function SignUpPage() {
                     />
                   </InputRightElement>
                 </InputGroup>
+                <p className="-mt-5 text-xs text-purple-600">
+                  Mật khẩu ít nhất 8 ký tự bao gồm số,chữ cái thường, viết hoa,
+                  kí tự đặc biệt
+                </p>
 
                 <FormLabel
                   ms="4px"
@@ -309,7 +313,7 @@ function SignUpPage() {
                   color={textColor}
                   display="flex"
                 >
-                  Xác nhận mật khẩu
+                  Xác nhận lại mật khẩu
                   <Text color={brandStars} marginBottom="0px">
                     *
                   </Text>
@@ -319,7 +323,7 @@ function SignUpPage() {
                     onChange={handleChangeConfirmPassword}
                     isRequired={true}
                     fontSize="sm"
-                    placeholder="Ít nhất 8 ký tự"
+                    placeholder="Nhập vào lại mật khẩu"
                     mb="24px"
                     size="lg"
                     type={isShowConfirmPassWord ? "text" : "password"}

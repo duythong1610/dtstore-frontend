@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { WrapperUploadFile } from "./style";
+import { WrapperAutoComplete, WrapperUploadFile } from "./style";
 import storage from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import {
   EditOutlined,
   RightOutlined,
   LeftOutlined,
+  UnlockOutlined,
 } from "@ant-design/icons";
 import Loading from "../../components/LoadingComponent/Loading";
 import default_avatar from "../../assets/img/default_avatar.png";
@@ -192,102 +193,115 @@ const ProfilePage = () => {
   };
 
   return (
-    <Loading isLoading={loadingUpdate}>
-      <div className="main h-auto">
-        <div className="max-w-7xl m-auto min-h-[80vh]">
-          <div className="content gap-5 pt-16 md:py-5 px-5 md:px-0 flex flex-col md:flex-row">
-            <div className="content-left md:w-1/4 md:p-5 rounded-xl hidden md:block bg-white">
-              <div className="flex gap-2 mb-3">
-                <img
-                  src={user?.avatar || default_avatar}
-                  alt="user-avatar"
-                  className="w-10 rounded-full h-10"
-                />
-                <div className="info flex flex-col">
-                  <span>Tài khoản của</span>
-                  <div className="flex items-center gap-1">
-                    <span className="font-medium">
-                      {user?.name || "Chưa cập nhật tên"}
-                    </span>
-                    {user?.isAdmin && (
-                      <CheckCircleFilled className="text-blue-500" />
-                    )}
-                  </div>
+    <div className="main h-auto">
+      <div className="max-w-7xl m-auto min-h-[80vh]">
+        <div className="content gap-5 pt-16 md:py-5 px-5 md:px-0 flex flex-col md:flex-row md:h-[80vh]">
+          <div className="content-left md:w-1/4 md:p-5 rounded-xl hidden md:block bg-white">
+            <div className="flex gap-2 mb-3">
+              <img
+                src={user?.avatar || default_avatar}
+                alt="user-avatar"
+                className="w-10 rounded-full h-10"
+              />
+              <div className="info flex flex-col">
+                <span>Tài khoản của</span>
+                <div className="flex items-center gap-1">
+                  <span className="font-medium">
+                    {user?.name || "Chưa cập nhật tên"}
+                  </span>
+                  {user?.isAdmin && (
+                    <CheckCircleFilled className="text-blue-500" />
+                  )}
                 </div>
               </div>
-              <ul>
-                {user?.isAdmin && (
-                  <li>
-                    <Link
-                      to="/system-admin"
-                      className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                    >
-                      <div className="flex items-center justify-center gap-3">
-                        <SettingOutlined />
-                        <span>Quản lý hệ thống</span>
-                      </div>
-                      <RightOutlined className="md:hidden text-gray-500" />
-                    </Link>
-                  </li>
-                )}
-                <li>
-                  <Link
-                    to=""
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                  >
-                    <div className="flex items-center justify-center gap-3">
-                      <UserOutlined />
-                      <span>Thông tin tài khoản</span>
-                    </div>
-                    <RightOutlined className="md:hidden text-gray-500" />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/don-hang-cua-toi"
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                  >
-                    <div className="flex items-center justify-center gap-3">
-                      <OrderedListOutlined />
-                      <span>Quản lý đơn hàng</span>
-                    </div>
-                    <RightOutlined className="md:hidden text-gray-500" />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/san-pham-da-xem"
-                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
-                  >
-                    <div className="flex items-center justify-center gap-3">
-                      <EyeFilled className="text-gray-500" />
-                      <span>Sản phẩm đã xem</span>
-                    </div>
-                    <RightOutlined className="md:hidden text-gray-500" />
-                  </Link>
-                </li>
-              </ul>
             </div>
-            <div className="content-right mb-[80px] md:mb-0 w-full bg-white p-5 rounded-xl">
-              <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-10 bg-white">
-                <div className="flex justify-center items-center">
-                  <LeftOutlined
-                    onClick={() => navigate(-1)}
-                    className={"w-8 h-8 text-lg text-blue-500 text-center"}
-                  />
-                </div>
-                <div className="text-center w-full mr-8">
-                  <h1 className="text-xl font-medium m-0">
-                    THÔNG TIN TÀI KHOẢN
-                  </h1>
-                </div>
+            <ul className="grid gap-2">
+              {user?.isAdmin && (
+                <li>
+                  <Link
+                    to="/system-admin"
+                    className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                  >
+                    <div className="flex items-center justify-center gap-3">
+                      <SettingOutlined />
+                      <span>Quản lý hệ thống</span>
+                    </div>
+                    <RightOutlined className="md:hidden text-gray-500" />
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link
+                  to=""
+                  className="py-2 px-3 w-full bg-gray-200 rounded-md flex items-center justify-between"
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <UserOutlined />
+                    <span>Thông tin tài khoản</span>
+                  </div>
+                  <RightOutlined className="md:hidden text-gray-500" />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/don-hang-cua-toi"
+                  className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <OrderedListOutlined />
+                    <span>Quản lý đơn hàng</span>
+                  </div>
+                  <RightOutlined className="md:hidden text-gray-500" />
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/san-pham-da-xem"
+                  className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <EyeFilled className="text-gray-500" />
+                    <span>Sản phẩm đã xem</span>
+                  </div>
+                  <RightOutlined className="md:hidden text-gray-500" />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  to="/doi-mat-khau"
+                  className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
+                >
+                  <div className="flex items-center justify-center gap-3">
+                    <UnlockOutlined className="text-gray-500" />
+                    <span>Đổi mật khẩu</span>
+                  </div>
+                  <RightOutlined className="md:hidden text-gray-500" />
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="content-right mb-[80px] md:mb-0 w-full bg-white p-5 rounded-xl">
+            <div className="relative z-[11]"></div>
+
+            <div className="fixed flex items-center py-3 px-5 md:hidden top-0 left-0 right-0 h-12 z-[1] bg-white">
+              <div className="flex justify-center items-center">
+                <LeftOutlined
+                  onClick={() => navigate(-1)}
+                  className={"w-8 h-8 text-lg text-blue-500 text-center"}
+                />
               </div>
-              <div className="hidden md:block text-start">
-                <h1 className="mb-5 text-lg md:text-xl">Thông tin tài khoản</h1>
+              <div className="text-center w-full mr-8">
+                <h1 className="text-xl font-medium m-0">THÔNG TIN TÀI KHOẢN</h1>
               </div>
-              <div className="info flex flex-col-reverse md:flex-row items-center">
-                <div className="left md:border-r-[1px] md:pr-5 border-zinc-300 w-full">
-                  <div className="text-sm md:text-base">
+            </div>
+            <div className="hidden md:block text-start">
+              <h1 className="mb-5 text-lg md:text-xl">Thông tin tài khoản</h1>
+            </div>
+            <div className="info flex flex-col-reverse md:flex-row items-center">
+              <div className="left md:border-r-[1px] md:pr-5 border-zinc-300 w-full">
+                <div className="text-sm md:text-base">
+                  <Loading isLoading={loadingUpdate}>
                     <Form
                       name="basic"
                       labelCol={{ span: 4 }}
@@ -306,6 +320,7 @@ const ProfilePage = () => {
                           onChange={handleOnchangeDetails}
                           name="email"
                           disabled
+                          className="!text-black !border-[#E0E5F2] !h-10"
                         />
                       </Form.Item>
                       <Form.Item
@@ -317,6 +332,7 @@ const ProfilePage = () => {
                           value={stateUserDetails.name}
                           onChange={handleOnchangeDetails}
                           name="name"
+                          className="!text-black !border-[#E0E5F2] !h-10 "
                         />
                       </Form.Item>
 
@@ -329,6 +345,7 @@ const ProfilePage = () => {
                           value={stateUserDetails.phone}
                           onChange={handleOnchangeDetails}
                           name="phone"
+                          className="!text-black !border-[#E0E5F2] !h-10"
                         />
                       </Form.Item>
 
@@ -337,8 +354,10 @@ const ProfilePage = () => {
                         label="Tỉnh, thành phố"
                         // name="city"
                       >
-                        <AutoComplete
+                        <WrapperAutoComplete
                           options={province}
+                          style={{ height: 40 }}
+                          listHeight={40}
                           placeholder="Chọn tỉnh, thành phố"
                           filterOption={(inputValue, option) =>
                             option.value
@@ -348,6 +367,7 @@ const ProfilePage = () => {
                           onChange={handleOnChangeProvince}
                           value={stateUserDetails["city"]}
                           name="city"
+                          className="!text-black !border-[#E0E5F2] !h-10"
                         />
                       </Form.Item>
                       <Form.Item
@@ -355,7 +375,7 @@ const ProfilePage = () => {
                         label="Quận, huyện"
                         // name="district"
                       >
-                        <AutoComplete
+                        <WrapperAutoComplete
                           options={district}
                           placeholder="Chọn quận, huyện"
                           filterOption={(inputValue, option) =>
@@ -366,6 +386,7 @@ const ProfilePage = () => {
                           onChange={handleOnChangeDistrict}
                           value={stateUserDetails["district"]}
                           name="district"
+                          className="!text-black !border-[#E0E5F2] !h-10"
                         />
                       </Form.Item>
                       <Form.Item
@@ -377,6 +398,7 @@ const ProfilePage = () => {
                           value={stateUserDetails.address}
                           onChange={handleOnchangeDetails}
                           name="address"
+                          className="!text-black !border-[#E0E5F2] !h-10"
                         />
                       </Form.Item>
 
@@ -389,8 +411,9 @@ const ProfilePage = () => {
                         </button>
                       </div>
                     </Form>
+                  </Loading>
 
-                    {/* <div className="form-control mb-5 flex items-center ">
+                  {/* <div className="form-control mb-5 flex items-center ">
                       <label className="w-40 font-medium" htmlFor="address">
                         Quận, huyện:
                       </label>
@@ -416,7 +439,7 @@ const ProfilePage = () => {
                       />
                     </div> */}
 
-                    {/* <div className="form-control mb-5 flex items-center">
+                  {/* <div className="form-control mb-5 flex items-center">
                       <label className="w-40 font-medium" htmlFor="phone">
                         Số điện thoại:
                       </label>
@@ -428,35 +451,34 @@ const ProfilePage = () => {
                         onChange={handleChangePhone}
                       />
                     </div> */}
-                  </div>
                 </div>
+              </div>
 
-                <div className="right w-full">
-                  <div className="text-center mb-5">
-                    <WrapperUploadFile
-                      className="relative"
-                      maxCount={1}
-                      onChange={handleChangeAvatar}
-                    >
-                      <img
-                        src={stateUserDetails?.avatar || default_avatar}
-                        style={{
-                          height: "150px",
-                          width: "150px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
-                        alt="avatar"
-                      />
+              <div className="right w-full">
+                <div className="text-center mb-5">
+                  <WrapperUploadFile
+                    className="relative"
+                    maxCount={1}
+                    onChange={handleChangeAvatar}
+                  >
+                    <img
+                      src={stateUserDetails?.avatar || default_avatar}
+                      style={{
+                        height: "150px",
+                        width: "150px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                      alt="avatar"
+                    />
 
-                      <EditOutlined className="absolute flex items-center justify-center right-2 bottom-2 w-6 h-6 text-white  bg-slate-600 text-sm rounded-full" />
-                    </WrapperUploadFile>
-                    <div className="hidden md:block">
-                      <h1>Dung lượng file tối đa 1 MB</h1>
-                      <div>
-                        <span className="font-medium">Định dạng: </span>{" "}
-                        <span>.JPEG, .PNG</span>
-                      </div>
+                    <EditOutlined className="absolute flex items-center justify-center right-2 bottom-2 w-6 h-6 text-white  bg-slate-600 text-sm rounded-full" />
+                  </WrapperUploadFile>
+                  <div className="hidden md:block">
+                    <h1>Dung lượng file tối đa 1 MB</h1>
+                    <div>
+                      <span className="font-medium">Định dạng: </span>{" "}
+                      <span>.JPEG, .PNG</span>
                     </div>
                   </div>
                 </div>
@@ -465,7 +487,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </Loading>
+    </div>
   );
 };
 
