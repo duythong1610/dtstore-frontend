@@ -51,6 +51,7 @@ const ChangePasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [countdown, setCountdown] = useState(5);
+  const [loading, setLoading] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [error, setError] = useState({
@@ -143,6 +144,7 @@ const ChangePasswordPage = () => {
       confirmNewPassword,
       userId: user?.id,
     };
+    setLoading(true);
     const res = await UserService.changePassword(payload, user?.access_token);
     if (res.status === "SUCCESS") {
       setIsOpenModal(true);
@@ -150,6 +152,7 @@ const ChangePasswordPage = () => {
     if (res.status === "ERROR") {
       message.error(res.message);
     }
+    setLoading(false);
 
     return res;
   };
@@ -282,183 +285,189 @@ const ChangePasswordPage = () => {
 
             <div className="md:w-1/2 m-auto">
               <div className="text-sm md:text-base ">
-                <FormControl>
-                  <FormLabel
-                    ms="4px"
-                    fontSize="md"
-                    fontWeight="500"
-                    color={textColor}
-                    display="flex"
-                  >
-                    Mật khẩu hiện tại
-                    <Text color={brandStars} marginBottom="0px">
-                      *
-                    </Text>
-                  </FormLabel>
-                  <InputGroup size="md">
-                    <Input
-                      name="password"
-                      borderRadius={6}
-                      onChange={handleChangePassword}
-                      onBlur={validateInput}
-                      isRequired={true}
-                      fontSize="sm"
-                      placeholder="Nhập mật khẩu hiện tại"
-                      mb="24px"
-                      size="md"
-                      type={isShowPassWord ? "text" : "password"}
-                      variant="auth"
-                      value={password}
-                    />
-                    {/* <InputForm
-                placeholder="password"
-                type={show ? "text" : "password"}
-                value={password}
-                onChange={handleChangePassword}
-              /> */}
-                    <InputRightElement display="flex" alignItems="center">
-                      <Icon
-                        color={textColorSecondary}
-                        _hover={{ cursor: "pointer" }}
-                        as={
-                          isShowPassWord
-                            ? RiEyeCloseLine
-                            : MdOutlineRemoveRedEye
-                        }
-                        onClick={() => setIsShowPassWord(!isShowPassWord)}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  {error.password && (
-                    <p className="-mt-5 text-xs text-purple-600">
-                      {error.password}
-                    </p>
-                  )}
-                  <FormLabel
-                    ms="4px"
-                    fontSize="md"
-                    fontWeight="500"
-                    color={textColor}
-                    display="flex"
-                  >
-                    Mật khẩu mới
-                    <Text color={brandStars} marginBottom="0px">
-                      *
-                    </Text>
-                  </FormLabel>
-                  <InputGroup size="md">
-                    <Input
-                      name="newPassword"
-                      borderRadius={6}
-                      onChange={handleChangeNewPassword}
-                      onBlur={validateInput}
-                      isRequired={true}
-                      fontSize="sm"
-                      placeholder="Nhập mật khẩu mới"
-                      mb="24px"
-                      size="md"
-                      type={isShowNewPassWord ? "text" : "password"}
-                      variant="auth"
-                      value={newPassword}
-                    />
-                    {/* <InputForm
-                placeholder="password"
-                type={show ? "text" : "password"}
-                value={password}
-                onChange={handleChangePassword}
-              /> */}
-                    <InputRightElement display="flex" alignItems="center">
-                      <Icon
-                        color={textColorSecondary}
-                        _hover={{ cursor: "pointer" }}
-                        as={
-                          isShowNewPassWord
-                            ? RiEyeCloseLine
-                            : MdOutlineRemoveRedEye
-                        }
-                        onClick={() => setIsShowNewPassWord(!isShowNewPassWord)}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  {error.newPassword ? (
-                    <p className="-mt-5 text-xs text-purple-600">
-                      {error.newPassword}
-                    </p>
-                  ) : (
-                    <p className="-mt-5 text-xs text-purple-600">
-                      {checkPassword() ? checkPassword() : ""}
-                    </p>
-                  )}
-
-                  <FormLabel
-                    ms="4px"
-                    fontSize="md"
-                    fontWeight="500"
-                    color={textColor}
-                    display="flex"
-                  >
-                    Xác nhận mật khẩu mới
-                    <Text color={brandStars} marginBottom="0px">
-                      *
-                    </Text>
-                  </FormLabel>
-                  <InputGroup size="md">
-                    <Input
-                      name="confirmNewPassword"
-                      borderRadius={6}
-                      onChange={handleChangeConfirmNewPassword}
-                      onBlur={validateInput}
-                      isRequired={true}
-                      fontSize="sm"
-                      placeholder="Nhập lại mật khẩu mới"
-                      mb="24px"
-                      size="md"
-                      type={isShowConfirmNewPassWord ? "text" : "password"}
-                      variant="auth"
-                      value={confirmNewPassword}
-                    />
-                    {/* <InputForm
-                placeholder="password"
-                type={show ? "text" : "password"}
-                value={password}
-                onChange={handleChangePassword}
-              /> */}
-                    <InputRightElement display="flex" alignItems="center">
-                      <Icon
-                        color={textColorSecondary}
-                        _hover={{ cursor: "pointer" }}
-                        as={
-                          isShowConfirmNewPassWord
-                            ? RiEyeCloseLine
-                            : MdOutlineRemoveRedEye
-                        }
-                        onClick={() =>
-                          setIsShowConfirmNewPassWord(!isShowConfirmNewPassWord)
-                        }
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                  {error.confirmNewPassword && (
-                    <p className="-mt-5 text-xs text-purple-600">
-                      {error.confirmNewPassword}
-                    </p>
-                  )}
-
-                  <div className="text-end">
-                    <button
-                      type="submit"
-                      className={
-                        isValidButton
-                          ? "py-2 mt-7 md:mt-0 w-full bg-zinc-400 text-sm md:text-base font-medium text-white h-10  rounded-lg cursor-not-allowed"
-                          : "py-2 mt-7 md:mt-0 w-full bg-purple-600 text-sm md:text-base font-medium text-white h-10  rounded-lg"
-                      }
-                      disabled={isValidButton}
-                      onClick={handleUpdate}
+                <Loading isLoading={loading}>
+                  <FormControl>
+                    <FormLabel
+                      ms="4px"
+                      fontSize="md"
+                      fontWeight="500"
+                      color={textColor}
+                      display="flex"
                     >
-                      Lưu thay đổi
-                    </button>
-                  </div>
-                </FormControl>
+                      Mật khẩu hiện tại
+                      <Text color={brandStars} marginBottom="0px">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <InputGroup size="md">
+                      <Input
+                        name="password"
+                        borderRadius={6}
+                        onChange={handleChangePassword}
+                        onBlur={validateInput}
+                        isRequired={true}
+                        fontSize="sm"
+                        placeholder="Nhập mật khẩu hiện tại"
+                        mb="24px"
+                        size="md"
+                        type={isShowPassWord ? "text" : "password"}
+                        variant="auth"
+                        value={password}
+                      />
+                      {/* <InputForm
+                placeholder="password"
+                type={show ? "text" : "password"}
+                value={password}
+                onChange={handleChangePassword}
+              /> */}
+                      <InputRightElement display="flex" alignItems="center">
+                        <Icon
+                          color={textColorSecondary}
+                          _hover={{ cursor: "pointer" }}
+                          as={
+                            isShowPassWord
+                              ? RiEyeCloseLine
+                              : MdOutlineRemoveRedEye
+                          }
+                          onClick={() => setIsShowPassWord(!isShowPassWord)}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    {error.password && (
+                      <p className="-mt-5 text-xs text-purple-600">
+                        {error.password}
+                      </p>
+                    )}
+                    <FormLabel
+                      ms="4px"
+                      fontSize="md"
+                      fontWeight="500"
+                      color={textColor}
+                      display="flex"
+                    >
+                      Mật khẩu mới
+                      <Text color={brandStars} marginBottom="0px">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <InputGroup size="md">
+                      <Input
+                        name="newPassword"
+                        borderRadius={6}
+                        onChange={handleChangeNewPassword}
+                        onBlur={validateInput}
+                        isRequired={true}
+                        fontSize="sm"
+                        placeholder="Nhập mật khẩu mới"
+                        mb="24px"
+                        size="md"
+                        type={isShowNewPassWord ? "text" : "password"}
+                        variant="auth"
+                        value={newPassword}
+                      />
+                      {/* <InputForm
+                placeholder="password"
+                type={show ? "text" : "password"}
+                value={password}
+                onChange={handleChangePassword}
+              /> */}
+                      <InputRightElement display="flex" alignItems="center">
+                        <Icon
+                          color={textColorSecondary}
+                          _hover={{ cursor: "pointer" }}
+                          as={
+                            isShowNewPassWord
+                              ? RiEyeCloseLine
+                              : MdOutlineRemoveRedEye
+                          }
+                          onClick={() =>
+                            setIsShowNewPassWord(!isShowNewPassWord)
+                          }
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    {error.newPassword ? (
+                      <p className="-mt-5 text-xs text-purple-600">
+                        {error.newPassword}
+                      </p>
+                    ) : (
+                      <p className="-mt-5 text-xs text-purple-600">
+                        {checkPassword() ? checkPassword() : ""}
+                      </p>
+                    )}
+
+                    <FormLabel
+                      ms="4px"
+                      fontSize="md"
+                      fontWeight="500"
+                      color={textColor}
+                      display="flex"
+                    >
+                      Xác nhận mật khẩu mới
+                      <Text color={brandStars} marginBottom="0px">
+                        *
+                      </Text>
+                    </FormLabel>
+                    <InputGroup size="md">
+                      <Input
+                        name="confirmNewPassword"
+                        borderRadius={6}
+                        onChange={handleChangeConfirmNewPassword}
+                        onBlur={validateInput}
+                        isRequired={true}
+                        fontSize="sm"
+                        placeholder="Nhập lại mật khẩu mới"
+                        mb="24px"
+                        size="md"
+                        type={isShowConfirmNewPassWord ? "text" : "password"}
+                        variant="auth"
+                        value={confirmNewPassword}
+                      />
+                      {/* <InputForm
+                placeholder="password"
+                type={show ? "text" : "password"}
+                value={password}
+                onChange={handleChangePassword}
+              /> */}
+                      <InputRightElement display="flex" alignItems="center">
+                        <Icon
+                          color={textColorSecondary}
+                          _hover={{ cursor: "pointer" }}
+                          as={
+                            isShowConfirmNewPassWord
+                              ? RiEyeCloseLine
+                              : MdOutlineRemoveRedEye
+                          }
+                          onClick={() =>
+                            setIsShowConfirmNewPassWord(
+                              !isShowConfirmNewPassWord
+                            )
+                          }
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    {error.confirmNewPassword && (
+                      <p className="-mt-5 text-xs text-purple-600">
+                        {error.confirmNewPassword}
+                      </p>
+                    )}
+
+                    <div className="text-end">
+                      <button
+                        type="submit"
+                        className={
+                          isValidButton
+                            ? "py-2 mt-7 md:mt-0 w-full bg-zinc-400 text-sm md:text-base font-medium text-white h-10  rounded-lg cursor-not-allowed"
+                            : "py-2 mt-7 md:mt-0 w-full bg-purple-600 text-sm md:text-base font-medium text-white h-10  rounded-lg"
+                        }
+                        disabled={isValidButton}
+                        onClick={handleUpdate}
+                      >
+                        Lưu thay đổi
+                      </button>
+                    </div>
+                  </FormControl>
+                </Loading>
                 <ModalComponent
                   closable={false}
                   footer={null}
