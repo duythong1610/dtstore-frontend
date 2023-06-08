@@ -18,6 +18,7 @@ import { FaChevronLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import {
   CheckCircleFilled,
+  CheckCircleOutlined,
   UserOutlined,
   EyeFilled,
   OrderedListOutlined,
@@ -29,9 +30,12 @@ import {
 import Loading from "../../components/LoadingComponent/Loading";
 import default_avatar from "../../assets/img/default_avatar.png";
 import * as message from "../../components/Message/Message";
+import ModalComponent from "../../components/ModalComponent/ModalComponent";
+import { resetUser } from "../../redux/slides/userSlice";
 
 const ChangePasswordPage = () => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const brandStars = useColorModeValue("brand.500", "brand.400");
@@ -46,6 +50,9 @@ const ChangePasswordPage = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [countdown, setCountdown] = useState(5);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const [error, setError] = useState({
     password: "",
     newPassword: "",
@@ -53,10 +60,30 @@ const ChangePasswordPage = () => {
   });
   const navigate = useNavigate();
 
-  const [stateUserDetails, setStateUserDetails] = useState({
-    currentPassword: "",
-    newPassword: "",
-  });
+  const handleLogout = async () => {
+    await UserService.logoutUser();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    message.success("Hãy đăng nhập lại!");
+    dispatch(resetUser());
+    navigate("/");
+  };
+
+  useEffect(() => {
+    let timer;
+    if (isOpenModal) {
+      timer = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+    }
+
+    if (countdown === 0) {
+      // setIsOpenModal(false);
+      handleLogout();
+    }
+
+    return () => clearInterval(timer);
+  }, [isOpenModal, countdown]);
 
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
@@ -109,8 +136,6 @@ const ChangePasswordPage = () => {
 
   console.log(error);
 
-  const handleOnchangeDetails = () => {};
-
   const handleUpdate = async () => {
     const payload = {
       currentPassword: password,
@@ -119,6 +144,12 @@ const ChangePasswordPage = () => {
       userId: user?.id,
     };
     const res = await UserService.changePassword(payload, user?.access_token);
+    if (res.status === "SUCCESS") {
+      setIsOpenModal(true);
+    }
+    if (res.status === "ERROR") {
+      message.error(res.message);
+    }
 
     return res;
   };
@@ -428,6 +459,20 @@ const ChangePasswordPage = () => {
                     </button>
                   </div>
                 </FormControl>
+                <ModalComponent
+                  closable={false}
+                  footer={null}
+                  title={null}
+                  open={isOpenModal}
+                  // onOk={handleUpdateInfoUser}
+                  className="custom-modal"
+                >
+                  <div className="text-center">
+                    <CheckCircleOutlined className="text-6xl md:text-7xl mb-5 text-green-500" />
+                    <h1 className="text-xl">Đổi mật khẩu thành công!</h1>
+                    <p>Vui lòng đăng nhập lại sau {countdown} giây</p>
+                  </div>
+                </ModalComponent>
               </div>
             </div>
           </div>

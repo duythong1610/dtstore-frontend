@@ -55,4 +55,7 @@ export const WrapperAutoComplete = styled(AutoComplete)`
   & .ant-select-selector {
     height: 100% !important;
   }
+  & .ant-select-selector .ant-select-selection-placeholder {
+    line-height: 40px !important;
+  }
 `;

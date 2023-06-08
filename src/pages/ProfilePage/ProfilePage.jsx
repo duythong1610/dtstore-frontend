@@ -356,8 +356,6 @@ const ProfilePage = () => {
                       >
                         <WrapperAutoComplete
                           options={province}
-                          style={{ height: 40 }}
-                          listHeight={40}
                           placeholder="Chọn tỉnh, thành phố"
                           filterOption={(inputValue, option) =>
                             option.value
