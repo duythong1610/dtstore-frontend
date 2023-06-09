@@ -26,6 +26,7 @@ import { RiEyeCloseLine } from "react-icons/ri";
 import { FaChevronLeft } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
+import { CheckCircleOutlined } from "@ant-design/icons";
 
 import * as UserService from "../../services/UserService";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -34,6 +35,7 @@ import { updateUser } from "../../redux/slides/userSlice";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import logo from "../../assets/img/logo.png";
+import ModalComponent from "../../components/ModalComponent/ModalComponent";
 function Login() {
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -52,12 +54,18 @@ function Login() {
     { bg: "whiteAlpha.200" }
   );
   const [show, setShow] = React.useState(false);
+  const [loadingForgot, setLoadingForgot] = useState(false);
   const [messageError, setMessageError] = useState("");
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isSuccessForgot, setIsSuccessForgot] = useState(false);
   const handleClick = () => setShow(!show);
 
   // Handle Logic
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailForgot, setEmailForgot] = useState("");
+  const [errorEmailForgot, setErrorEmailForgot] = useState("");
+
   const navigate = useNavigate();
 
   const mutation = useMutationHooks((data) => UserService.loginUser(data));
@@ -98,6 +106,10 @@ function Login() {
   //   navigate("/sign-up");
   // };
 
+  const handleChangeEmailForgot = (e) => {
+    setEmailForgot(e.target.value);
+  };
+
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -111,6 +123,21 @@ function Login() {
       email,
       password,
     });
+  };
+
+  const handleForgotPassword = async () => {
+    setLoadingForgot(true);
+    const res = await UserService.forgotPassword({ email: emailForgot });
+    console.log(res);
+    setLoadingForgot(false);
+    if (res.status === "ERROR") {
+      setErrorEmailForgot(res.message);
+    }
+    if (res.status === "SUCCESS") {
+      setIsSuccessForgot(true);
+      setErrorEmailForgot("");
+    }
+    return res;
   };
 
   const handleSignInEnter = (e) => {
@@ -346,7 +373,7 @@ function Login() {
                       Duy trì đăng nhập
                     </FormLabel>
                   </FormControl>
-                  <NavLink>
+                  <NavLink onClick={() => setIsOpenModal(!isOpenModal)}>
                     <Text
                       className="text-purple-600"
                       fontSize="sm"
@@ -418,6 +445,94 @@ function Login() {
           {/* <Footer /> */}
         </Flex>
       </Flex>
+      <ModalComponent
+        footer={null}
+        title={"Yêu cầu thiết lập lại mật khẩu"}
+        open={isOpenModal}
+        onCancel={() => {
+          setIsOpenModal(!isOpenModal), setEmailForgot("");
+        }}
+        // onOk={handleUpdateInfoUser}
+        className="custom-modal"
+      >
+        {isSuccessForgot && (
+          <div className="text-center">
+            <CheckCircleOutlined className="text-6xl md:text-7xl mb-5 text-green-500" />
+            <p className="text-lg">
+              Yêu cầu thiết lập lại mật khẩu cho tài khoản <b>{emailForgot}</b>{" "}
+              đã được gửi đi, vui lòng kiểm tra hộp thư của bạn!
+            </p>
+            <Button
+              fontSize="sm"
+              className="!bg-purple-600 !text-white"
+              fontWeight="500"
+              w="100%"
+              h="50"
+              onClick={() => {
+                setIsOpenModal(!isOpenModal),
+                  setIsSuccessForgot(false),
+                  setEmailForgot("");
+              }}
+            >
+              Hoàn tất
+            </Button>
+          </div>
+        )}
+
+        {!isSuccessForgot && (
+          <div className="text-center">
+            <FormLabel
+              ms="4px"
+              fontSize="sm"
+              fontWeight="500"
+              color={textColor}
+              display="flex"
+            >
+              Email
+              <Text color={brandStars} marginBottom="0px">
+                *
+              </Text>
+            </FormLabel>
+            <InputGroup size="md">
+              <Input
+                onChange={handleChangeEmailForgot}
+                isRequired={true}
+                fontSize="sm"
+                placeholder="youremail@gmail.com"
+                size="lg"
+                mb="24px"
+                type="email"
+                variant="auth"
+                value={emailForgot}
+                // onKeyDown={handleForgotPassword}
+              />
+              {/* <InputForm
+ placeholder="password"
+ type={show ? "text" : "password"}
+ value={password}
+ onChange={handleChangePassword}
+/> */}
+            </InputGroup>
+            {errorEmailForgot && (
+              <p className="text-purple-600 text-left -mt-5">
+                {errorEmailForgot}
+              </p>
+            )}
+            <Loading isLoading={loadingForgot}>
+              <Button
+                fontSize="sm"
+                className="!bg-purple-600 !text-white"
+                fontWeight="500"
+                w="100%"
+                h="50"
+                onClick={handleForgotPassword}
+              >
+                Gửi yêu cầu
+              </Button>
+            </Loading>
+          </div>
+        )}
+      </ModalComponent>
     </>
   );
 }

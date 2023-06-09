@@ -39,6 +39,24 @@ export const changePassword = async (data, access_token) => {
   return res.data;
 };
 
+export const forgotPassword = async (data) => {
+  const res = await axios.post(
+    "https://dtstore-backend.onrender.com/api/user/forgot-password",
+    data
+  );
+
+  return res.data;
+};
+
+export const resetPassword = async (data) => {
+  const res = await axios.post(
+    "https://dtstore-backend.onrender.com/api/user/reset-password",
+    data
+  );
+
+  return res.data;
+};
+
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
     "https://dtstore-backend.onrender.com/api/user/get-all/",

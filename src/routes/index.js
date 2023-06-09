@@ -21,6 +21,9 @@ const Login = React.lazy(() => import("../pages/LoginPage/Login"));
 const ChangePassword = React.lazy(() =>
   import("../pages/ChangePasswordPage/ChangePasswordPage")
 );
+const ResetPassword = React.lazy(() =>
+  import("../pages/ResetPasswordPage/ResetPasswordPage")
+);
 const MyOrder = React.lazy(() => import("../pages/MyOrderPage/MyOrder"));
 const OrderPage = React.lazy(() => import("../pages/OrderPage/OrderPage"));
 const PaymentPage = React.lazy(() =>
@@ -66,6 +69,11 @@ export const routes = [
   {
     path: "/doi-mat-khau",
     component: ChangePassword,
+    isDefaultLayout: true,
+  },
+  {
+    path: "/reset-password/",
+    component: ResetPassword,
     isDefaultLayout: true,
   },
 

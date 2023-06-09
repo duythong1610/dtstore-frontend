@@ -150,6 +150,7 @@ function HeaderComponent() {
             className={
               pathname !== "/" &&
               pathname !== "/thong-tin-tai-khoan" &&
+              !pathname.startsWith("/reset-password/") &&
               !pathname.startsWith("/san-pham/")
                 ? "!hidden md:!flex md:items-center"
                 : "md:flex flex-nowrap md:items-center md:w-7xl"
