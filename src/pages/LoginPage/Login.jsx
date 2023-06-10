@@ -171,7 +171,11 @@ function Login() {
       <Helmet>
         <title>Đăng nhập | October16th</title>
       </Helmet>
-      <Flex position="relative" h="max-content" className="!bg-white !md:h-screen">
+      <Flex
+        position="relative"
+        h="max-content"
+        className="!bg-white md:!h-screen"
+      >
         <Flex
           h={{
             sm: "initial",

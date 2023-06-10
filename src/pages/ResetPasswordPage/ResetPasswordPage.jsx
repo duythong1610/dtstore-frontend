@@ -186,7 +186,7 @@ function ResetPasswordPage() {
       <Flex
         position="relative"
         h="max-content"
-        className="!bg-white !md:h-screen"
+        className="!bg-white md:!h-screen"
       >
         <Flex
           h={{
