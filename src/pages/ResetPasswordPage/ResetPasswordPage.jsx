@@ -183,7 +183,11 @@ function ResetPasswordPage() {
       <Helmet>
         <title>Đặt lại mật khẩu | October16th</title>
       </Helmet>
-      <Flex position="relative" h="max-content" className="!bg-white !h-screen">
+      <Flex
+        position="relative"
+        h="max-content"
+        className="!bg-white !md:h-screen"
+      >
         <Flex
           h={{
             sm: "initial",
