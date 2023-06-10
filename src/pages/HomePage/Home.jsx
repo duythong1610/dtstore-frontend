@@ -85,6 +85,10 @@ function Home() {
 
       return () => {
         document.body.removeChild(script);
+        script.innerHTML = `
+      var chatbox = document.getElementById("fb-customer-chat");
+      chatbox.removeAttribute("page_id");
+      chatbox.removeAttribute("attribution");`;
       };
     }
   }, []);
