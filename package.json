@@ -58,5 +58,5 @@
     "tailwindcss": "^3.3.1",
     "vite": "^4.2.0"
   },
-  "proxy": "https://api.october16th.store/"
+  "proxy": "https://october16th.store/"
 }
