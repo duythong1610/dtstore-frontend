@@ -37,7 +37,7 @@ function DefaultLayout({ children }) {
       {isVisible && (
         <div className="fixed z-50 right-[10vw] bottom-[82px] md:bottom-[10vh]">
           <div
-            className="h-8 w-8 md:w-10 md:h-10 flex items-center bg-purple-500 rounded-full cursor-pointer"
+            className="h-8 w-8 md:w-10 md:h-10 flex items-center bg-purple-600 rounded-full cursor-pointer"
             onClick={() => scrollToTop()}
           >
             <UpOutlined className="text-white md:text-xl w-full !block" />
