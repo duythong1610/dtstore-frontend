@@ -341,7 +341,7 @@ const Comment = ({ idProduct }) => {
                         </div>
                         <h2 className="text-xs md:text-sm font-normal m-0">
                           {timeJoinRender(
-                            handleTimeJoin(comment.postedBy.createdAt)
+                            handleTimeJoin(comment?.postedBy?.createdAt)
                           )}
                         </h2>
                       </div>
@@ -464,7 +464,7 @@ const Comment = ({ idProduct }) => {
                                   </div>
                                   <h2 className="text-xs md:text-sm font-normal m-0">
                                     {timeJoinRender(
-                                      handleTimeJoin(reply.postedBy.createdAt)
+                                      handleTimeJoin(reply?.postedBy?.createdAt)
                                     )}
                                   </h2>
                                 </div>
