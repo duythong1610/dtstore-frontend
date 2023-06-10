@@ -93,11 +93,12 @@ function TypeProductPage() {
   }, [type, sort, activeBrand, minValue, maxValue]);
 
   const handleRemoveAllFilter = () => {
+    console.log("alo");
     setActivePrice("");
     setActiveFilter("");
     setActiveBrand("");
-    setMinValue(null);
-    setMaxValue(null);
+    setMinValue(minValue);
+    setMaxValue(maxValue);
   };
 
   useEffect(() => {
@@ -134,7 +135,7 @@ function TypeProductPage() {
     setActivePrice(value);
     setMinValue(value[0]);
     setMaxValue(value[1]);
-    setIsToggleContent(!isToggleContent);
+    setIsToggleContent(false);
   };
 
   const itemsFilter = [
