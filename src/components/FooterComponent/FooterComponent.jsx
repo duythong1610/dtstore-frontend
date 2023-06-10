@@ -17,7 +17,7 @@ const FooterComponent = () => {
           pathname === "/don-hang-cua-toi" ||
           pathname === "/thong-tin-tai-khoan") &&
         "hidden md:block"
-      } pb-[62px] md:pb-0 bg-white border-t-[3px] border-purple-600`}
+      }  bg-white border-t-[3px] border-purple-600`}
     >
       <div className="flex flex-col md:flex-row max-w-7xl m-auto gap-5 bg-white p-4">
         <div className="md:w-[30%] md:max-w-[30%]">
@@ -89,7 +89,7 @@ const FooterComponent = () => {
             </a>
           </div>
         </div>
-        <div className="md:w-[15%] md:max-w-[15%]">
+        <div className="md:w-[15%] md:max-w-[15%] pb-[120px] md:pb-0">
           <h1 className="text-base">KẾT NỐI VỚI TÔI</h1>
           <div className="flex items-center gap-2">
             <a href="https://zalo.me/0398052707" className="max-w-[32px]">
