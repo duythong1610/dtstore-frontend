@@ -150,7 +150,6 @@ function Home() {
     <>
       <Helmet>
         <title>Trang chủ | October16th</title>
-        <script src="/src/scriptMessenger.js" type="text/javascript"></script>
       </Helmet>
       {/* <Loading isLoading={isLoading}> */}
 
