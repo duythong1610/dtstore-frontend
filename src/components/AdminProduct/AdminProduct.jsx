@@ -270,7 +270,7 @@ const AdminProduct = () => {
       price: stateProduct?.price,
       priceAfterDiscount: (
         +stateProduct?.price -
-        (+stateProduct.price * +stateProduct?.discount) / 100
+        +stateProduct.price * (+stateProduct?.discount / 100)
       ).toString(),
       countInStock: stateProduct?.countInStock,
       discount: stateProduct?.discount,
