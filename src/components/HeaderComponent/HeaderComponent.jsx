@@ -74,7 +74,11 @@ function HeaderComponent() {
   };
 
   const handleToggleClass = () => {
-    setIsToggle((current) => !current);
+    if (user.access_token) {
+      setIsToggle((current) => !current);
+    } else {
+      navigate("sign-in");
+    }
   };
 
   const handleToggleClassContent = useCallback(() => {
@@ -281,9 +285,9 @@ function HeaderComponent() {
                       className="flex-col md:flex-row gap-1 md:gap-2"
                       onClick={handleNavigate}
                     >
-                      {userAvatar || user.id ? (
+                      {user.id ? (
                         <img
-                          src={userAvatar ? userAvatar : default_avatar}
+                          src={userAvatar || default_avatar}
                           alt="avatar"
                           style={{
                             height: "30px",
@@ -312,9 +316,9 @@ function HeaderComponent() {
                     className="flex-col md:flex-row gap-1 md:gap-2"
                     onClick={handleToggleClass}
                   >
-                    {userAvatar ? (
+                    {user.id ? (
                       <img
-                        src={userAvatar ? userAvatar : default_avatar}
+                        src={userAvatar || default_avatar}
                         alt="avatar"
                         style={{
                           height: "22px",

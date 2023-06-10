@@ -3,6 +3,7 @@ import * as message from "../../components/Message/Message";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
+import default_avatar from "../../assets/img/default_avatar.png";
 
 import {
   CheckCircleFilled,
@@ -60,14 +61,16 @@ const AccountNavMobile = ({ handleToggleClass }) => {
             <div className="content-left md:w-1/4 md:px-5">
               <div className="flex gap-5 mb-10">
                 <img
-                  src={user?.avatar}
+                  src={user?.avatar || default_avatar}
                   alt="user-avatar"
                   className="w-20 rounded-full h-20"
                 />
                 <div className="info flex flex-col">
                   <span>Tài khoản của</span>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-xl">{user?.name}</span>
+                    <span className="font-medium text-xl">
+                      {user?.name || "Chưa cập nhật tên"}
+                    </span>
                     {user?.isAdmin && (
                       <CheckCircleFilled className="text-blue-500" />
                     )}
