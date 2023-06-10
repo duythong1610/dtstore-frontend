@@ -130,8 +130,8 @@ function ResetPasswordPage() {
     )
       return true;
     else {
-      return `Mật khẩu ít nhất 8 ký tự bao gồm số,chữ cái thường, viết
-    hoa, kí tự đặc biệt`;
+      return `Mật khẩu ít nhất 8 ký tự bao gồm số, chữ cái thường, chữ cái viết
+    hoa, kí tự đặc biệt.`;
     }
   };
   const handleChangeTokenReset = (e) => {

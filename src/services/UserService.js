@@ -4,7 +4,7 @@ export const axiosJWT = axios.create();
 
 export const loginUser = async (data) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/sign-in",
+    `${import.meta.env.VITE_API_KEY}/api/user/sign-in`,
     data
   );
   return res.data;
@@ -12,14 +12,14 @@ export const loginUser = async (data) => {
 
 export const logoutUser = async () => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/log-out"
+    `${import.meta.env.VITE_API_KEY}/api/user/log-out`
   );
   return res.data;
 };
 
 export const signupUser = async (data) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/sign-up",
+    `${import.meta.env.VITE_API_KEY}/api/user/sign-up`,
     data
   );
   return res.data;
@@ -27,7 +27,7 @@ export const signupUser = async (data) => {
 
 export const changePassword = async (data, access_token) => {
   const res = await axiosJWT.post(
-    "https://dtstore-backend.onrender.com/api/user/change-password",
+    `${import.meta.env.VITE_API_KEY}/api/user/change-password`,
     data,
     {
       headers: {
@@ -41,7 +41,7 @@ export const changePassword = async (data, access_token) => {
 
 export const forgotPassword = async (data) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/forgot-password",
+    `${import.meta.env.VITE_API_KEY}/api/user/forgot-password`,
     data
   );
 
@@ -50,7 +50,7 @@ export const forgotPassword = async (data) => {
 
 export const resetPassword = async (data) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/reset-password",
+    `${import.meta.env.VITE_API_KEY}/api/user/reset-password`,
     data
   );
 
@@ -59,7 +59,7 @@ export const resetPassword = async (data) => {
 
 export const getAllUser = async (access_token) => {
   const res = await axiosJWT.get(
-    "https://dtstore-backend.onrender.com/api/user/get-all/",
+    `${import.meta.env.VITE_API_KEY}/api/user/get-all/`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -71,7 +71,7 @@ export const getAllUser = async (access_token) => {
 
 export const getDetailsUser = async (id, access_token) => {
   const res = await axiosJWT.get(
-    `https://dtstore-backend.onrender.com/api/user/get-details/${id}`,
+    `${import.meta.env.VITE_API_KEY}/api/user/get-details/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -83,7 +83,7 @@ export const getDetailsUser = async (id, access_token) => {
 
 export const viewedProducts = async (productId, userId, access_token) => {
   const res = await axiosJWT.post(
-    `https://dtstore-backend.onrender.com/api/user/viewed-products/${userId}`,
+    `${import.meta.env.VITE_API_KEY}/api/user/viewed-products/${userId}`,
     { productId },
     {
       headers: {
@@ -96,7 +96,7 @@ export const viewedProducts = async (productId, userId, access_token) => {
 
 export const getViewedProducts = async (userId, access_token) => {
   const res = await axios.get(
-    `https://dtstore-backend.onrender.com/api/user/get-viewed-products/${userId}`,
+    `${import.meta.env.VITE_API_KEY}/api/user/get-viewed-products/${userId}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -107,7 +107,7 @@ export const getViewedProducts = async (userId, access_token) => {
 };
 export const updateUser = async (id, data, access_token) => {
   const res = await axiosJWT.put(
-    `https://dtstore-backend.onrender.com/api/user/update-user/${id}`,
+    `${import.meta.env.VITE_API_KEY}/api/user/update-user/${id}`,
     data,
     {
       headers: {
@@ -120,7 +120,7 @@ export const updateUser = async (id, data, access_token) => {
 
 export const deleteUser = async (id, access_token) => {
   const res = await axiosJWT.delete(
-    `https://dtstore-backend.onrender.com/api/user/delete-user/${id}`,
+    `${import.meta.env.VITE_API_KEY}/api/user/delete-user/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -132,7 +132,7 @@ export const deleteUser = async (id, access_token) => {
 
 export const deleteManyUser = async (data, access_token) => {
   const res = await axiosJWT.post(
-    `https://dtstore-backend.onrender.com/api/user/delete-many`,
+    `${import.meta.env.VITE_API_KEY}/api/user/delete-many`,
     data,
     {
       headers: {
@@ -156,7 +156,7 @@ export const deleteManyUser = async (data, access_token) => {
 
 export const refreshToken = async (refreshToken) => {
   const res = await axios.post(
-    "https://dtstore-backend.onrender.com/api/user/refresh-token",
+    `${import.meta.env.VITE_API_KEY}/api/user/refresh-token`,
     {},
     {
       headers: {

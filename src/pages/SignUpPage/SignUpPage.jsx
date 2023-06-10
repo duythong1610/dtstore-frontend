@@ -302,8 +302,8 @@ function SignUpPage() {
                   </InputRightElement>
                 </InputGroup>
                 <p className="-mt-5 text-xs text-purple-600">
-                  Mật khẩu ít nhất 8 ký tự bao gồm số,chữ cái thường, viết hoa,
-                  kí tự đặc biệt
+                  Mật khẩu ít nhất 8 ký tự bao gồm số, chữ cái thường, chữ cái
+                  viết hoa, kí tự đặc biệt.
                 </p>
 
                 <FormLabel

@@ -125,6 +125,15 @@ function Login() {
     });
   };
 
+  const handleSignInEnter = async (e) => {
+    if (e.keyCode == 13) {
+      mutation.mutate({
+        email,
+        password,
+      });
+    }
+  };
+
   const handleForgotPassword = async () => {
     setLoadingForgot(true);
     const res = await UserService.forgotPassword({ email: emailForgot });
@@ -140,12 +149,20 @@ function Login() {
     return res;
   };
 
-  const handleSignInEnter = (e) => {
+  const handleForgotPasswordEnter = async (e) => {
     if (e.keyCode == 13) {
-      mutation.mutate({
-        email,
-        password,
-      });
+      setLoadingForgot(true);
+      const res = await UserService.forgotPassword({ email: emailForgot });
+      console.log(res);
+      setLoadingForgot(false);
+      if (res.status === "ERROR") {
+        setErrorEmailForgot(res.message);
+      }
+      if (res.status === "SUCCESS") {
+        setIsSuccessForgot(true);
+        setErrorEmailForgot("");
+      }
+      return res;
     }
   };
 
@@ -329,7 +346,7 @@ function Login() {
                     onChange={handleChangePassword}
                     isRequired={true}
                     fontSize="sm"
-                    placeholder="Ít nhất 8 ký tự"
+                    placeholder="Nhập mật khẩu của bạn"
                     mb="24px"
                     size="lg"
                     type={show ? "text" : "password"}
@@ -481,18 +498,6 @@ function Login() {
 
         {!isSuccessForgot && (
           <div className="text-center">
-            <FormLabel
-              ms="4px"
-              fontSize="sm"
-              fontWeight="500"
-              color={textColor}
-              display="flex"
-            >
-              Email
-              <Text color={brandStars} marginBottom="0px">
-                *
-              </Text>
-            </FormLabel>
             <InputGroup size="md">
               <Input
                 onChange={handleChangeEmailForgot}
@@ -504,7 +509,7 @@ function Login() {
                 type="email"
                 variant="auth"
                 value={emailForgot}
-                // onKeyDown={handleForgotPassword}
+                onKeyDown={handleForgotPasswordEnter}
               />
               {/* <InputForm
  placeholder="password"

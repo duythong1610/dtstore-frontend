@@ -2,7 +2,7 @@ import { axiosJWT } from "./UserService";
 
 export const createOrder = async (data, access_token) => {
   const res = await axiosJWT.post(
-    `https://dtstore-backend.onrender.com/api/order/create/${data?.user}`,
+    `${import.meta.env.VITE_API_KEY}/api/order/create/${data?.user}`,
     data,
     {
       headers: {
@@ -15,7 +15,7 @@ export const createOrder = async (data, access_token) => {
 
 export const getOrderByUserId = async (id, access_token) => {
   const res = await axiosJWT.get(
-    `https://dtstore-backend.onrender.com/api/order/get-all-order/${id}`,
+    `${import.meta.env.VITE_API_KEY}/api/order/get-all-order/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -27,7 +27,7 @@ export const getOrderByUserId = async (id, access_token) => {
 
 export const getDetailsOrder = async (id, access_token) => {
   const res = await axiosJWT.get(
-    `https://dtstore-backend.onrender.com/api/order/get-details-order/${id}`,
+    `${import.meta.env.VITE_API_KEY}/api/order/get-details-order/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -40,7 +40,7 @@ export const getDetailsOrder = async (id, access_token) => {
 export const cancelOrder = async (id, access_token, orderItems, userId) => {
   const data = { orderItems, orderId: id };
   const res = await axiosJWT.delete(
-    `https://dtstore-backend.onrender.com/api/order/cancel-order/${userId}`,
+    `${import.meta.env.VITE_API_KEY}/api/order/cancel-order/${userId}`,
     {
       headers: {
         // "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export const cancelOrder = async (id, access_token, orderItems, userId) => {
 
 export const getAllOrder = async (access_token) => {
   const res = await axiosJWT.get(
-    `https://dtstore-backend.onrender.com/api/order/get-all-order`,
+    `${import.meta.env.VITE_API_KEY}/api/order/get-all-order`,
     {
       headers: {
         token: `Bearer ${access_token}`,
