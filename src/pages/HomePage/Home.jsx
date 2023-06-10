@@ -54,6 +54,19 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [loadingLimit, setLoadingLimit] = useState(false);
 
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      const script = document.createElement("script");
+      script.src = "/src/messenger-script.js";
+      document.body.appendChild(script);
+
+      return () => {
+        // Xoá script khi component unmount (nếu cần)
+        document.body.removeChild(script);
+      };
+    }
+  }, []);
+
   const handleGetUserDetails = async () => {
     const res = await UserService.getDetailsUser(user?.id, user?.access_token);
     setUserInfo(res.data);

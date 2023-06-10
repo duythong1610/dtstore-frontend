@@ -139,7 +139,7 @@ const Comment = ({ idProduct }) => {
       };
       setLoadingLike(true);
       const res = await ProductService.likeComment(
-        productDetails._id,
+        productDetails?._id,
         payload,
         user?.access_token
       );
@@ -299,7 +299,7 @@ const Comment = ({ idProduct }) => {
         <div className="comment-list px-4 md:px-0 scrollbar-hide overflow-x-hidden overflow-y-auto max-h-96 relative">
           {productDetails?.comments?.map((comment) => {
             const isLikedByCurrentUser = comment.likes.some(
-              (like) => like._id === user.id
+              (like) => like?._id === user.id
             );
 
             return (
@@ -347,7 +347,7 @@ const Comment = ({ idProduct }) => {
                       </div>
                     </div>
 
-                    {user?.id === comment?.postedBy._id && (
+                    {user?.id === comment?.postedBy?._id && (
                       <div>
                         <Dropdown.Button menu={menuProps}></Dropdown.Button>
                       </div>
@@ -469,7 +469,7 @@ const Comment = ({ idProduct }) => {
                                   </h2>
                                 </div>
                               </div>
-                              {user?.id === reply?.postedBy._id && (
+                              {user?.id === reply?.postedBy?._id && (
                                 <div>
                                   <Dropdown.Button
                                     menu={menuProps}
