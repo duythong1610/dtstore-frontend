@@ -269,8 +269,8 @@ const AdminProduct = () => {
       name: stateProduct?.name,
       price: stateProduct?.price,
       priceAfterDiscount: (
-        +stateProduct?.price -
-        +stateProduct.price * (+stateProduct?.discount / 100)
+        Number(stateProduct?.price) -
+        Number(stateProduct.price) * (Number(stateProduct?.discount) / 100)
       ).toString(),
       countInStock: stateProduct?.countInStock,
       discount: stateProduct?.discount,
