@@ -345,7 +345,7 @@ function TypeProductPage() {
               </Collapse>
             </div>
 
-            <div className="py-5 md:pt-0 min-h-screen md:min-h-0">
+            <div className="py-5 md:pt-0 min-h-screen md:min-h-0 md:w-[85%]">
               <div className="flex flex-col justify-between gap-4">
                 <div className="fixed top-0 right-0 left-0 z-[4] bg-white py-3 shadow-sm px-4 md:hidden">
                   <div className="flex justify-between">
@@ -465,7 +465,7 @@ function TypeProductPage() {
               /> */}
               </div>
               {productsViews.length === 0 && (
-                <div className="text-center w-full pt-[40%]">
+                <div className="text-center w-full pt-[30%]">
                   <h1 className="">Không tìm thấy sản phẩm phù hợp</h1>
                 </div>
               )}
