@@ -51,7 +51,7 @@ function ButtonInputSearch(props) {
         {searchText && (
           <CloseOutlined
             className="p-2 cursor-pointer outline-none text-zinc-400"
-            onClick={() => onClearSearchText}
+            onClick={() => onClearSearchText()}
           />
         )}
       </div>
