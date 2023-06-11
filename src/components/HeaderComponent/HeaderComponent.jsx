@@ -24,6 +24,7 @@ import logo from "../../assets/img/logo.png";
 import default_avatar from "../../assets/img/default_avatar.png";
 import TypeProduct from "../TypeProduct/TypeProduct";
 import { convertPrice } from "../../until";
+import { useDebounce } from "use-debounce";
 
 function HeaderComponent() {
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,7 @@ function HeaderComponent() {
   const [activeCategory, setActiveCategory] = useState(false);
   const order = useSelector((state) => state.order);
   const [searchText, setSearchText] = useState("");
+  const [value] = useDebounce(searchText.trim(), 500);
   const user = useSelector((state) => state.user);
   const [userName, setUserName] = useState("");
   const [typeProduct, setTypeProduct] = useState([]);
@@ -61,13 +63,22 @@ function HeaderComponent() {
     setLoading(false);
   };
 
-  const onSearch = async (e) => {
-    const value = e.target.value;
+  const debounced = (value) => {
     setSearchText(value);
-    const res = await ProductService.getAllProduct(value, 5);
+  };
+
+  const handleGetProduct = async () => {
+    const res = await ProductService.getAllProduct(value.trim(), 5);
     setSuggestions(res.data);
   };
 
+  useEffect(() => {
+    if (searchText.trim()) {
+      handleGetProduct();
+    }
+  }, [value]);
+
+  console.log(value);
   const handleSearch = () => {
     dispatch(searchProduct(searchText));
     setSearchText("");
@@ -196,7 +207,7 @@ function HeaderComponent() {
                 textButton="Tìm kiếm"
                 size="large"
                 value={searchText}
-                onChange={onSearch}
+                onChange={(e) => debounced(e.target.value)}
                 onClick={handleSearch}
               />
               {searchText && (
