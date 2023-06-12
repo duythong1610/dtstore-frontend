@@ -14,6 +14,7 @@ const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
   const location = useLocation();
   const { state } = location;
+  console.log(state);
   const navigate = useNavigate();
   useEffect(() => {
     if (user?.name) {

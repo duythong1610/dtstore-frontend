@@ -231,6 +231,7 @@ const ChangePasswordPage = () => {
               <li>
                 <Link
                   to="/don-hang-cua-toi"
+                  state={{ id: user?.id, token: user?.access_token }}
                   className="py-2 px-3 w-full hover:bg-gray-200 rounded-md flex items-center justify-between"
                 >
                   <div className="flex items-center justify-center gap-3">
