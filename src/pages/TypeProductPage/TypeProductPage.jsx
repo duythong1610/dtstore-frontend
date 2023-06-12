@@ -289,35 +289,46 @@ function TypeProductPage() {
                     })}
                     <div>
                       <h1 className="mt-2">Chọn mức giá phù hợp</h1>
-                      <div className="flex items-center gap-1">
-                        <div>
-                          {minValue ? (
-                            <span>{convertPrice(minValue).slice(0, -4)} </span>
-                          ) : (
-                            <span>{convertPrice(minPrice).slice(0, -4)}</span>
-                          )}
-                        </div>
-                        <span>đến</span>
-                        <div>
-                          {maxValue ? (
-                            <span>{convertPrice(maxValue).slice(0, -4)} </span>
-                          ) : (
-                            <span>{convertPrice(maxPrice).slice(0, -4)}</span>
-                          )}
-                        </div>
-                      </div>
                       {minPrice && maxPrice && (
-                        <div>
-                          <Slider
-                            step={10000}
-                            min={minPrice}
-                            max={maxPrice}
-                            range
-                            defaultValue={[minPrice, maxPrice]}
-                            onAfterChange={handleOnChangeSliderPrice}
-                            tooltip={{ formatter }}
-                          />
-                        </div>
+                        <>
+                          <div className="flex items-center gap-1">
+                            <div>
+                              {minValue ? (
+                                <span>
+                                  {convertPrice(minValue).slice(0, -4)}{" "}
+                                </span>
+                              ) : (
+                                <span>
+                                  {convertPrice(minPrice).slice(0, -4)}
+                                </span>
+                              )}
+                            </div>
+                            <span>đến</span>
+                            <div>
+                              {maxValue ? (
+                                <span>
+                                  {convertPrice(maxValue).slice(0, -4)}{" "}
+                                </span>
+                              ) : (
+                                <span>
+                                  {convertPrice(maxPrice).slice(0, -4)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div>
+                            <Slider
+                              step={10000}
+                              min={minPrice}
+                              max={maxPrice}
+                              range
+                              defaultValue={[minPrice, maxPrice]}
+                              onAfterChange={handleOnChangeSliderPrice}
+                              tooltip={{ formatter }}
+                            />
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>
