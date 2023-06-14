@@ -142,11 +142,11 @@ export const routes = [
     isDefaultLayout: true,
   },
 
-  {
-    // path: "/system-admin",
-    pathAdmin: "/system-admin",
-    component: AdminPage,
-    isDefaultLayout: false,
-    isPrivate: true,
-  },
+  // {
+  //   // path: "/system-admin",
+  //   pathAdmin: "/system-admin",
+  //   component: AdminPage,
+  //   isDefaultLayout: false,
+  //   isPrivate: true,
+  // },
 ];
