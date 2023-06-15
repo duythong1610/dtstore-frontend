@@ -1,19 +1,4 @@
 import React from "react";
-// import AdminPage from "../pages/AdminPage/AdminPage";
-// import Home from "../pages/HomePage/Home";
-// import Login from "../pages/LoginPage/Login";
-// import MyOrder from "../pages/MyOrderPage/MyOrder";
-// import OrderPage from "../pages/OrderPage/OrderPage";
-// import PaymentPage from "../pages/PaymentPage/PaymentPage";
-// import ProductDetailsPage from "../pages/ProductDetailsPage/ProductDetailsPage";
-// import ProductPage from "../pages/ProductPage/ProductPage";
-// import ProfilePage from "../pages/ProfilePage/ProfilePage";
-// import SignUpPage from "../pages/SignUpPage/SignUpPage";
-// import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
-// import OrderSuccess from "../pages/OrderSuccessPage/OrderSuccess";
-// import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
-// import ViewedProductsPage from "../pages/ViewedProductsPage/ViewedProductsPage";
-// import VnpayStatusPage from "../pages/VnpayStatusPage/VnpayStatusPage";
 
 const AdminPage = React.lazy(() => import("../pages/AdminPage/AdminPage"));
 const Home = React.lazy(() => import("../pages/HomePage/Home"));

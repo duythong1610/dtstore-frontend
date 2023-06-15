@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { Helmet } from "react-helmet";
+import RespectComponent from "../../components/RespectComponent/RespectComponent";
 
 function Home() {
   const navigate = useNavigate();
@@ -152,6 +153,7 @@ function Home() {
         <title>Trang chủ | October16th</title>
       </Helmet>
       {/* <Loading isLoading={isLoading}> */}
+      <RespectComponent />
 
       <div className="relative">
         <div className="px-5 py-3 fixed top-0 left-0 right-0 z-[5] bg-white md:hidden">
