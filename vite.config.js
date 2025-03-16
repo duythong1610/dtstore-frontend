@@ -10,7 +10,7 @@ export default defineConfig({
 
     proxy: {
       "/api": {
-        target: "https://api.october16th.store",
+        target: "https://api-october16th-store.up.railway.app",
       },
     },
   },
