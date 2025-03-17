@@ -204,26 +204,40 @@ const Comment = ({ idProduct }) => {
   };
 
   const timeAgoRender = (timeAgo) => {
-    if (timeAgo > 59 && timeAgo < 1439) {
-      let hour = Math.floor(timeAgo / 60);
-      return hour + " giờ trước";
-    } else if (timeAgo > 1439) {
-      let day = Math.floor(timeAgo / 60 / 24);
-      return day + " ngày trước";
+    const minutesInHour = 60;
+    const minutesInDay = 1440; // 60 * 24
+    const minutesInMonth = 43200; // 60 * 24 * 30
+    const minutesInYear = 525600; // 60 * 24 * 365
+
+    if (timeAgo >= minutesInYear) {
+      return `${Math.floor(timeAgo / minutesInYear)} năm trước`;
+    } else if (timeAgo >= minutesInMonth) {
+      return `${Math.floor(timeAgo / minutesInMonth)} tháng trước`;
+    } else if (timeAgo >= minutesInDay) {
+      return `${Math.floor(timeAgo / minutesInDay)} ngày trước`;
+    } else if (timeAgo >= minutesInHour) {
+      return `${Math.floor(timeAgo / minutesInHour)} giờ trước`;
     } else {
-      return timeAgo === 0 ? "Vừa xong" : timeAgo + " phút trước";
+      return timeAgo === 0 ? "Vừa xong" : `${timeAgo} phút trước`;
     }
   };
 
   const timeJoinRender = (timeJoin) => {
-    if (timeJoin > 59 && timeJoin < 1439) {
-      let hour = Math.floor(timeJoin / 60);
-      return "Đã tham gia " + hour + " giờ";
-    } else if (timeJoin > 1439) {
-      let day = Math.floor(timeJoin / 60 / 24);
-      return "Đã tham gia " + day + " ngày";
+    const minutesInHour = 60;
+    const minutesInDay = 1440; // 60 * 24
+    const minutesInMonth = 43200; // 60 * 24 * 30
+    const minutesInYear = 525600; // 60 * 24 * 365
+
+    if (timeJoin >= minutesInYear) {
+      return `Đã tham gia ${Math.floor(timeJoin / minutesInYear)} năm`;
+    } else if (timeJoin >= minutesInMonth) {
+      return `Đã tham gia ${Math.floor(timeJoin / minutesInMonth)} tháng`;
+    } else if (timeJoin >= minutesInDay) {
+      return `Đã tham gia ${Math.floor(timeJoin / minutesInDay)} ngày`;
+    } else if (timeJoin >= minutesInHour) {
+      return `Đã tham gia ${Math.floor(timeJoin / minutesInHour)} giờ`;
     } else {
-      return "Đã tham gia " + timeJoin + " phút";
+      return `Đã tham gia ${timeJoin} phút`;
     }
   };
 
